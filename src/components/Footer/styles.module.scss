@@ -1,0 +1,7 @@
+@use '../../styles/themes';
+
+.footer {
+  margin-top: 100px;
+  background: themes.$primary-3;
+  height: 150px;
+}

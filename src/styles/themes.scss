@@ -1,0 +1,61 @@
+$backgroud-dark: #222;
+$backgroud-light: #fff;
+
+$white: #fff;
+$black: #000;
+
+$primary: #bd2626;
+$primary-2: #ffc5c5;
+$primary-3: #651111;
+
+
+
+@mixin theme($theme: 'dark') {
+  @if $theme == 'dark' {
+    background: $backgroud-dark;
+    color: $white
+  }
+  @else {
+    background: $backgroud-light;
+    color: $black;
+  }
+}
+
+@mixin scroll() {
+  &::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 10px;
+    background-color: #F5F5F5;
+  }
+
+  &::-webkit-scrollbar {
+    width: 5px;
+    background-color: #F5F5F5;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: $primary;
+  }
+}
+
+@mixin scrollBody() {
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: #F5F5F5;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.4);
+  }
+
+  &::-webkit-scrollbar {
+    width: 10px;
+    background-color: #F5F5F5;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.4);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgb(114, 114, 114);
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.4);
+  }
+}
+

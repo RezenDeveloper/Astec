@@ -1,0 +1,122 @@
+@use '../../styles/themes';
+
+.work-card {
+  display: flex;
+  flex-direction: column;
+  margin: 0 20px;
+
+  padding: 20px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  min-width: 350px;
+  width: auto;
+  transition: box-shadow 200ms;
+
+  &:hover {
+    box-shadow: rgba(149, 157, 165, 1) 0px 8px 24px;
+  }
+
+  .title {
+    margin: 0;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .card-wrapper {
+    display: flex;
+    
+    .pdf-container {
+      margin: auto 20px auto 0;
+    }
+    .description {
+      width: 100%;
+      
+      h4 {
+        text-align: center;
+      }
+      
+      p {
+        margin-bottom: 0;
+        height: 260px;
+        overflow: hidden;
+        overflow-y: auto;  
+        @include themes.scroll();         
+      }
+    }
+  }
+
+
+  .class {
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  .tags-title, .authors-title {
+    margin: 10px 0;
+    text-align: center;
+
+  }
+  
+  .tags-container, .authors-container {
+    display: flex;
+    justify-content: space-between;
+    
+    span {
+      border: 1px solid themes.$primary;
+      background: themes.$primary-2;
+      padding: 2px 5px;
+      border-radius: 5%;
+      width: 100%;
+
+      font-size: 0.8rem;
+      margin: 0 10px;
+      text-align: center;
+    }
+  }
+
+  .button-area {
+    margin-top: 40px;
+    display: flex;
+    justify-content: flex-end;
+
+    a {
+      padding:  5px 20px;
+      background: themes.$primary;
+      color: themes.$white;
+
+      &:hover {
+        filter: brightness(110%);
+      }
+    }
+  }
+}
+
+.class-card {
+  margin: 0 20px;
+  
+  .image {
+    margin: auto;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    transition: 500ms;
+    
+    width: 200px;
+    height: 200px;
+    
+    border: 5px solid rgb(24, 24, 24);
+    background: rgb(201, 201, 201);
+
+    h1 {
+      margin: auto;
+      color: themes.$black;
+    }
+    cursor: pointer;
+
+    &:hover {
+      background: rgb(24, 24, 24);
+      h1 {
+        color: white;
+      }
+    }
+  }
+}

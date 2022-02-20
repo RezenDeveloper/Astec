@@ -1,0 +1,28 @@
+.container {
+  main {
+    margin-top: 100px;
+
+    h1 {
+      text-transform: uppercase;
+      text-align: center;
+      margin: 40px 0;
+    }
+
+    .recent-works {
+      margin: 0 auto;
+      
+      &__container {
+        display: flex;
+        justify-content: center;
+        margin: 0 10px;
+      }
+    }
+
+    .classes {
+      &__container {
+        display: flex;
+        justify-content: center;
+      }
+    }
+  }
+}
