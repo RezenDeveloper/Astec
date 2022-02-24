@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Document, Page, pdfjs } from 'react-pdf/dist/umd/entry.webpack';
 
-pdfjs.GlobalWorkerOptions.workerSrc = 'pdf.worker.js';
+pdfjs.GlobalWorkerOptions.workerSrc = 'pdf.worker.min.js';
 
 import styles from './styles.module.scss';
 
