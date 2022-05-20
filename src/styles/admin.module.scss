@@ -1,0 +1,83 @@
+@import '../styles//variables';
+@import '../styles/mixins.scss';
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: $gray;
+}
+
+.modal {
+  background: $white;
+  box-shadow: 0px 4px 10px 5px rgba(0, 0, 0, 0.25);
+  max-width: 800px;
+  width: 100%;
+
+  &--header {
+    margin-bottom: 56px;
+    background: $secundary;
+    color: $white;
+    h1 {
+      margin: 0;
+      padding: 16px 0;
+      text-align: center;
+      text-transform: uppercase;
+    }
+  }
+
+  &--content {
+    text-align: center;
+    &__info {
+      margin-bottom: 70px;
+    }
+  }
+
+  &--field-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 46px;
+
+    label {
+      text-transform: uppercase;
+      font-family: $font-titles;
+      font-weight: 600;
+    }
+    input {
+      font-size: 1rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid black;
+
+      &:active,
+      &:focus {
+        outline: 1px solid $secundary;
+      }
+    }
+
+    input,
+    label {
+      max-width: 400px;
+      width: 100%;
+      text-align: left;
+    }
+  }
+
+  &--button {
+    @include buttonPrimary();
+
+    width: 33%;
+    margin: 40px 0 70px 0;
+
+    &--container {
+      display: flex;
+      justify-content: center;
+    }
+  }
+}

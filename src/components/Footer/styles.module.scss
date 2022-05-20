@@ -1,7 +1,7 @@
-@use '../../styles/themes';
+@import "../../styles/variables.scss";
 
 .footer {
   margin-top: 100px;
-  background: themes.$primary-3;
+  background: $primary-3;
   height: 150px;
 }

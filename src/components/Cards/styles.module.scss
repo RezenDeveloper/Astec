@@ -1,9 +1,9 @@
-@use '../../styles/themes';
+@import "../../styles/variables.scss";
 
 .work-card {
   display: flex;
   flex-direction: column;
-  margin: 0 20px;
+  margin: 0 25px;
 
   padding: 20px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
@@ -19,70 +19,48 @@
     margin: 0;
     margin-bottom: 10px;
     text-align: center;
+    font-size: 1rem;
   }
 
-  .card-wrapper {
-    display: flex;
-    
-    .pdf-container {
-      margin: auto 20px auto 0;
-      width: 80%;
-    }
-    .description {
-      width: 100%;
-      
-      h4 {
-        text-align: center;
-      }
-      
-      p {
-        margin-bottom: 0;
-        height: 260px;
-        overflow: hidden;
-        overflow-y: auto;  
-        @include themes.scroll();         
-      }
-    }
+  .pdf-container {
+    margin: auto;
+    max-width: 300px;
   }
-
-
   .class {
-    margin-top: 20px;
     text-align: center;
+    margin-top: 12px;
+    font-size: 0.75rem;
   }
+  .description {
+    width: 100%;
+    margin-top: 12px;
 
-  .tags-title, .authors-title {
-    margin: 10px 0;
-    text-align: center;
-
-  }
-  
-  .tags-container, .authors-container {
-    display: flex;
-    justify-content: space-between;
-    
-    span {
-      border: 1px solid themes.$primary;
-      background: themes.$primary-2;
-      padding: 2px 5px;
-      border-radius: 5%;
-      width: 100%;
-
-      font-size: 0.8rem;
-      margin: 0 10px;
+    h4 {
       text-align: center;
+      font-size: 0.75rem;
+    }
+
+    p {
+      margin-bottom: 0;
+      overflow: hidden;
+      overflow-y: auto;
+      font-size: 0.75rem;
     }
   }
 
   .button-area {
-    margin-top: 40px;
+    margin-top: 30px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
 
     a {
-      padding:  5px 20px;
-      background: themes.$primary;
-      color: themes.$white;
+      padding: 5px 0;
+      width: 50%;
+      text-align: center;
+
+      font-weight: 600;
+      background: $primary;
+      color: $white;
 
       &:hover {
         filter: brightness(110%);
@@ -93,23 +71,23 @@
 
 .class-card {
   margin: 0 20px;
-  
+
   .image {
     margin: auto;
     margin-bottom: 10px;
     display: flex;
     justify-content: center;
     transition: 500ms;
-    
+
     width: 200px;
     height: 200px;
-    
+
     border: 5px solid rgb(24, 24, 24);
     background: rgb(201, 201, 201);
 
     h1 {
       margin: auto;
-      color: themes.$black;
+      color: $black;
     }
     cursor: pointer;
 
