@@ -3,7 +3,7 @@ import { FormEvent, ChangeEvent, useState, SetStateAction, Dispatch } from 'reac
 
 import styles from '../styles/admin.module.scss'
 
-export default function Admin() {
+const Admin = () => {
 
   const [email, setEmail] = useState<string>()
   const [password, setPassword] = useState<string>()
@@ -26,8 +26,6 @@ export default function Admin() {
     <>
       <Head>
         <title>Armazenador de TGs - Admin</title>
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet" />
       </Head>
       <main className={styles['container']}>
         <div className={styles['modal']}>
@@ -65,3 +63,5 @@ export default function Admin() {
     </>
   )
 }
+
+export default Admin

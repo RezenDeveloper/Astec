@@ -9,7 +9,7 @@
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   min-width: 350px;
   width: auto;
-  transition: box-shadow 200ms;
+  transition: box-shadow ease 300ms;
 
   &:hover {
     box-shadow: rgba(149, 157, 165, 1) 0px 8px 24px;

@@ -6,13 +6,11 @@ import { ClassCard, WorkCard } from '../components/Cards'
 import styles from '../styles/home.module.scss'
 import Footer from '../components/Footer'
 
-export default function Home() {
+const Home = () => {
   return (
     <>
       <Head>
         <title>Armazenador de TGs</title>
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet" />
       </Head>
       <Header />
       <main className={styles['container']}>
@@ -38,3 +36,5 @@ export default function Home() {
     </>
   )
 }
+
+export default Home
