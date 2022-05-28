@@ -23,3 +23,45 @@
     }
   }
 }
+
+.select-input {
+  &--field {
+    position: relative;
+    > p {
+      min-height: 30px;
+      padding: 4px 8px;
+      border: 1px solid $black;
+      border-radius: 4px;
+      margin: 0 0 2px 0;
+    }
+  }
+  &--dropdown {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    visibility: hidden;
+    position: absolute;
+    width: 100%;
+    z-index: 2;
+    background-color: $white;
+    border: 1px solid $black;
+    border-radius: 4px;
+    &:focus-within, &.open {
+      visibility: visible;
+    }
+  }
+}
+
+.select-option {
+  margin: 0;
+  padding: 4px 8px;
+  &--selected {
+    padding: 4px 8px;
+    margin: 0;
+    background-color: $secundary;
+    color: $white;
+  }
+  &:hover {
+    background-color: $dark-gray;
+  }
+}

@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 
 import { Header } from '../../components/Header'
 import Footer from '../../components/Footer'
-import { TextInput } from '../../components/Inputs'
+import { SelectInput, TextInput } from '../../components/Inputs'
 
 import styles from '../../styles/search.module.scss'
 
@@ -26,14 +26,26 @@ const Search = () => {
       <main className={styles['container']}>
         <section className={styles['filter']}>
           <h2 className={styles['filter--title']}>Filtros</h2>
-          <TextInput 
-            id='ano' 
-            label='Ano' 
-            value={year} 
-            onChange={(e) => {
-              const value = e.target.value
-              setYear(value.replace(/\D/g, ''))
-            }}  
+          <SelectInput
+            label='Ano'
+            selectedId={year}
+            valueList={[
+              {
+              value: '1',
+              id: '1'
+              },
+              {
+                value: '2',
+                id: '2'
+              },
+              {
+                value: '3',
+                id: '3'
+              }
+            ]}
+            onChange={(id) => {
+              setYear(id)
+            }}
           />
           <TextInput 
             id='autor' 

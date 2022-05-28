@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import styles from './styles.module.scss';
 
@@ -17,7 +17,7 @@ export interface SelectInputProps {
     value: string
     id: string
   }[]
-  onChange: React.ChangeEventHandler<HTMLInputElement>
+  onChange: (id: string) => void
 }
 
 export const TextInput = ({ id, label, onChange, value }: TextInputProps) => {
@@ -37,11 +37,31 @@ export const TextInput = ({ id, label, onChange, value }: TextInputProps) => {
 export const SelectInput = ({ selectedId, label, onChange, valueList }: SelectInputProps) => {
   
   const selected = valueList.find((value) => selectedId === value.id)
+  const [open, setOpen] = useState(false)
   return (
     <div className={styles['select-input']}>
       <label>{label}</label>
       <div className={styles['select-input--field']}>
-        <p></p>
+        <p onClick={() => setOpen(!open)}>{selected?.value || ''}</p>
+        <ul className={`${styles['select-input--dropdown'] } ${open ? styles['open'] : ''}`}>
+          {valueList.map((({ id, value }) => {
+            const isSelected = id === selected?.id
+            return (
+              <li
+                key={id}
+                role='option'
+                aria-selected={isSelected}
+                className={isSelected ? styles['select-option--selected'] : styles['select-option']}
+                onClick={() => {
+                  onChange(id)
+                  setOpen(!open)
+                }}
+              >
+                {value}
+              </li>
+            )
+          }))}
+        </ul>
       </div>
     </div>
   );
