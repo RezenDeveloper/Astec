@@ -17,6 +17,21 @@ const Search = () => {
   const [year, setYear] = useState('')
   const [author, setAuthor] = useState('')
 
+  const getYearList = () => {
+    const currentYear = (new Date()).getFullYear();
+    const LastYear = 2000
+    let yearArray:number[] = []
+    
+    for(let countYear = LastYear;  countYear <= currentYear; countYear ++) {
+      yearArray.push(countYear)
+    }
+
+    return yearArray.map(year => ({
+      value: year.toString(),
+      id: year.toString()
+    }))
+  }
+
   return (
     <>
       <Head>
@@ -29,20 +44,7 @@ const Search = () => {
           <SelectInput
             label='Ano'
             selectedId={year}
-            valueList={[
-              {
-              value: '1',
-              id: '1'
-              },
-              {
-                value: '2',
-                id: '2'
-              },
-              {
-                value: '3',
-                id: '3'
-              }
-            ]}
+            valueList={getYearList()}
             onChange={(id) => {
               setYear(id)
             }}

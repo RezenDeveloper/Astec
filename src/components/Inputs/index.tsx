@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { MdArrowDropDown } from 'react-icons/md'
 import styles from './styles.module.scss';
 
 
@@ -38,18 +38,49 @@ export const SelectInput = ({ selectedId, label, onChange, valueList }: SelectIn
   
   const selected = valueList.find((value) => selectedId === value.id)
   const [open, setOpen] = useState(false)
+
+  const handleKeyDown = (e:React.KeyboardEvent<HTMLLIElement>, id: string) => {
+    switch (e.key) {
+      case " ":
+      case "SpaceBar":
+      case "Enter":
+        e.preventDefault();
+        onChange(id);
+        setOpen(false);
+        break;
+      default:
+        break;
+    }
+  }
+
   return (
-    <div className={styles['select-input']}>
+    <div className={`${styles['select-input']} ${open ? styles['open'] : ''}`}>
       <label>{label}</label>
       <div className={styles['select-input--field']}>
-        <p onClick={() => setOpen(!open)}>{selected?.value || ''}</p>
-        <ul className={`${styles['select-input--dropdown'] } ${open ? styles['open'] : ''}`}>
+        <button
+          onClick={() => setOpen(!open)}
+          aria-haspopup="listbox"
+          role='button'
+          aria-expanded={open}
+          tabIndex={0}
+        >
+          {selected?.value || ''}
+          <MdArrowDropDown size={20} />
+        </button>
+        <ul 
+          className={`${styles['select-input--dropdown'] }`}
+          role='listbox'
+          aria-activedescendant={selected?.id}
+          tabIndex={-1}
+        >
           {valueList.map((({ id, value }) => {
             const isSelected = id === selected?.id
             return (
               <li
                 key={id}
                 role='option'
+                tabIndex={0}
+                onKeyDown={(e) => handleKeyDown(e, id)}
                 aria-selected={isSelected}
                 className={isSelected ? styles['select-option--selected'] : styles['select-option']}
                 onClick={() => {
