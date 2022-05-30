@@ -1,11 +1,13 @@
 
 @import "../../styles/variables.scss";
+@import "../../styles/mixins.scss";
 
 .text-input {
   display: flex;
   flex-direction: column;
 
   label {
+    font-family: $font-titles;
     font-size: .875rem;
     font-weight: 600;
   }
@@ -16,15 +18,19 @@
     border: 1px solid $black;
     min-width: 300px;
     min-height: 32px;
+    padding: 0 8px;
 
-    &:focus, &:active {
-      border-color: $complementary;
-      outline: 1px solid $complementary;
-    }
+    @include outline()
   }
 }
 
 .select-input {
+  
+  label {
+    font-family: $font-titles;
+    font-size: .875rem;
+    font-weight: 600;
+  }
 
   &.open {
     .select-input--dropdown {
@@ -52,6 +58,9 @@
 
       width: 100%;
       min-height: 30px;
+      
+      @include outline();
+
       svg {
         transition: transform ease 200ms;
         margin-left: auto;
@@ -80,13 +89,22 @@
   margin: 0;
   padding: 4px 8px;
   font-size: .875rem;
+  &:hover {
+    background-color: $dark-gray;
+  }
+  @include outline() {
+    background-color: $dark-gray;
+  }
   &--selected {
     padding: 4px 8px;
     margin: 0;
     background-color: $secundary;
     color: $white;
-  }
-  &:hover {
-    background-color: $dark-gray;
+    &:hover {
+      background-color: $secundary;
+    }
+    @include outline() {
+      background-color: $secundary;
+    }
   }
 }

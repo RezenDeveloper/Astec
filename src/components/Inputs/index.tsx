@@ -82,7 +82,7 @@ export const SelectInput = ({ selectedId, label, onChange, valueList }: SelectIn
                 tabIndex={0}
                 onKeyDown={(e) => handleKeyDown(e, id)}
                 aria-selected={isSelected}
-                className={isSelected ? styles['select-option--selected'] : styles['select-option']}
+                className={`${styles['select-option']} ${isSelected ? styles['select-option--selected'] : ''}`}
                 onClick={() => {
                   onChange(id)
                   setOpen(!open)

@@ -26,8 +26,8 @@ export const Header:React.FC<Props> = ({ query }) => {
         <div className={styles['header__container']}>
           <h1 className={styles['header__container--title']}>Armazenador de TGs</h1>
           <div className={styles['header__container--search']}>
-            <form 
-              className={styles['header__container--search__wrap']} 
+            <form
+              className={styles['header__container--search__wrap']}
               onSubmit={(e) => {
                 e.preventDefault()
                 handleSearch(queryValue)
@@ -35,12 +35,16 @@ export const Header:React.FC<Props> = ({ query }) => {
             >
               <input
                 type="text" 
+                aria-label='Pesquisar'
                 placeholder="Pesquisar..." 
                 value={queryValue}
                 onChange={(e) => setQueryValue(e.target.value)}
               />
               <input type="submit" hidden />
-              <MdSearch 
+              <MdSearch
+                tabIndex={0}
+                role='button'
+                aria-label='Pesquisar'
                 color={'black'} 
                 size={"40px"}
                 onClick={() => handleSearch(queryValue)}

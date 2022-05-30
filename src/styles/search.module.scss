@@ -1,14 +1,29 @@
+@import "./variables.scss";
+
 .container {
-  margin: 100px 70px 30px;
+  margin: 100px 50px 30px;
   display: flex;
 }
 
 .filter {
-  min-height: 600px;
+  min-height: 500px;
+  max-width: 370px;
+  margin-top: 110px;
+  padding: 0 20px;
+  border-right: 1px solid $black;
   &--title {
     font-size: 1.25rem;
     text-align: center;
     text-transform: uppercase;
+  }
+  &--field {
+    margin-bottom: 40px;
+
+    &__tags{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 30px;
+    }
   }
 }
 

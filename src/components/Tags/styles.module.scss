@@ -1,0 +1,26 @@
+@import "../../styles/variables.scss";
+
+.tag-container {
+  transition: ease 150ms;
+  cursor: pointer;
+
+  font-size: 0.875rem;
+  border: none;
+  background: $dark-gray;
+  border-radius: 2px;
+  
+  padding: 2px 16px;
+  min-width: 100px;
+  text-align: center;
+
+  &--selected {
+    background: $primary-2;
+  }
+
+  &:hover {
+    filter: brightness(90%);
+  }
+  span {
+    color: $primary-3;
+  }
+}
