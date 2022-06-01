@@ -8,6 +8,7 @@ import { SelectInput, TextInput } from '../../components/Inputs'
 
 import styles from '../../styles/search.module.scss'
 import { Tag } from '../../components/Tags'
+import { ResultCard } from '../../components/ResultCard'
 
 const Search = () => {
   
@@ -86,7 +87,40 @@ const Search = () => {
       ))
     }
   }
-  
+
+  const getResultList = () => {
+    return [
+      {
+        title: 'teste',
+        description: 'teste',
+        fileId: 'teste',
+        authorArray: ['teste', 'teste', 'teste'],
+        tagArray: ['teste', 'teste', 'teste', 'teste']
+      },
+      {
+        title: 'teste',
+        description: 'teste',
+        fileId: 'teste',
+        authorArray: ['teste', 'teste', 'teste'],
+        tagArray: ['teste', 'teste', 'teste', 'teste']
+      },
+      {
+        title: 'teste',
+        description: 'teste',
+        fileId: 'teste',
+        authorArray: ['teste', 'teste', 'teste'],
+        tagArray: ['teste', 'teste', 'teste', 'teste']
+      },
+      {
+        title: 'teste',
+        description: 'teste',
+        fileId: 'teste',
+        authorArray: ['teste', 'teste', 'teste'],
+        tagArray: ['teste', 'teste', 'teste', 'teste']
+      }
+    ]
+  }
+
   return (
     <>
       <Head>
@@ -142,6 +176,15 @@ const Search = () => {
         </section>
         <section className={styles['result']}>
           <h1 className={styles['result--title']}>{query}</h1>
+          {getResultList().map(({ authorArray, description, fileId, tagArray, title }) => (
+            <ResultCard 
+              authorArray={authorArray} 
+              description={description} 
+              fileId={fileId}
+              tagArray={tagArray}
+              title={title}
+            />
+          ))}
         </section>
       </main>
       <Footer />
