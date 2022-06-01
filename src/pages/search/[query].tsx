@@ -176,8 +176,9 @@ const Search = () => {
         </section>
         <section className={styles['result']}>
           <h1 className={styles['result--title']}>{query}</h1>
-          {getResultList().map(({ authorArray, description, fileId, tagArray, title }) => (
-            <ResultCard 
+          {getResultList().map(({ authorArray, description, fileId, tagArray, title }, index) => (
+            <ResultCard
+              key={index}
               authorArray={authorArray} 
               description={description} 
               fileId={fileId}

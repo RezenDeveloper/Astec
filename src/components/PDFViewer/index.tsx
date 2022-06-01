@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
-import workerSrc from "../../pdf-worker";
-pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
+pdfjs.GlobalWorkerOptions.workerSrc = `//${window.location.host}/pdf.worker.min.js`;;
 
 import styles from './styles.module.scss';
 
 const PDFViewer = () => {
   return (
     <Document
-      file={"sample.pdf"}
+      file={`//${window.location.host}/sample.pdf`}
       onLoadError={(err) => console.log(err)}
       className={styles['document']}
     >
