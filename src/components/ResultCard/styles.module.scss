@@ -2,17 +2,20 @@
 
 
 .result-card {
- padding: 8px;
  transition: box-shadow ease 300ms;
  border: 1px solid #959da504;
  box-shadow: 0px 8px 24px 0px #959DA533;
  margin-bottom: 30px;
- padding: 12px 24px;
+ padding: 12px 24px 20px;
 
  &:hover {
    box-shadow: 0px 8px 24px 0px #959da5b8;
  }
  
+ .pdf-container {
+  max-width: 220px;
+  padding-right: 26px;
+ }
 
  h2 {
   font-size: 1.25rem;
@@ -46,7 +49,7 @@
 
 .wrapper {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
 }
 
 .tag-wrapper {

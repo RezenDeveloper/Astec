@@ -92,28 +92,28 @@ const Search = () => {
     return [
       {
         title: 'teste',
-        description: 'teste',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur nibh eu luctus consequat. Praesent a scelerisque elit. Sed cursus diam ac ligula vehicula, ut tincidunt magna fringilla. Nullam lobortis dui a massa bibendum, vel porta neque sodales. Nam vestibulum justo nec condimentum luctus. Cras eros dui, porta vitae auctor a, cursus nec nisl. Vivamus pretium ex eu felis consequat lobortis. ',
         fileId: 'teste',
         authorArray: ['teste', 'teste', 'teste'],
         tagArray: ['teste', 'teste', 'teste', 'teste']
       },
       {
         title: 'teste',
-        description: 'teste',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur nibh eu luctus consequat. Praesent a scelerisque elit. Sed cursus diam ac ligula vehicula, ut tincidunt magna fringilla. Nullam lobortis dui a massa bibendum, vel porta neque sodales. Nam vestibulum justo nec condimentum luctus. Cras eros dui, porta vitae auctor a, cursus nec nisl. Vivamus pretium ex eu felis consequat lobortis. ',
         fileId: 'teste',
         authorArray: ['teste', 'teste', 'teste'],
         tagArray: ['teste', 'teste', 'teste', 'teste']
       },
       {
         title: 'teste',
-        description: 'teste',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur nibh eu luctus consequat. Praesent a scelerisque elit. Sed cursus diam ac ligula vehicula, ut tincidunt magna fringilla. Nullam lobortis dui a massa bibendum, vel porta neque sodales. Nam vestibulum justo nec condimentum luctus. Cras eros dui, porta vitae auctor a, cursus nec nisl. Vivamus pretium ex eu felis consequat lobortis. ',
         fileId: 'teste',
         authorArray: ['teste', 'teste', 'teste'],
         tagArray: ['teste', 'teste', 'teste', 'teste']
       },
       {
         title: 'teste',
-        description: 'teste',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur nibh eu luctus consequat. Praesent a scelerisque elit. Sed cursus diam ac ligula vehicula, ut tincidunt magna fringilla. Nullam lobortis dui a massa bibendum, vel porta neque sodales. Nam vestibulum justo nec condimentum luctus. Cras eros dui, porta vitae auctor a, cursus nec nisl. Vivamus pretium ex eu felis consequat lobortis. ',
         fileId: 'teste',
         authorArray: ['teste', 'teste', 'teste'],
         tagArray: ['teste', 'teste', 'teste', 'teste']
@@ -176,16 +176,19 @@ const Search = () => {
         </section>
         <section className={styles['result']}>
           <h1 className={styles['result--title']}>{query}</h1>
-          {getResultList().map(({ authorArray, description, fileId, tagArray, title }, index) => (
-            <ResultCard
-              key={index}
-              authorArray={authorArray} 
-              description={description} 
-              fileId={fileId}
-              tagArray={tagArray}
-              title={title}
-            />
-          ))}
+          <div className={styles['result--list']}>
+            {getResultList().map(({ authorArray, description, fileId, tagArray, title }, index) => (
+              <ResultCard
+                key={index}
+                authorArray={authorArray} 
+                description={description} 
+                fileId={fileId}
+                tagArray={tagArray}
+                title={title}
+              />
+            ))}
+          </div>
+          <button className={styles['result--button']}>Ver Mais</button>
         </section>
       </main>
       <Footer />
