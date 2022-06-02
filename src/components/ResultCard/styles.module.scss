@@ -1,0 +1,58 @@
+@import "../../styles/variables.scss";
+
+
+.result-card {
+ transition: box-shadow ease 300ms;
+ border: 1px solid #959da504;
+ box-shadow: 0px 8px 24px 0px #959DA533;
+ margin-bottom: 30px;
+ padding: 12px 24px 20px;
+
+ &:hover {
+   box-shadow: 0px 8px 24px 0px #959da5b8;
+ }
+ 
+ .pdf-container {
+  max-width: 220px;
+  padding-right: 26px;
+ }
+
+ h2 {
+  font-size: 1.25rem;
+  margin: 0;
+  margin-bottom: 12px;
+ }
+
+ label {
+   font-family: $font-titles;
+   font-size: .75rem;
+   font-weight: 600;
+ }
+
+ &--description p {
+  font-size: .688rem;
+ }
+ &--authors, &--tags {
+   p {
+    font-size: .688rem;
+    padding: 2px 16px;
+    border-radius: 2px;
+   }
+ }
+ &--authors p {
+  background: $tertiary;
+ }
+ &--tags p {
+  background: $dark-gray;
+ }
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.tag-wrapper {
+  display: flex;
+  gap: 0 20px;
+}
