@@ -1,4 +1,5 @@
 import Router from 'next/router';
+import Link from 'next/link';
 import React, { useCallback, useEffect, useState } from 'react';
 import { MdSearch } from 'react-icons/md';
 import styles from './styles.module.scss';
@@ -24,7 +25,9 @@ export const Header:React.FC<Props> = ({ query }) => {
     <>
       <header className={styles['header']}>
         <div className={styles['header__container']}>
-          <h1 className={styles['header__container--title']}>Armazenador de TGs</h1>
+          <h1 className={styles['header__container--title']}>
+            <Link href={`/`} aria-label="Home">Armazenador de TGs</Link>
+          </h1>
           <div className={styles['header__container--search']}>
             <form
               className={styles['header__container--search__wrap']}
