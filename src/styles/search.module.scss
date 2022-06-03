@@ -46,7 +46,7 @@
 
     margin: auto;
     display: block;
-    min-width: 250px;
+    max-width: 350px;
     @include buttonPrimary();
   }
 }

@@ -9,116 +9,69 @@ import { SelectInput, TextInput } from '../../components/Inputs'
 import styles from '../../styles/search.module.scss'
 import { Tag } from '../../components/Tags'
 import { ResultCard } from '../../components/ResultCard'
+import { GetStaticPaths, GetStaticProps } from 'next'
 
-const Search = () => {
+interface SearchProps { 
+  subjectList: Subject[]
+  tagList: Tag[]
+  resultList: Work[]
+  yearList: Year[]
+}
+
+const Search = ({ subjectList, tagList, yearList, resultList }: SearchProps) => {
   
-  const { query: routerQuery } = useRouter()
-
-  const query = routerQuery.query as string
+  const router = useRouter()
+  const query = router.query.query as string
 
   const [year, setYear] = useState('')
   const [author, setAuthor] = useState('')
   const [subject, setSubject] = useState('')
   const [tagArray, setTagArray] = useState<string[]>([])
 
-  const getYearList = () => {
-    const currentYear = (new Date()).getFullYear();
-    const LastYear = 2000
-    let yearArray:number[] = []
+  useEffect(() => {
+    const { ano, autor, curso, tags } = router.query as { [key: string]: string }
+    const foundSubject = !!subjectList.find(subject => curso === subject.id)
+    const foundYear = !!yearList.find(year => ano === year.id)
     
-    for(let countYear = LastYear;  countYear <= currentYear; countYear ++) {
-      yearArray.push(countYear)
-    }
-
-    return yearArray.map(year => ({
-      value: year.toString(),
-      id: year.toString()
-    }))
-  }
-
-  const getSubjectList = () => {
-    return [
-      {
-        value: 'Teste',
-        id: 'teste'
-      },
-      {
-        value: 'Teste 2',
-        id: 'teste2'
-      },
-      {
-        value: 'Teste 3',
-        id: 'teste3'
-      }
-    ]
-  }
-
-  const getTagList = () => {
-    return [
-      {
-        id: 'IA',
-        text: 'Inteligência Artificial',
-        total: 15
-      },
-      {
-        id: 'TI',
-        text: 'TI',
-        total: 25
-      },
-      {
-        id: 'C',
-        text: 'Comércio',
-        total: 85
-      }
-    ]
-  }
+    setAuthor(autor || '')
+    setTagArray(tags?.split(',') || [])
+    setYear(foundYear ? ano : '')
+    setSubject(foundSubject ? curso : '')
+  }, [router.query])
 
   const handleTagSelect = (newTag: string) => {
     const tagExists = !!tagArray.find(tag => tag === newTag)
 
     if(tagExists) {
-      setTagArray(old => (
-        old.filter(tag => tag !== newTag)
-      ))
+      setTagArray(old => {
+        const newTagArray = old.filter(tag => tag !== newTag)
+        console.log('join', newTagArray.join(','))
+        changeParams({ 
+          tags: newTagArray.join(',')
+        })
+        return newTagArray
+      })
     }
     else {
-      setTagArray(old => (
-        [...old, newTag]
-      ))
+      setTagArray(old => {
+        const newTagArray = [...old, newTag]
+        changeParams({ 
+          tags: newTagArray.join(',')
+        })
+        return newTagArray
+      })
     }
   }
 
-  const getResultList = () => {
-    return [
-      {
-        title: 'teste',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur nibh eu luctus consequat. Praesent a scelerisque elit. Sed cursus diam ac ligula vehicula, ut tincidunt magna fringilla. Nullam lobortis dui a massa bibendum, vel porta neque sodales. Nam vestibulum justo nec condimentum luctus. Cras eros dui, porta vitae auctor a, cursus nec nisl. Vivamus pretium ex eu felis consequat lobortis. ',
-        fileId: 'teste',
-        authorArray: ['teste', 'teste', 'teste'],
-        tagArray: ['teste', 'teste', 'teste', 'teste']
-      },
-      {
-        title: 'teste',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur nibh eu luctus consequat. Praesent a scelerisque elit. Sed cursus diam ac ligula vehicula, ut tincidunt magna fringilla. Nullam lobortis dui a massa bibendum, vel porta neque sodales. Nam vestibulum justo nec condimentum luctus. Cras eros dui, porta vitae auctor a, cursus nec nisl. Vivamus pretium ex eu felis consequat lobortis. ',
-        fileId: 'teste',
-        authorArray: ['teste', 'teste', 'teste'],
-        tagArray: ['teste', 'teste', 'teste', 'teste']
-      },
-      {
-        title: 'teste',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur nibh eu luctus consequat. Praesent a scelerisque elit. Sed cursus diam ac ligula vehicula, ut tincidunt magna fringilla. Nullam lobortis dui a massa bibendum, vel porta neque sodales. Nam vestibulum justo nec condimentum luctus. Cras eros dui, porta vitae auctor a, cursus nec nisl. Vivamus pretium ex eu felis consequat lobortis. ',
-        fileId: 'teste',
-        authorArray: ['teste', 'teste', 'teste'],
-        tagArray: ['teste', 'teste', 'teste', 'teste']
-      },
-      {
-        title: 'teste',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur nibh eu luctus consequat. Praesent a scelerisque elit. Sed cursus diam ac ligula vehicula, ut tincidunt magna fringilla. Nullam lobortis dui a massa bibendum, vel porta neque sodales. Nam vestibulum justo nec condimentum luctus. Cras eros dui, porta vitae auctor a, cursus nec nisl. Vivamus pretium ex eu felis consequat lobortis. ',
-        fileId: 'teste',
-        authorArray: ['teste', 'teste', 'teste'],
-        tagArray: ['teste', 'teste', 'teste', 'teste']
+  const changeParams = (newParams: { [key: string]: string }) => {
+    const queryParams = router.query
+    delete queryParams.query
+    router.push({
+      query: {
+        ...queryParams,
+        ...newParams
       }
-    ]
+    })
   }
 
   return (
@@ -134,9 +87,12 @@ const Search = () => {
             <SelectInput
               label='Ano'
               selectedId={year}
-              valueList={getYearList()}
+              valueList={yearList}
               onChange={(id) => {
                 setYear(id)
+                changeParams({
+                  ano: id
+                })
               }}
             />
           </div>
@@ -144,9 +100,12 @@ const Search = () => {
             <SelectInput
               label='Curso'
               selectedId={subject}
-              valueList={getSubjectList()}
+              valueList={subjectList}
               onChange={(id) => {
                 setSubject(id)
+                changeParams({
+                  curso: id
+                })
               }}
             />
           </div>
@@ -158,16 +117,25 @@ const Search = () => {
               onChange={(e) => {
                 const value = e.target.value
                 setAuthor(value.replace(/\d/g, ''))
-              }}  
+              }}
+              onKeyDown={(e) => {
+                if(e.key === 'Enter') {
+                  changeParams({
+                      autor: author,
+                  })
+                }
+              }}
+              onBlur={() => changeParams({ autor: author })}
             />
           </div>
           <div className={`${styles['filter--field']} ${styles['filter--field__tags']}`}>
             {
-              getTagList().map(({ text, total, id }) => (
+              tagList.map(({ text, total, id }) => (
                 <Tag 
                   id={id}
                   text={text} 
                   total={total} 
+                  isSelected={!!tagArray.find(tag => tag === id)}
                   handleTagSelect={handleTagSelect}
                 />
               ))
@@ -177,7 +145,7 @@ const Search = () => {
         <section className={styles['result']}>
           <h1 className={styles['result--title']}>{query}</h1>
           <div className={styles['result--list']}>
-            {getResultList().map(({ authorArray, description, fileId, tagArray, title }, index) => (
+            {resultList.map(({ authorArray, description, fileId, tagArray, title }, index) => (
               <ResultCard
                 key={index}
                 authorArray={authorArray} 
@@ -194,6 +162,97 @@ const Search = () => {
       <Footer />
     </>
   )
+}
+
+export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
+  return {
+      paths: [],
+      fallback: 'blocking'
+  }
+}
+
+export const getStaticProps: GetStaticProps<SearchProps> = async () => {
+  const getYearList = () => {
+    const currentYear = (new Date()).getFullYear();
+    const LastYear = 2000
+    let yearArray:number[] = []
+    
+    for(let countYear = LastYear;  countYear <= currentYear; countYear ++) {
+      yearArray.push(countYear)
+    }
+
+    return yearArray.map(year => ({
+      value: year.toString(),
+      id: year.toString()
+    }))
+  }
+
+  return {
+    props: {
+      subjectList: [
+        {
+          value: 'Teste',
+          id: 'teste'
+        },
+        {
+          value: 'Teste 2',
+          id: 'teste2'
+        },
+        {
+          value: 'Teste 3',
+          id: 'teste3'
+        }
+      ],
+      tagList: [
+        {
+          id: 'IA',
+          text: 'Inteligência Artificial',
+          total: 15
+        },
+        {
+          id: 'TI',
+          text: 'TI',
+          total: 25
+        },
+        {
+          id: 'C',
+          text: 'Comércio',
+          total: 85
+        }
+      ],
+      yearList: getYearList(),
+      resultList: [
+        {
+          title: 'teste',
+          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur nibh eu luctus consequat. Praesent a scelerisque elit. Sed cursus diam ac ligula vehicula, ut tincidunt magna fringilla. Nullam lobortis dui a massa bibendum, vel porta neque sodales. Nam vestibulum justo nec condimentum luctus. Cras eros dui, porta vitae auctor a, cursus nec nisl. Vivamus pretium ex eu felis consequat lobortis. ',
+          fileId: 'teste',
+          authorArray: ['teste', 'teste', 'teste'],
+          tagArray: ['teste', 'teste', 'teste', 'teste']
+        },
+        {
+          title: 'teste',
+          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur nibh eu luctus consequat. Praesent a scelerisque elit. Sed cursus diam ac ligula vehicula, ut tincidunt magna fringilla. Nullam lobortis dui a massa bibendum, vel porta neque sodales. Nam vestibulum justo nec condimentum luctus. Cras eros dui, porta vitae auctor a, cursus nec nisl. Vivamus pretium ex eu felis consequat lobortis. ',
+          fileId: 'teste',
+          authorArray: ['teste', 'teste', 'teste'],
+          tagArray: ['teste', 'teste', 'teste', 'teste']
+        },
+        {
+          title: 'teste',
+          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur nibh eu luctus consequat. Praesent a scelerisque elit. Sed cursus diam ac ligula vehicula, ut tincidunt magna fringilla. Nullam lobortis dui a massa bibendum, vel porta neque sodales. Nam vestibulum justo nec condimentum luctus. Cras eros dui, porta vitae auctor a, cursus nec nisl. Vivamus pretium ex eu felis consequat lobortis. ',
+          fileId: 'teste',
+          authorArray: ['teste', 'teste', 'teste'],
+          tagArray: ['teste', 'teste', 'teste', 'teste']
+        },
+        {
+          title: 'teste',
+          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur nibh eu luctus consequat. Praesent a scelerisque elit. Sed cursus diam ac ligula vehicula, ut tincidunt magna fringilla. Nullam lobortis dui a massa bibendum, vel porta neque sodales. Nam vestibulum justo nec condimentum luctus. Cras eros dui, porta vitae auctor a, cursus nec nisl. Vivamus pretium ex eu felis consequat lobortis. ',
+          fileId: 'teste',
+          authorArray: ['teste', 'teste', 'teste'],
+          tagArray: ['teste', 'teste', 'teste', 'teste']
+        }
+      ]
+    }
+  }
 }
 
 export default Search

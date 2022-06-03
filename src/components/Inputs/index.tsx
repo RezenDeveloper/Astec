@@ -3,7 +3,7 @@ import { MdArrowDropDown } from 'react-icons/md'
 import styles from './styles.module.scss';
 
 
-export interface TextInputProps {
+export interface TextInputProps extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>{
   id: string
   label: string
   onChange: React.ChangeEventHandler<HTMLInputElement>
@@ -20,7 +20,7 @@ export interface SelectInputProps {
   onChange: (id: string) => void
 }
 
-export const TextInput = ({ id, label, onChange, value }: TextInputProps) => {
+export const TextInput = ({ id, label, onChange, value, ...rest }: TextInputProps) => {
   return (
     <div className={styles['text-input']}>
       <label htmlFor={id}>{label}</label>
@@ -29,6 +29,7 @@ export const TextInput = ({ id, label, onChange, value }: TextInputProps) => {
         type="text"
         onChange={onChange} 
         value={value}
+        {...rest}
       />
     </div>
   );
