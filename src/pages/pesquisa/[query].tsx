@@ -143,7 +143,9 @@ const Search = ({ subjectList, tagList, yearList, resultList }: SearchProps) => 
           </div>
         </section>
         <section className={styles['result']}>
-          <h1 className={styles['result--title']}>{query}</h1>
+          <h1 className={styles['result--title']}>
+            {query}
+          </h1>
           <div className={styles['result--list']}>
             {resultList.map(({ authorArray, description, fileId, tagArray, title }, index) => (
               <ResultCard

@@ -1,4 +1,5 @@
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import React, { useState } from 'react';
 import styles from './styles.module.scss';
 
@@ -16,7 +17,9 @@ export const ResultCard = ({ title, description, fileId, authorArray, tagArray }
 
   return (
     <div className={styles['result-card']}>
-      <h2 className={styles['result-card--title']}>{title}</h2>
+      <h2 className={styles['result-card--title']}>
+        <Link href={`/trabalho/${fileId}`}>{title}</Link>
+      </h2>
       <div className={styles['wrapper']}>
         <div className={styles['pdf-container']}>
           <PDFViewer />
