@@ -19,5 +19,7 @@ interface Work {
   description: string
   fileId: string,
   authorArray: string[],
-  tagArray: string[]
+  tagArray: string[],
+  subject: string,
+  year: number,
 }

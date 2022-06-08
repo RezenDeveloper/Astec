@@ -13,5 +13,7 @@ $complementary: #116565;
 $tertiary: #7EDFDF;
 
 $header-height: 70px;
+$footer-height: 250px;
+$full-height: calc(100% - #{$footer-height});
 
 $font-titles: 'Nunito';

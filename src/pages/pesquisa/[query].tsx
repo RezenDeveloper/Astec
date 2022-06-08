@@ -10,16 +10,21 @@ import styles from '../../styles/search.module.scss'
 import { Tag } from '../../components/Tags'
 import { ResultCard } from '../../components/ResultCard'
 import { GetStaticPaths, GetStaticProps } from 'next'
+import { getAllWorks } from '../../database/work'
+import NotFound from '../404'
 
 interface SearchProps { 
-  subjectList: Subject[]
-  tagList: Tag[]
-  resultList: Work[]
-  yearList: Year[]
+  subjectList: Subject[] | null
+  tagList: Tag[] | null
+  resultList: Work[] | null
+  yearList: Year[] | null
 }
 
 const Search = ({ subjectList, tagList, yearList, resultList }: SearchProps) => {
   
+  if(!subjectList || !tagList || !yearList || !resultList) return (
+    <NotFound />
+  )
   const router = useRouter()
   const query = router.query.query as string
 
@@ -223,36 +228,7 @@ export const getStaticProps: GetStaticProps<SearchProps> = async () => {
         }
       ],
       yearList: getYearList(),
-      resultList: [
-        {
-          title: 'teste',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur nibh eu luctus consequat. Praesent a scelerisque elit. Sed cursus diam ac ligula vehicula, ut tincidunt magna fringilla. Nullam lobortis dui a massa bibendum, vel porta neque sodales. Nam vestibulum justo nec condimentum luctus. Cras eros dui, porta vitae auctor a, cursus nec nisl. Vivamus pretium ex eu felis consequat lobortis. ',
-          fileId: 'teste',
-          authorArray: ['teste', 'teste', 'teste'],
-          tagArray: ['teste', 'teste', 'teste', 'teste']
-        },
-        {
-          title: 'teste',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur nibh eu luctus consequat. Praesent a scelerisque elit. Sed cursus diam ac ligula vehicula, ut tincidunt magna fringilla. Nullam lobortis dui a massa bibendum, vel porta neque sodales. Nam vestibulum justo nec condimentum luctus. Cras eros dui, porta vitae auctor a, cursus nec nisl. Vivamus pretium ex eu felis consequat lobortis. ',
-          fileId: 'teste',
-          authorArray: ['teste', 'teste', 'teste'],
-          tagArray: ['teste', 'teste', 'teste', 'teste']
-        },
-        {
-          title: 'teste',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur nibh eu luctus consequat. Praesent a scelerisque elit. Sed cursus diam ac ligula vehicula, ut tincidunt magna fringilla. Nullam lobortis dui a massa bibendum, vel porta neque sodales. Nam vestibulum justo nec condimentum luctus. Cras eros dui, porta vitae auctor a, cursus nec nisl. Vivamus pretium ex eu felis consequat lobortis. ',
-          fileId: 'teste',
-          authorArray: ['teste', 'teste', 'teste'],
-          tagArray: ['teste', 'teste', 'teste', 'teste']
-        },
-        {
-          title: 'teste',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur nibh eu luctus consequat. Praesent a scelerisque elit. Sed cursus diam ac ligula vehicula, ut tincidunt magna fringilla. Nullam lobortis dui a massa bibendum, vel porta neque sodales. Nam vestibulum justo nec condimentum luctus. Cras eros dui, porta vitae auctor a, cursus nec nisl. Vivamus pretium ex eu felis consequat lobortis. ',
-          fileId: 'teste',
-          authorArray: ['teste', 'teste', 'teste'],
-          tagArray: ['teste', 'teste', 'teste', 'teste']
-        }
-      ]
+      resultList: getAllWorks()
     }
   }
 }

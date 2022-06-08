@@ -1,0 +1,60 @@
+@import './variables';
+
+.container {
+  min-height: $full-height;
+  margin: $header-height auto 0;
+  width: 60%;
+  max-width: 1100px;
+}
+
+.title {
+  text-align: center;
+  margin: 0;
+  padding: 20px 0;
+}
+
+.pdf-container {
+  max-width: 700px;
+  margin: auto;
+}
+
+.information-container {
+  margin-bottom: 10px;
+
+  &--description p {
+    margin: 0;
+    font-size: 0.875rem;
+    text-align: justify;
+  }
+  
+  b {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  &--list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+
+    span {
+      border-radius: 2px;
+      padding: 2px 16px;
+      line-height: 14px;
+      font-size: 0.875rem;
+    }
+  }
+
+  &--authors span {
+    background: $tertiary;
+  }
+
+  &--tags span {
+    background: $dark-gray;
+  }
+  
+  &--subject p {
+    font-size: 0.875rem;
+  }
+}

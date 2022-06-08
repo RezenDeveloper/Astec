@@ -18,7 +18,7 @@ export const Header:React.FC<Props> = ({ query }) => {
 
   const handleSearch = useCallback((value: string) => {
     if(typeof window === 'undefined') return
-    Router.push(`/search/${value}`)
+    Router.push(`/pesquisa/${value}`)
   }, [])
 
   return (
