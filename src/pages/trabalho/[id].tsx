@@ -11,7 +11,13 @@ import { getWork } from '../../database/work'
 
 import styles from '../../styles/work.module.scss'
 
-const PDFViewer = dynamic(() => import('../../components/PDFViewer'), { ssr: false });
+const PDFViewer = dynamic(() => 
+  import('../../components/PDFViewer'), 
+  { 
+    ssr: false, 
+    loading: () => <div className={styles['loading']}></div> 
+  }
+);
 
 interface WorkProps {
   work: Work | null
@@ -48,7 +54,12 @@ const Work = ({ work }: WorkProps) => {
       <main className={styles['container']}>
         <h1 className={styles['title']}>{title}</h1>
         <div className={styles['pdf-container']}>
-          <PDFViewer />
+          {(!PDFViewer && <p>Loading</p>)}
+          <PDFViewer
+            Loading={() => (<div className={styles['loading']}></div>)}
+            pageIndex={0}
+            showDetails={true}
+          />
         </div>
         <div className={`${styles['information-container']} ${styles['information-container--description']}`}>
           <b>Descrição</b>

@@ -3,7 +3,13 @@ import dynamic from 'next/dynamic'
 
 import styles from './styles.module.scss';
 
-const PDFViewer = dynamic(() => import('../PDFViewer'), { ssr: false });
+const PDFViewer = dynamic(() => 
+  import('../../components/PDFViewer'), 
+  { 
+    ssr: false, 
+    loading: () => <div className={styles['loading']}></div> 
+  }
+);
 
 export interface IWorkCardProps {
 }
@@ -13,7 +19,10 @@ export const WorkCard = (props: IWorkCardProps) => {
     <div className={styles['work-card']}>
       <h2 className={styles['title']}>Lorem ipsum dolor sit amet</h2>
       <div className={styles['pdf-container']}>
-        <PDFViewer />
+        <PDFViewer 
+          Loading={() => (<div className={styles['loading']}></div>)}
+          pageIndex={0} 
+        />
       </div>
       <strong className={styles['class']}>Análise e Desenvolvimento de Sistemas</strong>
       <div className={styles['description']}>

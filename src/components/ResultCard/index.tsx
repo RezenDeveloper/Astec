@@ -3,7 +3,13 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import styles from './styles.module.scss';
 
-const PDFViewer = dynamic(() => import('../PDFViewer'), { ssr: false });
+const PDFViewer = dynamic(() => 
+  import('../../components/PDFViewer'), 
+  { 
+    ssr: false, 
+    loading: () => <div className={styles['loading']}></div> 
+  }
+);
 
 export interface ResultCardProps {
   title: string
@@ -22,7 +28,10 @@ export const ResultCard = ({ title, description, fileId, authorArray, tagArray }
       </h2>
       <div className={styles['wrapper']}>
         <div className={styles['pdf-container']}>
-          <PDFViewer />
+          <PDFViewer 
+            Loading={() => (<div className={styles['loading']}></div>)}
+            pageIndex={0} 
+          />
         </div>
         <div>
           <div className={styles['result-card--description']}>
