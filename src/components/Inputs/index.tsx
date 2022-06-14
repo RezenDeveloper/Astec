@@ -10,6 +10,13 @@ export interface TextInputProps extends React.DetailedHTMLProps<React.InputHTMLA
   value: string | undefined
 }
 
+export interface TextBoxInputProps extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>{
+  id: string
+  label: string
+  onChange: React.ChangeEventHandler<HTMLTextAreaElement>
+  value: string | undefined
+}
+
 export interface SelectInputProps {
   label: string
   selectedId: string | undefined
@@ -25,6 +32,21 @@ export const TextInput = ({ id, label, onChange, value, ...rest }: TextInputProp
     <div className={styles['text-input']}>
       <label htmlFor={id}>{label}</label>
       <input 
+        id={id} 
+        type="text"
+        onChange={onChange} 
+        value={value}
+        {...rest}
+      />
+    </div>
+  );
+}
+
+export const TextBox = ({ id, label, onChange, value, ...rest }: TextBoxInputProps) => {
+  return (
+    <div className={styles['text-box']}>
+      <label htmlFor={id}>{label}</label>
+      <textarea 
         id={id} 
         type="text"
         onChange={onChange} 

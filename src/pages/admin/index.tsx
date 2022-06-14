@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { FormEvent, ChangeEvent, useState, SetStateAction, Dispatch } from 'react'
 
-import styles from '../styles/admin.module.scss'
+import styles from '../../styles/admin.module.scss'
 
 const Admin = () => {
 

@@ -41,7 +41,7 @@ const PDFViewer:React.FC<PDFViewerProps> = ({ pageIndex:propPageIndex, Loading, 
         </div>
       }
       <Document
-        file={`//${window.location.host}/sample.pdf`}
+        file={`//${window.location.host}/test.pdf`}
         onLoadError={(err) => console.log(err)}
         loading={<Loading />}
         error={<Loading />}
@@ -52,6 +52,7 @@ const PDFViewer:React.FC<PDFViewerProps> = ({ pageIndex:propPageIndex, Loading, 
           pageIndex={pageIndex}
           className={styles['page']}
           renderTextLayer={false}
+          loading={<Loading />}
         />
       </Document>
       {showDetails && numPages &&
