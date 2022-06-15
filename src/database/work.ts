@@ -52,3 +52,18 @@ export const getAllWorks = (): Work[] | null => {
     }
   ]
 }
+
+export const getYearList = () => {
+  const currentYear = (new Date()).getFullYear();
+  const LastYear = 2000
+  let yearArray:number[] = []
+  
+  for(let countYear = LastYear;  countYear <= currentYear; countYear ++) {
+    yearArray.push(countYear)
+  }
+
+  return yearArray.map(year => ({
+    value: year.toString(),
+    id: year.toString()
+  }))
+}

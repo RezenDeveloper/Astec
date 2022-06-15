@@ -8,6 +8,7 @@ export interface TextInputProps extends React.DetailedHTMLProps<React.InputHTMLA
   label: string
   onChange: React.ChangeEventHandler<HTMLInputElement>
   value: string | undefined
+  className?: string
 }
 
 export interface TextBoxInputProps extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>{
@@ -15,6 +16,7 @@ export interface TextBoxInputProps extends React.DetailedHTMLProps<React.InputHT
   label: string
   onChange: React.ChangeEventHandler<HTMLTextAreaElement>
   value: string | undefined
+  className?: string
 }
 
 export interface SelectInputProps {
@@ -25,6 +27,7 @@ export interface SelectInputProps {
     id: string
   }[]
   onChange: (id: string) => void
+  className?: string
 }
 
 export const TextInput = ({ id, label, onChange, value, ...rest }: TextInputProps) => {
@@ -57,7 +60,7 @@ export const TextBox = ({ id, label, onChange, value, ...rest }: TextBoxInputPro
   );
 }
 
-export const SelectInput = ({ selectedId, label, onChange, valueList }: SelectInputProps) => {
+export const SelectInput = ({ selectedId, label, onChange, valueList, className }: SelectInputProps) => {
   
   const selected = valueList.find((value) => selectedId === value.id)
   const [open, setOpen] = useState(false)
@@ -77,7 +80,7 @@ export const SelectInput = ({ selectedId, label, onChange, valueList }: SelectIn
   }
 
   return (
-    <div className={`${styles['select-input']} ${open ? styles['open'] : ''}`}>
+    <div className={`${styles['select-input']} ${className ? className : ''} ${open ? styles['open'] : ''}`}>
       <label>{label}</label>
       <div className={styles['select-input--field']}>
         <button

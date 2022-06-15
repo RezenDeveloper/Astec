@@ -10,7 +10,7 @@ import styles from '../../styles/search.module.scss'
 import { Tag } from '../../components/Tags'
 import { ResultCard } from '../../components/ResultCard'
 import { GetStaticPaths, GetStaticProps } from 'next'
-import { getAllWorks } from '../../database/work'
+import { getAllWorks, getYearList } from '../../database/work'
 import NotFound from '../404'
 
 interface SearchProps { 
@@ -179,21 +179,6 @@ export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
 }
 
 export const getStaticProps: GetStaticProps<SearchProps> = async () => {
-  const getYearList = () => {
-    const currentYear = (new Date()).getFullYear();
-    const LastYear = 2000
-    let yearArray:number[] = []
-    
-    for(let countYear = LastYear;  countYear <= currentYear; countYear ++) {
-      yearArray.push(countYear)
-    }
-
-    return yearArray.map(year => ({
-      value: year.toString(),
-      id: year.toString()
-    }))
-  }
-
   return {
     props: {
       subjectList: [

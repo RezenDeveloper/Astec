@@ -34,6 +34,7 @@
   }
   &--container {
     display: flex;
+    min-height: 43px;
     flex-wrap: wrap;
     gap: 5px;
     border: 1px solid #000;
@@ -46,6 +47,7 @@
 
       &--icon {
         opacity: 0;
+        cursor: pointer;
         
         display: flex;
         border: none;

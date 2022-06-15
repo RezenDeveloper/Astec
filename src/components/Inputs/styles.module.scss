@@ -47,7 +47,6 @@
 }
 
 .select-input {
-  
   label {
     font-family: $font-titles;
     font-size: .875rem;
@@ -65,6 +64,7 @@
 
   &--field {
     position: relative;
+    min-height: 32px;
     > button {
       display: flex;
       align-items: center;
