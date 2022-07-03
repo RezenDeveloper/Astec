@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { ChangeEventHandler, FormEventHandler, useState } from 'react'
+import { ChangeEventHandler, FormEventHandler, MouseEventHandler, useState } from 'react'
 
 import { Header } from '../../../components/Header'
 
@@ -44,6 +44,10 @@ const New = ({ yearList, subjectList }: NewProps) => {
     if(eventFile) setFile(eventFile)
   }
 
+  const handlePublish: MouseEventHandler<HTMLButtonElement> | undefined = (e) => {
+    e.preventDefault()
+  }
+
   if (!subjectList) return <AdminError />
 
   return (
@@ -55,7 +59,13 @@ const New = ({ yearList, subjectList }: NewProps) => {
       <main className={styles['container']}>
         <h1 className={styles['title']}>Adicionar TG</h1>
         <form className={styles['form']} onSubmit={handleSubmit}>
-          <TextInput id="title" label="Titulo" onChange={handleTitleChange} value={title} />
+          <TextInput 
+            className={styles['title-input']} 
+            id="title" 
+            label="Titulo" 
+            onChange={handleTitleChange} 
+            value={title} 
+          />
           <TextBox id="description" label="Descrição" onChange={handleDescriptionChange} value={description} />
           <div className={styles['form-grid']}>
             <TagInput
@@ -73,6 +83,7 @@ const New = ({ yearList, subjectList }: NewProps) => {
             <SelectInput
               label="Ano"
               className={styles['year-input']}
+              placeholder={new Date().getFullYear().toString()}
               selectedId={year}
               valueList={yearList}
               onChange={(id) => setYear(id)}
@@ -80,6 +91,7 @@ const New = ({ yearList, subjectList }: NewProps) => {
             <SelectInput
               label="Curso"
               className={styles['subject-input']}
+              placeholder={'Analise e desenvolvimento de sistemas'}
               selectedId={subject}
               valueList={subjectList}
               onChange={(id) => setSubject(id)}
@@ -105,6 +117,12 @@ const New = ({ yearList, subjectList }: NewProps) => {
               />
             </div>
           </div>
+          <button 
+            className={styles['publish-button']}
+            onClick={handlePublish}
+          >
+            Publicar
+          </button>
         </form>
       </main>
       <Footer />

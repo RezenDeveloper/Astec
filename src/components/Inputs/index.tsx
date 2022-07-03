@@ -11,28 +11,9 @@ export interface TextInputProps extends React.DetailedHTMLProps<React.InputHTMLA
   className?: string
 }
 
-export interface TextBoxInputProps extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>{
-  id: string
-  label: string
-  onChange: React.ChangeEventHandler<HTMLTextAreaElement>
-  value: string | undefined
-  className?: string
-}
-
-export interface SelectInputProps {
-  label: string
-  selectedId: string | undefined
-  valueList: {
-    value: string
-    id: string
-  }[]
-  onChange: (id: string) => void
-  className?: string
-}
-
-export const TextInput = ({ id, label, onChange, value, ...rest }: TextInputProps) => {
+export const TextInput = ({ id, label, onChange, value, className, ...rest }: TextInputProps) => {
   return (
-    <div className={styles['text-input']}>
+    <div className={`${styles['text-input']} ${className ? className : ''}`}>
       <label htmlFor={id}>{label}</label>
       <input 
         id={id} 
@@ -43,6 +24,14 @@ export const TextInput = ({ id, label, onChange, value, ...rest }: TextInputProp
       />
     </div>
   );
+}
+
+export interface TextBoxInputProps extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>{
+  id: string
+  label: string
+  onChange: React.ChangeEventHandler<HTMLTextAreaElement>
+  value: string | undefined
+  className?: string
 }
 
 export const TextBox = ({ id, label, onChange, value, ...rest }: TextBoxInputProps) => {
@@ -60,7 +49,19 @@ export const TextBox = ({ id, label, onChange, value, ...rest }: TextBoxInputPro
   );
 }
 
-export const SelectInput = ({ selectedId, label, onChange, valueList, className }: SelectInputProps) => {
+export interface SelectInputProps {
+  label: string
+  placeholder?: string
+  selectedId: string | undefined
+  valueList: {
+    value: string
+    id: string
+  }[]
+  onChange: (id: string) => void
+  className?: string
+}
+
+export const SelectInput = ({ selectedId, label, onChange, valueList, className, placeholder }: SelectInputProps) => {
   
   const selected = valueList.find((value) => selectedId === value.id)
   const [open, setOpen] = useState(false)
@@ -82,15 +83,16 @@ export const SelectInput = ({ selectedId, label, onChange, valueList, className 
   return (
     <div className={`${styles['select-input']} ${className ? className : ''} ${open ? styles['open'] : ''}`}>
       <label>{label}</label>
-      <div className={styles['select-input--field']}>
+      <div className={`${styles['select-input--field']}`}>
         <button
           onClick={() => setOpen(!open)}
           aria-haspopup="listbox"
           role='button'
+          className={`${!selected?.value && placeholder ? styles['placeholder'] : ''}`}
           aria-expanded={open}
           tabIndex={0}
         >
-          {selected?.value || ''}
+          {selected?.value || placeholder || ''}
           <MdArrowDropDown size={20} />
         </button>
         <ul 
