@@ -85,13 +85,14 @@ const New = ({ yearList, subjectList }: NewProps) => {
               onChange={(id) => setSubject(id)}
             />
             <div className={styles['pdf-file']}>
-              <Image
-                src={'/images/pdf.svg'}
-                width={'auto'}
-                height={'250'}
-                aria-label={'PDF'}
-                className={styles['image']}
-              />
+              <div className={styles['image-container']}>
+                <Image
+                  src={'/images/pdf.svg'}
+                  aria-label={'PDF'}
+                  layout={'fill'}
+                  objectFit={'contain'}
+                />
+              </div>
               <p className={styles['name']}>{file?.name || ''}</p>
               <label className={styles['send-button']} role={'button'} htmlFor={'pdf'} aria-label={'Enviar PDF'}>
                 Enviar PDF
