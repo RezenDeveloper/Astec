@@ -41,28 +41,31 @@ export const TagInput = ({ tags, id, label, className = '' }: TagInputProps) => 
   const [input, setInput] = useState('')
 
   const handleKeyDown:React.KeyboardEventHandler<HTMLInputElement> | undefined = (e) => {
-    const { key } = e;
-    const trimmedInput = input.trim();
+    const { key } = e
+    const trimmedInput = input.trim()
 
-    if (key === 'Enter' && trimmedInput.length && !tags.value.includes(trimmedInput)) {
-      e.preventDefault();
-      tags.setValue(prevState => [...prevState, trimmedInput]);
-      setInput('');
+    if (key === 'Enter') {
+      e.preventDefault()
+      setInput('')
+      if(trimmedInput.length) {
+        if(tags.value.includes(trimmedInput)) return
+        else tags.setValue(prevState => [...prevState, trimmedInput])
+      }
     }
 
     if (key === "Backspace" && !input.length && tags.value.length) {
-      e.preventDefault();
-      const tagsCopy = [...tags.value];
-      const poppedTag = tagsCopy.pop();
+      e.preventDefault()
+      const tagsCopy = [...tags.value]
+      const poppedTag = tagsCopy.pop()
   
-      tags.setValue(tagsCopy);
-      if(poppedTag) setInput(poppedTag);
+      tags.setValue(tagsCopy)
+      if(poppedTag) setInput(poppedTag)
     }
   }
 
   const handleRemove = (deleteTag: string) => {
     const newValue = tags.value.filter(tag => tag !== deleteTag)
-    tags.setValue(newValue);
+    tags.setValue(newValue)
   }
 
   return (
