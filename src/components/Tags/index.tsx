@@ -36,7 +36,7 @@ export interface TagInputProps {
   className?: string
 }
 
-export const TagInput = ({ tags, id, label, className = '' }: TagInputProps) => {
+export const TagInput = ({ tags, id, label, className = ''}: TagInputProps) => {
 
   const [input, setInput] = useState('')
 
@@ -46,11 +46,7 @@ export const TagInput = ({ tags, id, label, className = '' }: TagInputProps) => 
 
     if (key === 'Enter') {
       e.preventDefault()
-      setInput('')
-      if(trimmedInput.length) {
-        if(tags.value.includes(trimmedInput)) return
-        else tags.setValue(prevState => [...prevState, trimmedInput])
-      }
+      addNewTag(trimmedInput)
     }
 
     if (key === "Backspace" && !input.length && tags.value.length) {
@@ -60,6 +56,14 @@ export const TagInput = ({ tags, id, label, className = '' }: TagInputProps) => 
   
       tags.setValue(tagsCopy)
       if(poppedTag) setInput(poppedTag)
+    }
+  }
+
+  const addNewTag = (input: string) => {
+    setInput('')
+    if(input.length) {
+      if(tags.value.includes(input)) return
+      else tags.setValue(prevState => [...prevState, input])
     }
   }
 
@@ -88,6 +92,7 @@ export const TagInput = ({ tags, id, label, className = '' }: TagInputProps) => 
           id={id}
           value={input}
           onKeyDown={handleKeyDown}
+          onBlur={() => addNewTag(input)}
           onChange={(e) => {
             setInput(e.target.value)
           }}

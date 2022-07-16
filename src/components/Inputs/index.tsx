@@ -34,9 +34,9 @@ export interface TextBoxInputProps extends React.DetailedHTMLProps<React.InputHT
   className?: string
 }
 
-export const TextBox = ({ id, label, onChange, value, ...rest }: TextBoxInputProps) => {
+export const TextBox = ({ id, label, onChange, value, className, ...rest }: TextBoxInputProps) => {
   return (
-    <div className={styles['text-box']}>
+    <div className={`${className} ${styles['text-box']}`}>
       <label htmlFor={id}>{label}</label>
       <textarea 
         id={id} 

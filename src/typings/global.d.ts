@@ -23,3 +23,13 @@ interface Work {
   subject: string,
   year: number,
 }
+
+interface ErrorObj {
+  title: boolean
+  description: boolean
+  tag: boolean
+  author: boolean
+  year: boolean
+  subject: boolean
+  file: boolean
+}

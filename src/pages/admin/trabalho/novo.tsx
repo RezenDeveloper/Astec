@@ -12,6 +12,7 @@ import { getYearList } from '../../../database/work'
 import { GetStaticProps } from 'next'
 import { getAllSubjects } from '../../../database/subject'
 import AdminError from './erro'
+import { checkInputs } from '../../../utils/checkInputs'
 
 interface NewProps {
   subjectList: Subject[] | null
@@ -26,6 +27,15 @@ const New = ({ yearList, subjectList }: NewProps) => {
   const [year, setYear] = useState('')
   const [subject, setSubject] = useState('')
   const [file, setFile] = useState<File>()
+  const [errorList, setErrorList] = useState<ErrorObj>({
+    title: false,
+    description: false,
+    tag: false,
+    author: false,
+    year: false,
+    subject: false,
+    file: false
+  })
 
   const handleTitleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setTitle(e.target.value)
@@ -35,20 +45,38 @@ const New = ({ yearList, subjectList }: NewProps) => {
     setDescription(e.target.value)
   }
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> | undefined = (e) => {
-    e.preventDefault()
-  }
-
   const handleSendPDF: ChangeEventHandler<HTMLInputElement> | undefined = (e) => {
     const eventFile = e.target.files?.item(0)
     if(eventFile) setFile(eventFile)
   }
-
-  const handlePublish: MouseEventHandler<HTMLButtonElement> | undefined = (e) => {
+  
+  const handleSubmit: FormEventHandler<HTMLFormElement> | undefined = (e) => {
     e.preventDefault()
+    console.log('submit')
+    const { errorList: newErrorList, hasErrors } = checkInputs({
+      authorList,
+      description,
+      file,
+      subject,
+      tagList,
+      title,
+      year
+    })
+    console.log(newErrorList)
+    setErrorList(newErrorList)
+
+    if(hasErrors) return
   }
 
   if (!subjectList) return <AdminError />
+
+  const titleError = errorList.title ? styles['title-input--error'] : ''
+  const descError = errorList.description ? styles['description-input--error'] : ''
+  const tagError = errorList.tag ? styles['tag-input--error'] : ''
+  const authorError = errorList.author ? styles['author-input--error'] : ''
+  const yearError = errorList.year ? styles['year-input--error'] : ''
+  const subjectError = errorList.subject ? styles['subject-input--error'] : ''
+  const pdfError = errorList.file ? styles['pdf-file--error'] : ''
 
   return (
     <>
@@ -60,29 +88,35 @@ const New = ({ yearList, subjectList }: NewProps) => {
         <h1 className={styles['title']}>Adicionar TG</h1>
         <form className={styles['form']} onSubmit={handleSubmit}>
           <TextInput 
-            className={styles['title-input']} 
+            className={`${styles['title-input']} ${titleError}`} 
             id="title" 
             label="Titulo" 
             onChange={handleTitleChange} 
-            value={title} 
+            value={title}
           />
-          <TextBox id="description" label="Descrição" onChange={handleDescriptionChange} value={description} />
+          <TextBox 
+            id="description" 
+            label="Descrição" 
+            className={`${styles['description-input']} ${descError}`}
+            onChange={handleDescriptionChange} 
+            value={description}
+          />
           <div className={styles['form-grid']}>
             <TagInput
-              className={styles['tag-input']}
+              className={`${styles['tag-input']} ${tagError}`}
               id={'tagInput'}
               label={'Tags'}
               tags={{ value: tagList, setValue: setTagList }}
             />
             <TagInput
-              className={styles['author-input']}
+              className={`${styles['author-input']} ${authorError}`}
               id={'authorInput'}
               label={'Autores'}
               tags={{ value: authorList, setValue: setAuthorList }}
             />
             <SelectInput
               label="Ano"
-              className={styles['year-input']}
+              className={`${styles['year-input']} ${yearError}`}
               placeholder={new Date().getFullYear().toString()}
               selectedId={year}
               valueList={yearList}
@@ -90,13 +124,13 @@ const New = ({ yearList, subjectList }: NewProps) => {
             />
             <SelectInput
               label="Curso"
-              className={styles['subject-input']}
+              className={`${styles['subject-input']} ${subjectError}`}
               placeholder={'Analise e desenvolvimento de sistemas'}
               selectedId={subject}
               valueList={subjectList}
               onChange={(id) => setSubject(id)}
             />
-            <div className={styles['pdf-file']}>
+            <div className={`${styles['pdf-file']} ${pdfError}`}>
               <div className={styles['image-container']}>
                 <Image
                   src={'/images/pdf.svg'}
@@ -109,8 +143,8 @@ const New = ({ yearList, subjectList }: NewProps) => {
               <label className={styles['send-button']} role={'button'} htmlFor={'pdf'} aria-label={'Enviar PDF'}>
                 Enviar PDF
               </label>
-              <input 
-                type={'file'} 
+              <input
+                type={'file'}
                 id={'pdf'} 
                 accept={'application/pdf'} 
                 onChange={handleSendPDF}
@@ -119,7 +153,7 @@ const New = ({ yearList, subjectList }: NewProps) => {
           </div>
           <button 
             className={styles['publish-button']}
-            onClick={handlePublish}
+            type="submit"
           >
             Publicar
           </button>
