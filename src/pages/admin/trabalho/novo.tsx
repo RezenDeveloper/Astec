@@ -13,6 +13,7 @@ import { GetStaticProps } from 'next'
 import { getAllSubjects } from '../../../database/subject'
 import AdminError from './erro'
 import { checkInputs } from '../../../utils/checkInputs'
+import Link from 'next/link'
 
 interface NewProps {
   subjectList: Subject[] | null
@@ -151,7 +152,9 @@ const New = ({ yearList, subjectList }: NewProps) => {
               selectedId={subject}
               valueList={subjectList}
               onChange={(id) => setSubject(id)}
-            />
+            >
+              <Link href={'/admin/cursos'}>Adicionar mais cursos</Link>
+            </SelectInput>
             <div className={`${styles['pdf-file']} ${pdfError}`}>
               <div className={styles['image-container']}>
                 <Image

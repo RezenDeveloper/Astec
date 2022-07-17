@@ -60,6 +60,7 @@
   &-grid {
     display: grid;
     grid-template: 1fr 1fr 1fr 1fr / 1fr 1fr 1fr 1fr ;
+    grid-template-rows: auto;
 
     .tag-input {
       grid-area: 1 / 1 / 2 / 4;
@@ -126,6 +127,11 @@
     }
     .subject-input {
       grid-area: 4 / 1 / 5 / 4;
+      a {
+        font-size: 0.75rem;
+        position: absolute;
+        right: 0;
+      }
       div, button {
         min-height: 40px;
       }

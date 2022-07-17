@@ -61,7 +61,7 @@ export interface SelectInputProps {
   className?: string
 }
 
-export const SelectInput = ({ selectedId, label, onChange, valueList, className, placeholder }: SelectInputProps) => {
+export const SelectInput:React.FC<SelectInputProps> = ({ selectedId, label, onChange, valueList, className, placeholder, children } ) => {
   
   const selected = valueList.find((value) => selectedId === value.id)
   const [open, setOpen] = useState(false)
@@ -87,7 +87,12 @@ export const SelectInput = ({ selectedId, label, onChange, valueList, className,
         <button
           onClick={() => setOpen(!open)}
           aria-haspopup="listbox"
-          role='button'
+          type={'button'}
+          onBlur={(e) => {
+            const target = e.relatedTarget as HTMLLIElement | undefined;
+            const isOption = target?.classList.contains(styles['select-option'])
+            if(open && !isOption) setOpen(false)
+          }}
           className={`${!selected?.value && placeholder ? styles['placeholder'] : ''}`}
           aria-expanded={open}
           tabIndex={0}
@@ -95,6 +100,7 @@ export const SelectInput = ({ selectedId, label, onChange, valueList, className,
           {selected?.value || placeholder || ''}
           <MdArrowDropDown size={20} />
         </button>
+        {children}
         <ul 
           className={`${styles['select-input--dropdown'] }`}
           role='listbox'
