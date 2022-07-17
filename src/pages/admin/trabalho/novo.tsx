@@ -150,7 +150,7 @@ const New = ({ yearList, subjectList }: NewProps) => {
               className={`${styles['subject-input']} ${subjectError}`}
               placeholder={'Analise e desenvolvimento de sistemas'}
               selectedId={subject}
-              valueList={subjectList}
+              valueList={subjectList.map(subject => ({ id: subject.id, value: subject.title }))}
               onChange={(id) => setSubject(id)}
             >
               <Link href={'/admin/cursos'}>Adicionar mais cursos</Link>

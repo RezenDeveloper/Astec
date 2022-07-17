@@ -51,7 +51,14 @@
   padding: 8px 16px;
   cursor: pointer;
 
-  &:hover {
+  &.disabled {
+    background-color: $disabled;
+    border-color: $disabled;
+    color: black;
+    cursor: not-allowed;
+  }
+
+  &:hover:not(.disabled) {
     filter: brightness(125%);
   }
   &:focus, &:active {

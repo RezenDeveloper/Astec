@@ -1,0 +1,60 @@
+@import './variables';
+@import './mixins';
+
+.container {
+  margin: $header-height 20% 0;
+  height: $full-height;
+  .title {
+    margin: 0;
+    font-size: 2.19rem;
+    padding-top: 50px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  
+  button {
+    @include buttonPrimary();
+    min-width: 200px;
+  }
+
+  .subject-list {
+    margin: 32px 0;
+    padding: 0;
+    list-style: none;
+    border: 1px solid $placeholder;
+    li {
+      cursor: pointer;
+      padding: 4px 8px;
+      &.active {
+        background-color: $secundary;
+        color: #fff;
+      }
+      &:hover:not(.active) {
+        background-color: $dark-gray;
+        color: #000;
+      }
+      &:not(:first-child) {
+        border-top: 1px solid $placeholder;
+      }
+    }
+  }
+
+  .buttons-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .add-container {
+    margin-top: 32px;
+    h2 {
+      text-align: center;
+      text-transform: uppercase;
+    }
+    .desc-input {
+      margin-top: 16px;
+    }
+    .save-button {
+      margin: 16px auto;
+    }
+  }
+}

@@ -1,16 +1,19 @@
 export const getAllSubjects = () => {
   return [
     {
-      value: 'Teste',
-      id: 'teste'
+      title: 'Análise e Desenvolvimento de Sistemas',
+      description: '',
+      id: 'ads'
     },
     {
-      value: 'Teste 2',
-      id: 'teste2'
+      title: 'Gestão de Projetos',
+      description: '',
+      id: 'gp'
     },
     {
-      value: 'Teste 3',
-      id: 'teste3'
+      title: 'Logística',
+      description: '',
+      id: 'l'
     }
   ]
 }

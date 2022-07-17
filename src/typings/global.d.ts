@@ -1,6 +1,7 @@
 interface Subject {
   id: string
-  value: string
+  title: string
+  description: string
 }
 
 interface Year {
