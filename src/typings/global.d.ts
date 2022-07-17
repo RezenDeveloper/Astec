@@ -24,12 +24,13 @@ interface Work {
   year: number,
 }
 
+type ErrorTypes = 'error' | 'error__min' | 'error__max' | undefined
 interface ErrorObj {
-  title: boolean
-  description: boolean
-  tag: boolean
-  author: boolean
-  year: boolean
-  subject: boolean
-  file: boolean
+  title: ErrorTypes
+  description: ErrorTypes
+  tag: ErrorTypes
+  author: ErrorTypes
+  year: ErrorTypes
+  subject: ErrorTypes
+  file: ErrorTypes
 }

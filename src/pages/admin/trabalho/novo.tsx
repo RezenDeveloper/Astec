@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { ChangeEventHandler, FormEventHandler, MouseEventHandler, useState } from 'react'
+import { ChangeEventHandler, FormEventHandler, MouseEventHandler, useEffect, useState } from 'react'
 
 import { Header } from '../../../components/Header'
 
@@ -27,14 +27,15 @@ const New = ({ yearList, subjectList }: NewProps) => {
   const [year, setYear] = useState('')
   const [subject, setSubject] = useState('')
   const [file, setFile] = useState<File>()
+  const [submitError, setSubmitError] = useState<boolean>(false)
   const [errorList, setErrorList] = useState<ErrorObj>({
-    title: false,
-    description: false,
-    tag: false,
-    author: false,
-    year: false,
-    subject: false,
-    file: false
+    title: undefined,
+    description: undefined,
+    tag: undefined,
+    author: undefined,
+    year: undefined,
+    subject: undefined,
+    file: undefined
   })
 
   const handleTitleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -62,21 +63,42 @@ const New = ({ yearList, subjectList }: NewProps) => {
       title,
       year
     })
-    console.log(newErrorList)
+    
     setErrorList(newErrorList)
 
-    if(hasErrors) return
+    if(hasErrors) {
+      setSubmitError(true)
+      return
+    }
   }
+
+  useEffect(() => {
+    const { errorList: newErrorList } = checkInputs({
+      authorList,
+      description,
+      file,
+      subject,
+      tagList,
+      title,
+      year
+    })
+    if(!submitError) {
+      if(newErrorList.tag !== 'error__min') setErrorList(prev => ({ ...prev, tag: newErrorList.tag }))
+      if(newErrorList.author !== 'error__min') setErrorList(prev => ({ ...prev, author: newErrorList.author }))
+      return
+    }
+    setErrorList(newErrorList)
+  }, [description, file, subject, title, year, submitError, tagList, authorList])
 
   if (!subjectList) return <AdminError />
 
-  const titleError = errorList.title ? styles['title-input--error'] : ''
-  const descError = errorList.description ? styles['description-input--error'] : ''
-  const tagError = errorList.tag ? styles['tag-input--error'] : ''
-  const authorError = errorList.author ? styles['author-input--error'] : ''
-  const yearError = errorList.year ? styles['year-input--error'] : ''
-  const subjectError = errorList.subject ? styles['subject-input--error'] : ''
-  const pdfError = errorList.file ? styles['pdf-file--error'] : ''
+  const titleError = errorList.title ? styles[`title-input--${errorList.title}`] : ''
+  const descError = errorList.description ? styles[`description-input--${errorList.description}`] : ''
+  const tagError = errorList.tag ? styles[`tag-input--${errorList.tag}`] : ''
+  const authorError = errorList.author ? styles[`author-input--${errorList.author}`] : ''
+  const yearError = errorList.year ? styles[`year-input--${errorList.year}`] : ''
+  const subjectError = errorList.subject ? styles[`subject-input--${errorList.subject}`] : ''
+  const pdfError = errorList.file ? styles[`pdf-file--${errorList.file}`] : ''
 
   return (
     <>

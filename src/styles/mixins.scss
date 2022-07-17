@@ -39,7 +39,7 @@
 }
 
 @mixin buttonPrimary() {
-  transition: ease 300ms;
+  transition: filter ease 300ms;
   font-family: $font-titles;
   background: $secundary;
   border: 1px solid $secundary;
@@ -53,6 +53,10 @@
 
   &:hover {
     filter: brightness(125%);
+  }
+  &:focus, &:active {
+    outline: 2px solid $outline;
+    @content;
   }
 }
 

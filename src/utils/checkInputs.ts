@@ -1,3 +1,4 @@
+import { WORK_MAX_AUTHORS, WORK_MAX_TAGS, WORK_MIN_AUTHORS, WORK_MIN_TAGS } from "./constants"
 
 interface InputData {
   title: string,
@@ -17,16 +18,25 @@ interface CheckInputsReturn {
 export const checkInputs = (inputData: InputData): CheckInputsReturn => {
   
   const { title, authorList, description, tagList, year, subject, file } = inputData
+  
+  const titleError = !title.length ? 'error' : undefined
+  const descriptionError = !description.length ? 'error' : undefined
 
-  const titleError = !title.length
-  const descriptionError = !description.length
-  const tagError = tagList.length < 3
-  const authorError = authorList.length < 3
-  const yearError = !year.length
-  const subjectError = !subject.length
-  const fileError = !file
+  const tagError = tagList.length < WORK_MIN_TAGS 
+    ? 'error__min' 
+    : tagList.length > WORK_MAX_TAGS 
+      ? 'error__max' : undefined
+  
+  const authorError = authorList.length < WORK_MIN_AUTHORS 
+    ? 'error__min' 
+    : authorList.length > WORK_MAX_AUTHORS
+      ? 'error__max' : undefined
 
-  const hasErrors = titleError || descriptionError || tagError || authorError || yearError || subjectError || fileError
+  const yearError = !year.length ? 'error' : undefined
+  const subjectError = !subject.length ? 'error' : undefined
+  const fileError = !file ? 'error' : undefined
+
+  const hasErrors = !!titleError || !!descriptionError || !!tagError || !!authorError || !!yearError || !!subjectError || !!fileError
   
   return {
     hasErrors,
