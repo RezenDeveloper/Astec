@@ -12,6 +12,8 @@ import { ResultCard } from '../../components/ResultCard'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import { getAllWorks, getYearList } from '../../database/work'
 import NotFound from '../404'
+import { getAllSubjects } from '../../database/subject'
+import { getWorkTags } from '../../database/tag'
 
 interface SearchProps { 
   subjectList: Subject[] | null
@@ -105,7 +107,10 @@ const Search = ({ subjectList, tagList, yearList, resultList }: SearchProps) => 
             <SelectInput
               label='Curso'
               selectedId={subject}
-              valueList={subjectList}
+              valueList={subjectList.map(subject => ({
+                id: subject.id,
+                value: subject.title
+              }))}
               onChange={(id) => {
                 setSubject(id)
                 changeParams({
@@ -137,6 +142,7 @@ const Search = ({ subjectList, tagList, yearList, resultList }: SearchProps) => 
             {
               tagList.map(({ text, total, id }) => (
                 <Tag 
+                  key={id}
                   id={id}
                   text={text} 
                   total={total} 
@@ -181,37 +187,8 @@ export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
 export const getStaticProps: GetStaticProps<SearchProps> = async () => {
   return {
     props: {
-      subjectList: [
-        {
-          value: 'Teste',
-          id: 'teste'
-        },
-        {
-          value: 'Teste 2',
-          id: 'teste2'
-        },
-        {
-          value: 'Teste 3',
-          id: 'teste3'
-        }
-      ],
-      tagList: [
-        {
-          id: 'IA',
-          text: 'Inteligência Artificial',
-          total: 15
-        },
-        {
-          id: 'TI',
-          text: 'TI',
-          total: 25
-        },
-        {
-          id: 'C',
-          text: 'Comércio',
-          total: 85
-        }
-      ],
+      subjectList: getAllSubjects(),
+      tagList: getWorkTags(),
       yearList: getYearList(),
       resultList: getAllWorks()
     }
