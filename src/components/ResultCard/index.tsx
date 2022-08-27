@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import React, { useState } from 'react';
+import { PDFViewerProps } from '../../components/PDFViewer';
 import styles from './styles.module.scss';
 
 const PDFViewer = dynamic(() => 
@@ -9,7 +10,7 @@ const PDFViewer = dynamic(() =>
     ssr: false, 
     loading: () => <div className={styles['loading']}></div> 
   }
-);
+) as React.FC<PDFViewerProps>;
 
 export interface ResultCardProps {
   title: string

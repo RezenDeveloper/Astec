@@ -7,7 +7,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//${window.location.host}/pdf.worker.min.
 
 import styles from './styles.module.scss';
 
-interface PDFViewerProps {
+export interface PDFViewerProps {
   pageIndex: number
   Loading: React.FC
   showDetails?: boolean

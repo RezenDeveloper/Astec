@@ -10,6 +10,8 @@ import NotFound from '../404'
 import { getWork } from '../../database/work'
 
 import styles from '../../styles/work.module.scss'
+import React from 'react'
+import { PDFViewerProps } from '../../components/PDFViewer'
 
 const PDFViewer = dynamic(() => 
   import('../../components/PDFViewer'), 
@@ -17,7 +19,7 @@ const PDFViewer = dynamic(() =>
     ssr: false, 
     loading: () => <div className={styles['loading']}></div> 
   }
-);
+) as React.FC<PDFViewerProps>
 
 interface WorkProps {
   work: Work | null
