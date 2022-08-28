@@ -31,7 +31,8 @@ export const ResultCard = ({ title, description, fileId, authorArray, tagArray }
         <div className={styles['pdf-container']}>
           <PDFViewer 
             Loading={() => (<div className={styles['loading']}></div>)}
-            pageIndex={0} 
+            pageIndex={0}
+            fileId={fileId}
           />
         </div>
         <div>

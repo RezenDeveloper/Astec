@@ -1,8 +1,9 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import dynamic from 'next/dynamic'
 
 import styles from './styles.module.scss';
 import { PDFViewerProps } from '../../components/PDFViewer';
+import Link from 'next/link';
 
 const PDFViewer = dynamic(() => 
   import('../../components/PDFViewer'), 
@@ -12,28 +13,35 @@ const PDFViewer = dynamic(() =>
   }
 ) as React.FC<PDFViewerProps>;
 
-export interface IWorkCardProps {
+export interface WorkCardProps {
+  work: Work
 }
 
-export const WorkCard = (props: IWorkCardProps) => {
+export const WorkCard:React.FC<WorkCardProps> = ({ work }) => {
+  const { 
+    title,
+    subject,
+    fileId,
+    description,
+  } = work
+
   return (
     <div className={styles['work-card']}>
-      <h2 className={styles['title']}>Lorem ipsum dolor sit amet</h2>
+      <h2 className={styles['title']}>{title}</h2>
       <div className={styles['pdf-container']}>
         <PDFViewer 
           Loading={() => (<div className={styles['loading']}></div>)}
+          fileId={fileId}
           pageIndex={0} 
         />
       </div>
-      <strong className={styles['class']}>Análise e Desenvolvimento de Sistemas</strong>
+      <strong className={styles['class']}>{subject}</strong>
       <div className={styles['description']}>
         <h4>Descrição</h4>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut hendrerit, libero sodales iaculis tincidunt, arcu arcu efficitur dui, ac sodales augue nisi at purus. Sed ornare rhoncus ante eget feugiat. Suspendisse molestie placerat vehicula. Proin imperdiet quis nisl non porttitor. Morbi convallis ligula felis, et viverra augue luctus ut. Sed vel turpis euismod, varius nulla elementum, varius dui. Etiam dignissim vehicula est ut rhoncus. Praesent imperdiet imperdiet diam vitae porttitor. Proin tellus tellus, maximus at erat nec, fermentum efficitur lorem. Sed imperdiet elit eu odio sodales, at lacinia eros mattis.
-        </p>
+        <p>{description}</p>
       </div>
       <div className={styles['button-area']}>
-        <a href="">Visualizar</a>
+        <Link href={`/trabalho/${fileId}`}>Visualizar</Link>
       </div>
     </div>
   );

@@ -10,10 +10,11 @@ import styles from './styles.module.scss';
 export interface PDFViewerProps {
   pageIndex: number
   Loading: React.FC
+  fileId: string
   showDetails?: boolean
 }
 
-const PDFViewer:React.FC<PDFViewerProps> = ({ pageIndex:propPageIndex, Loading, showDetails = false }) => {
+const PDFViewer:React.FC<PDFViewerProps> = ({ pageIndex:propPageIndex, Loading, fileId, showDetails = false }) => {
   
   const [numPages, setNumPages] = useState<number>()
   const [pageIndex, setPageIndex] = useState(propPageIndex)
@@ -41,7 +42,7 @@ const PDFViewer:React.FC<PDFViewerProps> = ({ pageIndex:propPageIndex, Loading, 
         </div>
       }
       <Document
-        file={`//${window.location.host}/test.pdf`}
+        file={`//${window.location.host}/${fileId}.pdf`}
         onLoadError={(err) => console.log(err)}
         loading={<Loading />}
         error={<Loading />}

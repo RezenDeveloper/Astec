@@ -5,8 +5,14 @@ import { ClassCard, WorkCard } from '../components/Cards'
 
 import styles from '../styles/home.module.scss'
 import Footer from '../components/Footer'
+import { GetStaticProps } from 'next'
+import { getRecentWorks } from '../database/work'
 
-const Home = () => {
+interface HomeProps {
+  recentWorks: Work[]
+}
+
+const Home:React.FC<HomeProps> = ({ recentWorks }) => {
   return (
     <>
       <Head>
@@ -18,8 +24,8 @@ const Home = () => {
           <h1>Trabalhos recentes</h1>
           <div className={styles['recent-works__container']}>
             {/* Colocar vários cards com um slider na horizontal */}
-            {[1, 2, 3].map((_, index) => (
-              <WorkCard key={index} />
+            {recentWorks.map((work, index) => (
+              <WorkCard key={index} work={work} />
             ))}
           </div>
         </section>
@@ -36,5 +42,14 @@ const Home = () => {
     </>
   )
 }
+
+export const getStaticProps: GetStaticProps<HomeProps> = async () => {
+  return {
+    props: {
+      recentWorks: getRecentWorks(),
+    }
+  }
+}
+
 
 export default Home

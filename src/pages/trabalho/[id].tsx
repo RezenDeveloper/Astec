@@ -36,7 +36,6 @@ const Work = ({ work }: WorkProps) => {
     <NotFound />
   )
   
-  
   const { 
     title, 
     authorArray, 
@@ -60,6 +59,7 @@ const Work = ({ work }: WorkProps) => {
           <PDFViewer
             Loading={() => (<div className={styles['loading']}></div>)}
             pageIndex={0}
+            fileId={fileId}
             showDetails={true}
           />
         </div>
