@@ -4,6 +4,7 @@ import Work from '../../../database/models/Work'
 export default (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
     case 'POST': createWork(req, res)
+    case 'GET': getAllWorks(req, res)
   }
 }
 
@@ -27,5 +28,15 @@ const createWork = async (req: NextApiRequest, res: NextApiResponse) => {
     
   } catch (error) {
     res.status(500).json({ error: error })
+  }
+}
+
+const getAllWorks = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    const works = await Work.findAll()
+  
+    res.status(200).json(works)
+  } catch (error) {
+    res.status(500).json({ error: error }) 
   }
 }
