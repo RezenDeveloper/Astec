@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import Author from '../../../database/models/Author'
+import { Author } from '../../../database/models'
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {

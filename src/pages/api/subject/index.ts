@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import Subject from '../../../database/models/Subject'
+import { Subject } from '../../../database/models'
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {

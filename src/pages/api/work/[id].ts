@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import Work from '../../../database/models/Work'
+import { Work } from '../../../database/models'
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
@@ -8,8 +8,16 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 const getWork = async (req: NextApiRequest, res: NextApiResponse) => {
-  const id = req.query.id as string
-  const work = await Work.findByPk(id)
-  
-  res.status(200).json(work)
+  try {
+    const id = req.query.id as string
+    const work = await Work.findByPk(id, {
+      include: {
+        association: 'subject'
+      }
+    })
+    
+    res.status(200).json(work)
+  } catch (error) {
+    res.status(500).json({ error: error }) 
+  }
 }

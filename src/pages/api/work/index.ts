@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import Work from '../../../database/models/Work'
+import { Work } from '../../../database/models'
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {

@@ -11,4 +11,16 @@ const Subject = connection.define('subjects', {
   description: DataTypes.TEXT,
 })
 
-export default Subject
+const associate = () => {
+  const Work = connection.models['works']
+
+  Subject.hasMany(Work, {
+    foreignKey: 'subject_id',
+    as: 'works',
+  })
+}
+
+export default {
+  Model: Subject,
+  associate
+}

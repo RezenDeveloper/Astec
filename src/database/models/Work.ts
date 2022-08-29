@@ -1,8 +1,7 @@
 import { DataTypes } from 'sequelize'
 import { connection } from '../index'
-import Subject from './Subject'
 
-const Work = connection.define('work', {
+const Work = connection.define('works', {
   id: { 
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
@@ -13,10 +12,16 @@ const Work = connection.define('work', {
   description: DataTypes.TEXT,
 })
 
-Work.belongsTo(Subject, {
-  foreignKey: 'subject_id',
-  as: 'subject',
-})
+const associate = () => {
+  const Subject = connection.models['subjects']
+  
+  Work.belongsTo(Subject, {
+    foreignKey: 'subject_id',
+    as: 'subject',
+  })
+}
 
-
-export default Work
+export default {
+  Model: Work,
+  associate
+}

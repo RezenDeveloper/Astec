@@ -1,6 +1,5 @@
 import { DataTypes } from 'sequelize'
 import { connection } from '..'
-import Work from './Work'
 
 const Author = connection.define('authors', {
   id: { 
@@ -11,9 +10,16 @@ const Author = connection.define('authors', {
   name: DataTypes.STRING,
 })
 
-Author.belongsTo(Work, {
-  foreignKey: 'work_id',
-  as: 'work',
-})
+const associate = () => {
+  const Work = connection.models['works']
+  
+  Author.belongsTo(Work, {
+    foreignKey: 'work_id',
+    as: 'work',
+  })
+}
 
-export default Author
+export default {
+  Model: Author,
+  associate 
+}
