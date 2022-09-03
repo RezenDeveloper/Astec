@@ -5,6 +5,7 @@ module.exports = {
     await queryInterface.createTable('works', { 
       id: {
         type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
         allowNull: false
       },
@@ -30,8 +31,6 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'RESTRICT'
       },
-      // authorArray: ['autor1', 'autor2', 'autor3'],
-      // tagArray: ['tag1', 'tag2', 'tag3', 'tag4'],
       created_at: {
         type: Sequelize.DATE,
         allowNull: false

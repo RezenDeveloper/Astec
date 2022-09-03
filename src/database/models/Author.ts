@@ -1,7 +1,13 @@
-import { DataTypes } from 'sequelize'
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 import { connection } from '..'
 
-const Author = connection.define('authors', {
+interface AuthorModel extends Model<InferAttributes<AuthorModel>, InferCreationAttributes<AuthorModel>> {
+  id: CreationOptional<string>
+  name: string
+  work_id?: string
+}
+
+const Author = connection.define<AuthorModel>('authors', {
   id: { 
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,

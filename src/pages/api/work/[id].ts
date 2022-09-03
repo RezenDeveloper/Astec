@@ -1,9 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Work } from '../../../database/models'
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
-    case 'GET': getWork(req, res)
+    case 'GET': return await getWork(req, res)
+    default: return res.status(500).send(`Invalid method`)
   }
 }
 
@@ -16,8 +17,8 @@ const getWork = async (req: NextApiRequest, res: NextApiResponse) => {
       }
     })
     
-    res.status(200).json(work)
+    return res.status(200).json(work)
   } catch (error) {
-    res.status(500).json({ error: error }) 
+    return res.status(500).json({ error: error }) 
   }
 }

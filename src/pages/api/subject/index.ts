@@ -1,10 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Subject } from '../../../database/models'
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
-    case 'POST': createSubject(req, res)
-    case 'GET': getAllSubjects(req, res)
+    case 'POST': return await createSubject(req, res)
+    case 'GET': return await getAllSubjects(req, res)
+    default: return res.status(500).send(`Invalid method`)
   }
 }
 

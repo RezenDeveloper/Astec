@@ -1,32 +1,31 @@
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 import { connection } from '..'
 
-interface SubjectModel extends Model<InferAttributes<SubjectModel>, InferCreationAttributes<SubjectModel>> {
+interface TagModel extends Model<InferAttributes<TagModel>, InferCreationAttributes<TagModel>> {
   id: CreationOptional<string>
   name: string
-  description: string
 }
 
-const Subject = connection.define<SubjectModel>('subjects', {
+const Tag = connection.define<TagModel>('tags', {
   id: { 
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true
   },
   name: DataTypes.STRING,
-  description: DataTypes.TEXT,
 })
 
 const associate = () => {
   const Work = connection.models['works']
 
-  Subject.hasMany(Work, {
-    foreignKey: 'subject_id',
-    as: 'works',
+  Tag.belongsToMany(Work, {
+    foreignKey: 'tag_id',
+    through: 'work_tags',
+    as: 'works'
   })
 }
 
 export default {
-  Model: Subject,
+  Model: Tag,
   associate
 }

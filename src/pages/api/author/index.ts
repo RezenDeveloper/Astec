@@ -1,10 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Author } from '../../../database/models'
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
-    case 'POST': createAuthor(req, res)
-    case 'GET': getAllAuthors(req, res)
+    case 'POST': return await createAuthor(req, res)
+    case 'GET': return await getAllAuthors(req, res)
+    default: return res.status(500).send(`Invalid method`)
   }
 }
 

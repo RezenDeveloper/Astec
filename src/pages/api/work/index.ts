@@ -1,10 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Work } from '../../../database/models'
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
-    case 'POST': createWork(req, res)
-    case 'GET': getAllWorks(req, res)
+    case 'POST': return await createWork(req, res)
+    case 'GET': return await getAllWorks(req, res)
+    default: return res.status(500).send(`Invalid method`)
   }
 }
 

@@ -2,15 +2,11 @@
 
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('authors', { 
+    await queryInterface.createTable('work_tags', { 
       id: {
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4,
+        type: Sequelize.INTEGER,
         primaryKey: true,
-        allowNull: false
-      },
-      name: {
-        type: Sequelize.STRING,
+        autoIncrement: true,
         allowNull: false
       },
       work_id: {
@@ -18,6 +14,16 @@ module.exports = {
         allowNull: false,
         references: {
           model: 'works',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      },
+      tag_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'tags',
           key: 'id'
         },
         onUpdate: 'CASCADE',
@@ -35,6 +41,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('authors');
+    await queryInterface.dropTable('work_tags');
   }
 };
