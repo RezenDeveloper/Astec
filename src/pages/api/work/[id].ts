@@ -12,9 +12,14 @@ const getWork = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const id = req.query.id as string
     const work = await Work.findByPk(id, {
-      include: {
-        association: 'subject'
-      }
+      include: [
+        {
+          association: 'subject',
+        },
+        {
+          association: 'tags'
+        }
+      ]
     })
     
     return res.status(200).json(work)
