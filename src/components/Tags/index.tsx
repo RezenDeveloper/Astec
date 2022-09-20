@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './styles.module.scss';
 import { AiOutlineClose } from 'react-icons/ai'
+import axios from 'axios';
 
 export interface TagsProps {
   text: string;
@@ -33,12 +34,33 @@ export interface TagInputProps {
   }
   id: string
   label: string
+  autocomplete?: {
+    route: string
+  }
   className?: string
 }
 
-export const TagInput = ({ tags, id, label, className = ''}: TagInputProps) => {
+export const TagInput = ({ tags, id, label, autocomplete, className = ''}: TagInputProps) => {
 
   const [input, setInput] = useState('')
+  const [search, setSearch] = useState<Tag[]>([])
+
+  useEffect(() => {
+    const handleAutoComplete = async () => {
+      const { data } = await  axios.get<Tag[]>(autocomplete!.route, {
+        params: {
+          name: input
+        }
+      })
+      
+      setSearch(data.filter(({ name }) => !tags.value.includes(name)))
+    }
+    if(input.length > 2 && autocomplete) {
+      handleAutoComplete();
+    } else {
+      setSearch([])
+    }
+  }, [input])
 
   const handleKeyDown:React.KeyboardEventHandler<HTMLInputElement> | undefined = (e) => {
     const { key } = e
@@ -59,6 +81,19 @@ export const TagInput = ({ tags, id, label, className = ''}: TagInputProps) => {
     }
   }
 
+  const handleAutocompleteKeyDown = (e:React.KeyboardEvent<HTMLLIElement>, name:string) => {
+    switch (e.key) {
+      case " ":
+      case "SpaceBar":
+      case "Enter":
+        e.preventDefault();
+        addNewTag(name)
+        break;
+      default:
+        break;
+    }
+  }
+
   const addNewTag = (input: string) => {
     setInput('')
     if(input.length) {
@@ -73,7 +108,7 @@ export const TagInput = ({ tags, id, label, className = ''}: TagInputProps) => {
   }
 
   return (
-    <div className={className}>
+    <div className={`${styles['tag-input']} ${className}`}>
       <label className={styles['tag-input--label']} htmlFor={id}>{label}</label>
       <div className={styles['tag-input--container']}>
         {tags.value.map((tag, index) => (
@@ -92,12 +127,29 @@ export const TagInput = ({ tags, id, label, className = ''}: TagInputProps) => {
           id={id}
           value={input}
           onKeyDown={handleKeyDown}
-          onBlur={() => addNewTag(input)}
+          onBlur={() => {
+            if(search.length > 0) return
+            addNewTag(input)
+          }}
           onChange={(e) => {
             setInput(e.target.value)
           }}
         />
       </div>
+      {search.length > 0 && (
+        <ul className={styles['tag-autocomplete']}>
+          {search.map(({name, id}, index) => (
+            <li 
+              key={id}
+              tabIndex={0}
+              onKeyDown={(e) => handleAutocompleteKeyDown(e, name)}
+              onClick={() => addNewTag(name)}
+            >
+              {name}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   )
 }

@@ -4,11 +4,11 @@ import { Tag } from '../../../../database/models'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
-    case 'GET': return await getAllTags(req, res)
+    case 'GET': return await searchTag(req, res)
     default: return res.status(500).send(`Invalid method`)
   }
 }
-const getAllTags = async (req: NextApiRequest, res: NextApiResponse) => {
+const searchTag = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const name = req.query.name as string
 

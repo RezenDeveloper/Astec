@@ -128,6 +128,7 @@ const New = ({ yearList, subjectList }: NewProps) => {
             <TagInput
               className={`${styles['tag-input']} ${tagError}`}
               id={'tagInput'}
+              autocomplete={{ route: '/api/tag/search' }}
               label={'Tags'}
               tags={{ value: tagList, setValue: setTagList }}
             />
