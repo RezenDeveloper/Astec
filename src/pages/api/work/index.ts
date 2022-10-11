@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { Work } from '../../../database/models'
+import { Sequelize } from 'sequelize'
+import { Tag, Work } from '../../../database/models'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
@@ -15,8 +16,11 @@ const createWork = async (req: NextApiRequest, res: NextApiResponse) => {
       title,
       description,
       subject_id,
+      tags,
       year
     } = req.body
+
+    if(!title || !description || !subject_id || !tags?.length || !year) return res.status(404).json({ message: 'Invalid fields' })
 
     const work = await Work.create({
       title,
@@ -24,8 +28,34 @@ const createWork = async (req: NextApiRequest, res: NextApiResponse) => {
       year,
       subject_id
     })
+
+    await Promise.all(
+      tags.map(async (name: string) => {
+        let tag = await Tag.findOne({
+          // @ts-expect-error
+          where: { 
+            name: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('name')), 'LIKE', '%' + name.toLowerCase() + '%')
+          },
+        })
+
+        if(!tag) {
+          tag = await Tag.create({ name })
+        }
+        
+        // @ts-expect-error
+        await work.addTag(tag)
+      })
+    )
+
+    const fullWork = await Work.findByPk(work.id, {
+      include: [
+        {
+          association: 'tags'
+        }
+      ]
+    })
     
-    res.status(201).json(work)
+    res.status(201).json(fullWork)
     
   } catch (error) {
     res.status(500).json({ error: error })

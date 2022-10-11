@@ -21,9 +21,9 @@ const searchTag = async (req: NextApiRequest, res: NextApiResponse) => {
         name: {
           [Op.startsWith]: name
         }
-      }
-    })
-    
+      },
+      attributes: ['name', 'id']
+    })    
     
     res.status(200).json(tags)
   } catch (error) {
