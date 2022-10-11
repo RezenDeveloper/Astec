@@ -94,14 +94,15 @@ const New = ({ yearList, subjectList }: NewProps) => {
     
     if(error) setSubmitError(true)
     else if(data) {
-      clearInputs()
       setSuccess(true)
+      clearInputs()
     }
 
     setLoading(false)
   }
 
   useEffect(() => {
+    if(success) return
     const { errorList: newErrorList } = checkInputs({
       authorList,
       description,
