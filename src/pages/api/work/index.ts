@@ -15,18 +15,18 @@ const createWork = async (req: NextApiRequest, res: NextApiResponse) => {
     const {
       title,
       description,
-      subject_id,
+      subjectId,
       tags,
       year
     } = req.body
 
-    if(!title || !description || !subject_id || !tags?.length || !year) return res.status(404).json({ message: 'Invalid fields' })
+    if(!title || !description || !subjectId || !tags?.length || !year) return res.status(404).json({ message: 'Invalid fields' })
 
     const work = await Work.create({
       title,
       description,
       year,
-      subject_id
+      subject_id: subjectId
     })
 
     await Promise.all(

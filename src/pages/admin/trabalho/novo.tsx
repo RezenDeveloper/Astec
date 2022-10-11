@@ -8,12 +8,13 @@ import styles from '../../../styles/admin-work.module.scss'
 import Footer from '../../../components/Footer'
 import { SelectInput, TextBox, TextInput } from '../../../components/Inputs'
 import { TagInput } from '../../../components/Tags'
-import { getYearList } from '../../../database/work'
+import { createWork, getYearList } from '../../../database/work'
 import { GetStaticProps } from 'next'
 import { getAllSubjects } from '../../../database/subject'
 import AdminError from './erro'
 import { checkInputs } from '../../../utils/checkInputs'
 import Link from 'next/link'
+import { SuccessModal } from '../../../components/SuccessModal'
 
 interface NewProps {
   subjectList: Subject[] | null
@@ -38,6 +39,8 @@ const New = ({ yearList, subjectList }: NewProps) => {
     subject: undefined,
     file: undefined
   })
+  const [loading, setLoading] = useState<boolean>(false)
+  const [success, setSuccess] = useState<boolean>(false)
 
   const handleTitleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setTitle(e.target.value)
@@ -51,10 +54,19 @@ const New = ({ yearList, subjectList }: NewProps) => {
     const eventFile = e.target.files?.item(0)
     if(eventFile) setFile(eventFile)
   }
+
+  const clearInputs = () => {
+    setTitle('')
+    setDescription('')
+    setTagList([])
+    setAuthorList([])
+    setYear('')
+    setSubject('')
+    setFile(undefined)
+  }
   
-  const handleSubmit: FormEventHandler<HTMLFormElement> | undefined = (e) => {
+  const handleSubmit: FormEventHandler<HTMLFormElement> | undefined = async (e) => {
     e.preventDefault()
-    console.log('submit')
     const { errorList: newErrorList, hasErrors } = checkInputs({
       authorList,
       description,
@@ -71,6 +83,22 @@ const New = ({ yearList, subjectList }: NewProps) => {
       setSubmitError(true)
       return
     }
+    setLoading(true)
+    const { data, error } = await createWork({
+      title,
+      description,
+      tags: tagList,
+      year: parseInt(year),
+      subjectId: subject
+    })
+    
+    if(error) setSubmitError(true)
+    else if(data) {
+      clearInputs()
+      setSuccess(true)
+    }
+
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -151,7 +179,7 @@ const New = ({ yearList, subjectList }: NewProps) => {
               className={`${styles['subject-input']} ${subjectError}`}
               placeholder={'Analise e desenvolvimento de sistemas'}
               selectedId={subject}
-              valueList={subjectList.map(subject => ({ id: subject.id, value: subject.title }))}
+              valueList={subjectList.map(subject => ({ id: subject.id, value: subject.name }))}
               onChange={(id) => setSubject(id)}
             >
               <Link href={'/admin/cursos'}>Adicionar mais cursos</Link>
@@ -184,6 +212,26 @@ const New = ({ yearList, subjectList }: NewProps) => {
             Publicar
           </button>
         </form>
+        {loading && (
+          <div className={styles['loading-modal']}>
+            <Image
+              src={'/images/loading.svg'}
+              aria-label={'Carregando'}
+              objectFit={'contain'}
+              width={150}
+              height={150}
+            />
+          </div>
+        )}
+        {success && (
+          <SuccessModal 
+            title='Sucesso!'
+            message='Trabalho publicado com sucesso.'
+            closeCallback={() => {
+              setSuccess(false)
+            }}
+          />
+        )}
       </main>
       <Footer />
     </>
@@ -191,9 +239,10 @@ const New = ({ yearList, subjectList }: NewProps) => {
 }
 
 export const getStaticProps: GetStaticProps<NewProps> = async () => {
+  const { data } = await getAllSubjects();
   return {
     props: {
-      subjectList: getAllSubjects(),
+      subjectList: data,
       yearList: getYearList(),
     },
   }

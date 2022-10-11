@@ -1,19 +1,18 @@
-export const getAllSubjects = () => {
-  return [
-    {
-      title: 'Análise e Desenvolvimento de Sistemas',
-      description: '',
-      id: 'ads'
-    },
-    {
-      title: 'Gestão de Projetos',
-      description: '',
-      id: 'gp'
-    },
-    {
-      title: 'Logística',
-      description: '',
-      id: 'l'
+import { axiosAPI } from "./axios"
+
+export const getAllSubjects = async ():Promise<MethodResponse<Subject[]>> => {
+
+  try {
+    const { data } = await axiosAPI.get<Subject[]>(`/api/subject`)
+    return {
+      data,
+      error: null
+    }    
+  } catch (error) {
+    console.log(error)
+    return {
+      data: null,
+      error
     }
-  ]
+  }
 }

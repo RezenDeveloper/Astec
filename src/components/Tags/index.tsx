@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './styles.module.scss';
 import { AiOutlineClose } from 'react-icons/ai'
-import axios from 'axios';
+import { axiosAPI } from '../../database/axios';
 
 export interface TagsProps {
   text: string;
@@ -47,7 +47,7 @@ export const TagInput = ({ tags, id, label, autocomplete, className = ''}: TagIn
 
   useEffect(() => {
     const handleAutoComplete = async () => {
-      const { data } = await  axios.get<Tag[]>(autocomplete!.route, {
+      const { data } = await  axiosAPI.get<Tag[]>(autocomplete!.route, {
         params: {
           name: input
         }

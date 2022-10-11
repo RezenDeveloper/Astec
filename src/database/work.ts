@@ -1,3 +1,5 @@
+import { axiosAPI } from "./axios"
+
 export const getWork = (id: string): Work | null => {
 
   return {
@@ -83,6 +85,21 @@ export const getAllWorks = (): Work[] | null => {
       year: 2015
     }
   ]
+}
+
+export const createWork = async (data:ReqWork):Promise<MethodResponse<Work>> => {
+  try {
+    const { data:resData } = await axiosAPI.post<Work>(`/api/work`, data)
+    return {
+      data: resData,
+      error: null
+    }
+  } catch (error) {
+    return {
+      data: null,
+      error
+    }
+  }
 }
 
 export const getYearList = () => {

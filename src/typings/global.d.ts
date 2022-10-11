@@ -1,9 +1,3 @@
-interface Subject {
-  id: string
-  title: string
-  description: string
-}
-
 interface Year {
   id: string
   value: string

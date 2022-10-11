@@ -1,9 +1,13 @@
-interface DefaultAPI {
-  id: string
-  createdAt: string
-  updatedAt: string
+
+interface MethodResponse<T> {
+  data: T | null
+  error: any | null
 }
 
-interface Tag extends DefaultAPI{
-  name: string
+interface ReqWork {
+  title: string
+  description: string
+  subjectId: string
+  year: number
+  tags: string[]
 }
