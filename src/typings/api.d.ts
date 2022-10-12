@@ -35,3 +35,12 @@ interface ReqUpdateSubject {
   name?: string
   description?: string
 }
+
+interface SearchParams {
+  query?: string
+  year?: string
+  author?: string
+  subject?: string
+  tags?: string
+  order?: 'recent'
+}

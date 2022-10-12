@@ -10,41 +10,53 @@ import styles from '../../styles/search.module.scss'
 import { Tag } from '../../components/Tags'
 import { ResultCard } from '../../components/ResultCard'
 import { GetStaticPaths, GetStaticProps } from 'next'
-import { getAllWorks, getYearList } from '../../database/work'
+import { getYearList, searchWorks } from '../../database/work'
 import NotFound from '../404'
 import { getAllSubjects } from '../../database/subject'
 import { getWorkTags } from '../../database/tag'
+import Image from 'next/image'
 
 interface SearchProps { 
   subjectList: Subject[] | null
   tagList: SearchTag[] | null
-  resultList: Work[] | null
   yearList: Year[] | null
 }
 
-const Search = ({ subjectList, tagList, yearList, resultList }: SearchProps) => {
+const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
   
-  if(!subjectList || !tagList || !yearList || !resultList) return (
-    <NotFound />
-  )
   const router = useRouter()
   const query = router.query.query as string
 
+  const [resultList, setResultList] = useState<Work[] | null>(null)
   const [year, setYear] = useState('')
   const [author, setAuthor] = useState('')
   const [subject, setSubject] = useState('')
   const [tagArray, setTagArray] = useState<string[]>([])
 
   useEffect(() => {
-    const { ano, autor, curso, tags } = router.query as { [key: string]: string }
-    const foundSubject = !!subjectList.find(subject => curso === subject.id)
-    const foundYear = !!yearList.find(year => ano === year.id)
+    const { ano, autor, curso, tags, query } = router.query as { [key: string]: string }
+    const foundSubject = !!subjectList?.find(subject => curso === subject.id)
+    const foundYear = !!yearList?.find(year => ano === year.id)
     
     setAuthor(autor || '')
     setTagArray(tags?.split(',') || [])
     setYear(foundYear ? ano : '')
     setSubject(foundSubject ? curso : '')
+
+    updateSearchResults({
+      query,
+      author: autor,
+      subject: curso,
+      year: ano,
+      tags,
+    })
   }, [router.query])
+
+
+  const updateSearchResults = async (params: SearchParams) => {
+    const { data } = await searchWorks(params)
+    setResultList(data)
+  }
 
   const handleTagSelect = (newTag: string) => {
     const tagExists = !!tagArray.find(tag => tag === newTag)
@@ -81,10 +93,12 @@ const Search = ({ subjectList, tagList, yearList, resultList }: SearchProps) => 
     })
   }
 
+  if(!subjectList || !tagList || !yearList || !resultList) return <NotFound />
+
   return (
     <>
       <Head>
-        <title>{query}</title>
+        <title>{query || 'Pesquisando...'}</title>
       </Head>
       <Header query={query} />
       <main className={styles['container']}>
@@ -153,24 +167,42 @@ const Search = ({ subjectList, tagList, yearList, resultList }: SearchProps) => 
             }
           </div>
         </section>
-        <section className={styles['result']}>
-          <h1 className={styles['result--title']}>
-            {query}
-          </h1>
-          <div className={styles['result--list']}>
-            {resultList.map(({ id, authorArray, description, tagArray, title }, index) => (
-              <ResultCard
-                key={index}
-                authorArray={authorArray} 
-                description={description} 
-                id={id}
-                tagArray={tagArray}
-                title={title}
-              />
-            ))}
-          </div>
-          <button className={styles['result--button']}>Ver Mais</button>
-        </section>
+        {query && (
+          <section className={styles['result']}>
+            <h1 className={styles['result--title']}>
+              {query}
+            </h1>
+            <div className={styles['result--list']}>
+              {resultList.length > 0 ? 
+                resultList.map(({ id, authorArray, description, tagArray, title }, index) => (
+                  <ResultCard
+                    key={index}
+                    authorArray={authorArray} 
+                    description={description} 
+                    id={id}
+                    tagArray={tagArray}
+                    title={title}
+                  />
+                )) : (
+                  <h1 className={styles['not-found']}>Nada encontrado</h1>
+                )
+              }
+            </div>
+            <button className={styles['result--button']}>Ver Mais</button>
+          </section>
+        )}
+        
+        {!query && (
+          <section className={styles['result-loading']}>
+            <Image
+              src={'/images/loading.svg'}
+              aria-label={'Carregando'}
+              objectFit={'contain'}
+              width={150}
+              height={150}
+            />
+          </section>
+        )}
       </main>
       <Footer />
     </>
@@ -184,19 +216,15 @@ export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
   }
 }
 
-export const getStaticProps: GetStaticProps<SearchProps> = async () => {
+export const getStaticProps: GetStaticProps<SearchProps> = async ({ params }) => {
   
   const { data: subjectList } = await getAllSubjects()
   // const { data: workTagsData } = await getWorkTags()
-  const { data: resultList } = await getAllWorks()
-
-
   return {
     props: {
       subjectList,
       tagList: getWorkTags(),
-      yearList: getYearList(),
-      resultList
+      yearList: getYearList()
     }
   }
 }

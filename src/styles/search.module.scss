@@ -32,11 +32,25 @@
   position: relative;
   flex: 1;
   margin-left: 60px;
+  
+  &-loading {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
   &--title {
     text-align: center;
   }
-  &--list > div:last-of-type {
-    filter: blur(2px);
+  &--list {
+    > div:last-of-type {
+      filter: blur(2px);
+    }
+    .not-found {
+      width: 100%;
+      text-align: center;
+      font-size: 2.3rem;
+    }
   }
   &--button {
     position: absolute;
