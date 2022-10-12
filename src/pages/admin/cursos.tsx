@@ -5,11 +5,12 @@ import { Header } from '../../components/Header'
 import styles from '../../styles/admin-subjects.module.scss'
 import Footer from '../../components/Footer'
 import { GetStaticProps } from 'next'
-import { getAllSubjects } from '../../database/subject'
+import { createSubject, getAllSubjects, updateSubject } from '../../database/subject'
 import AdminError from './trabalho/erro'
 import { useEffect, useState } from 'react'
 import { handleSelectKeyPress } from '../../utils/acessibility'
 import { TextBox, TextInput } from '../../components/Inputs'
+import { LoadingModal } from '../../components/LoadingModal'
 
 interface SubjectsProps {
   subjectList: Subject[] | null
@@ -17,14 +18,16 @@ interface SubjectsProps {
 
 type ActionTypes = 'NEW' | 'EDIT'
 
-const Subjects = ({ subjectList }: SubjectsProps) => {
+const Subjects = ({ subjectList: subjectListProps }: SubjectsProps) => {
 
   const [selecteAction, setSelectedAction] = useState<ActionTypes>()
-  
   const [selectedSubject, setSelectedSubject] = useState<string>()
+  const [subjectList, setSelectedSubjectList] = useState<Subject[] | null>(subjectListProps)
 
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
+
+  const [loading, setLoading] = useState(false)
 
 
   useEffect(() => {
@@ -37,7 +40,7 @@ const Subjects = ({ subjectList }: SubjectsProps) => {
     const selected = subjectList.find(subject => subject.id === selectedSubject)
     if(!selected) return
     setSelectedAction('EDIT')
-    setTitle(selected.title)
+    setTitle(selected.name)
     setDescription(selected.description)
   }
 
@@ -46,6 +49,26 @@ const Subjects = ({ subjectList }: SubjectsProps) => {
     setSelectedSubject(undefined)
     setTitle('')
     setDescription('')
+  }
+
+  const handleSaveSubject = async () => {
+    setLoading(true)
+    if(selecteAction === "NEW") {
+      await createSubject({
+        name: title,
+        description
+      })
+    } else if(selecteAction === "EDIT") {
+      const selected = subjectList.find(subject => subject.id === selectedSubject)
+      if(!selected) return
+      await updateSubject(selected.id, {
+        name: title,
+        description
+      })
+    }
+    const { data:newSubjectList } = await getAllSubjects()
+    setSelectedSubjectList(newSubjectList)
+    setLoading(false)
   }
 
   return (
@@ -67,7 +90,7 @@ const Subjects = ({ subjectList }: SubjectsProps) => {
               className={`${styles['subject-list--item']} ${subject.id === selectedSubject ? styles['active'] : ''}`}
               onClick={() => setSelectedSubject(subject.id)}
             >
-              {subject.title}
+              {subject.name}
             </li>
           ))}
         </ul>
@@ -112,23 +135,26 @@ const Subjects = ({ subjectList }: SubjectsProps) => {
             />
             <div className={styles['buttons-container']}>
               <button
-                className={styles['save-button']
-              }>
+                className={styles['save-button']}
+                onClick={handleSaveSubject}
+              >
                 Salvar
               </button>
             </div>
           </div>
         )}
       </main>
+      {loading && <LoadingModal />}
       <Footer />
     </>
   )
 }
 
 export const getStaticProps: GetStaticProps<SubjectsProps> = async () => {
+  const { data } = await getAllSubjects();
   return {
     props: {
-      subjectList: getAllSubjects(),
+      subjectList: data,
     },
   }
 }

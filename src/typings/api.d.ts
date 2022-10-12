@@ -11,3 +11,13 @@ interface ReqWork {
   year: number
   tags: string[]
 }
+
+interface ReqSubject {
+  name: string
+  description: string
+}
+
+interface ReqUpdateSubject {
+  name?: string
+  description?: string
+}

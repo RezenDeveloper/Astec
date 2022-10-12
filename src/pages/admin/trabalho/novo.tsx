@@ -15,6 +15,7 @@ import AdminError from './erro'
 import { checkInputs } from '../../../utils/checkInputs'
 import Link from 'next/link'
 import { SuccessModal } from '../../../components/SuccessModal'
+import { LoadingModal } from '../../../components/LoadingModal'
 
 interface NewProps {
   subjectList: Subject[] | null
@@ -214,15 +215,7 @@ const New = ({ yearList, subjectList }: NewProps) => {
           </button>
         </form>
         {loading && (
-          <div className={styles['loading-modal']}>
-            <Image
-              src={'/images/loading.svg'}
-              aria-label={'Carregando'}
-              objectFit={'contain'}
-              width={150}
-              height={150}
-            />
-          </div>
+          <LoadingModal />
         )}
         {success && (
           <SuccessModal 
