@@ -14,7 +14,7 @@ import { getAllSubjects } from '../../../database/subject'
 import AdminError from './erro'
 import { checkInputs } from '../../../utils/checkInputs'
 import Link from 'next/link'
-import { SuccessModal } from '../../../components/SuccessModal'
+import { InfoModal } from '../../../components/InfoModal'
 import { LoadingModal } from '../../../components/LoadingModal'
 
 interface NewProps {
@@ -218,7 +218,7 @@ const New = ({ yearList, subjectList }: NewProps) => {
           <LoadingModal />
         )}
         {success && (
-          <SuccessModal 
+          <InfoModal 
             title='Sucesso!'
             message='Trabalho publicado com sucesso.'
             closeCallback={() => {

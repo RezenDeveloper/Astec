@@ -5,15 +5,20 @@ import { Header } from '../../components/Header'
 import styles from '../../styles/admin-subjects.module.scss'
 import Footer from '../../components/Footer'
 import { GetStaticProps } from 'next'
-import { createSubject, getAllSubjects, updateSubject } from '../../database/subject'
+import { createSubject, deleteSubject, getAllSubjects, updateSubject } from '../../database/subject'
 import AdminError from './trabalho/erro'
 import { useEffect, useState } from 'react'
 import { handleSelectKeyPress } from '../../utils/acessibility'
 import { TextBox, TextInput } from '../../components/Inputs'
 import { LoadingModal } from '../../components/LoadingModal'
+import { InfoModal } from '../../components/InfoModal'
 
 interface SubjectsProps {
   subjectList: Subject[] | null
+}
+
+interface ErrorObj {
+  status: number
 }
 
 type ActionTypes = 'NEW' | 'EDIT'
@@ -28,6 +33,7 @@ const Subjects = ({ subjectList: subjectListProps }: SubjectsProps) => {
   const [description, setDescription] = useState('')
 
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<ErrorObj>()
 
 
   useEffect(() => {
@@ -35,6 +41,12 @@ const Subjects = ({ subjectList: subjectListProps }: SubjectsProps) => {
   }, [selectedSubject])
 
   if (!subjectList) return <AdminError />
+
+  const updateSubjectList = async () => {
+    const { data:newSubjectList } = await getAllSubjects()
+    console.log('updated')
+    setSelectedSubjectList(newSubjectList)
+  }
 
   const handleEditSubject = () => {
     const selected = subjectList.find(subject => subject.id === selectedSubject)
@@ -49,6 +61,19 @@ const Subjects = ({ subjectList: subjectListProps }: SubjectsProps) => {
     setSelectedSubject(undefined)
     setTitle('')
     setDescription('')
+  }
+
+  const handleDeleteSubject = async () => {
+    const selected = subjectList.find(subject => subject.id === selectedSubject)
+    if(!selected) return
+    
+    setLoading(true)
+    
+    const { error } = await deleteSubject(selected.id)
+    if(error?.response) setError({ status: error.response.status })
+
+    await updateSubjectList()
+    setLoading(false)
   }
 
   const handleSaveSubject = async () => {
@@ -66,8 +91,7 @@ const Subjects = ({ subjectList: subjectListProps }: SubjectsProps) => {
         description
       })
     }
-    const { data:newSubjectList } = await getAllSubjects()
-    setSelectedSubjectList(newSubjectList)
+    await updateSubjectList()
     setLoading(false)
   }
 
@@ -105,6 +129,7 @@ const Subjects = ({ subjectList: subjectListProps }: SubjectsProps) => {
           <button 
             className={!selectedSubject ? styles['disabled'] : ''} 
             disabled={!selectedSubject}
+            onClick={handleDeleteSubject}
           >
             Excluir
           </button>
@@ -145,6 +170,19 @@ const Subjects = ({ subjectList: subjectListProps }: SubjectsProps) => {
         )}
       </main>
       {loading && <LoadingModal />}
+      {error !== undefined && (
+        <InfoModal 
+          title={"Ocorreu um erro"}
+          message={
+            error.status === 400 ? 
+            "O curso selecionado já possui um trabalho vinculado" : 
+            "Ocorreu um problema ao deletar o curso, tente novamente mais tarde"
+          }
+          closeCallback={() => {
+            setError(undefined)
+          }}
+        />
+      )}
       <Footer />
     </>
   )

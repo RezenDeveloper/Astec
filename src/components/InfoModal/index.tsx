@@ -1,13 +1,13 @@
 import styles from './styles.module.scss';
 import { AiOutlineClose } from 'react-icons/ai'
 
-interface ISuccessModal {
+interface InfoModal {
   title: string
   message: string
   closeCallback: () => void
 }
 
-export const SuccessModal = ({ title, message, closeCallback }: ISuccessModal) => {
+export const InfoModal = ({ title, message, closeCallback }: InfoModal) => {
   return (
     <div className={styles['success-modal']}>
       <div className={styles['success-modal-container']}>

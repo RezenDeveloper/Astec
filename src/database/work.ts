@@ -1,3 +1,4 @@
+import { AxiosError } from "axios"
 import { axiosAPI } from "./axios"
 
 export const getWork = (id: string): Work | null => {
@@ -87,7 +88,7 @@ export const getAllWorks = (): Work[] | null => {
   ]
 }
 
-export const createWork = async (data:ReqWork):Promise<MethodResponse<Work>> => {
+export const createWork = async (data:ReqWork):Promise<MethodResponse<Work, AxiosError>> => {
   try {
     const { data:resData } = await axiosAPI.post<Work>(`/api/work`, data)
     return {
@@ -97,7 +98,7 @@ export const createWork = async (data:ReqWork):Promise<MethodResponse<Work>> => 
   } catch (error) {
     return {
       data: null,
-      error
+      error: error as AxiosError
     }
   }
 }

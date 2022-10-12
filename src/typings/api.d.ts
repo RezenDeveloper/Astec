@@ -1,7 +1,6 @@
-
-interface MethodResponse<T> {
+interface MethodResponse<T,E> {
   data: T | null
-  error: any | null
+  error: E | null
 }
 
 interface ReqWork {

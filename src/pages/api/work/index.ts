@@ -19,7 +19,7 @@ const createWork = async (req: NextApiRequest, res: NextApiResponse) => {
       tags,
       year
     } = req.body
-
+    
     if(!title || !description || !subjectId || !tags?.length || !year) return res.status(404).json({ message: 'Invalid fields' })
 
     const work = await Work.create({

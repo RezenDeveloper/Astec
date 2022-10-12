@@ -1,6 +1,7 @@
+import { AxiosError } from "axios"
 import { axiosAPI } from "./axios"
 
-export const getAllSubjects = async ():Promise<MethodResponse<Subject[]>> => {
+export const getAllSubjects = async ():Promise<MethodResponse<Subject[], AxiosError>> => {
 
   try {
     const { data } = await axiosAPI.get<Subject[]>(`/api/subject`)
@@ -12,12 +13,12 @@ export const getAllSubjects = async ():Promise<MethodResponse<Subject[]>> => {
     console.log(error)
     return {
       data: null,
-      error
+      error: error as AxiosError
     }
   }
 }
 
-export const createSubject = async (data:ReqSubject):Promise<MethodResponse<Subject>> => {
+export const createSubject = async (data:ReqSubject):Promise<MethodResponse<Subject, AxiosError>> => {
   try {
     const { data:dataRes } = await axiosAPI.post<Subject>(`/api/subject`, data)
 
@@ -28,12 +29,12 @@ export const createSubject = async (data:ReqSubject):Promise<MethodResponse<Subj
   } catch (error) {
     return {
       data: null,
-      error
+      error: error as AxiosError
     }
   }
 }
 
-export const updateSubject = async (id:string, data:ReqUpdateSubject):Promise<MethodResponse<Subject>> => {
+export const updateSubject = async (id:string, data:ReqUpdateSubject):Promise<MethodResponse<Subject, AxiosError>> => {
   try {
     const { data:dataRes } = await axiosAPI.put<Subject>(`/api/subject/${id}`, data)
     return {
@@ -43,7 +44,22 @@ export const updateSubject = async (id:string, data:ReqUpdateSubject):Promise<Me
   } catch (error) {
     return {
       data: null,
-      error
+      error: error as AxiosError
+    }
+  }
+}
+
+export const deleteSubject = async (id:string):Promise<MethodResponse<Subject, AxiosError>> => {
+  try {
+    const { data:dataRes } = await axiosAPI.delete<Subject>(`/api/subject/${id}`)
+    return {
+      data: dataRes,
+      error: null
+    }
+  } catch (error) {
+    return {
+      data: null,
+      error: error as AxiosError
     }
   }
 }
