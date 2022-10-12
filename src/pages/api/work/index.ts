@@ -64,7 +64,19 @@ const createWork = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const getAllWorks = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const works = await Work.findAll()
+    const order = req.query.order as string
+
+    const works = await Work.findAll({
+      include: [
+        {
+          association: 'subject'
+        },
+        {
+          association: 'tags'
+        }
+      ],
+      order: order === 'recent' ? [['createdAt', 'DESC']] : []
+    })
   
     res.status(200).json(works)
   } catch (error) {

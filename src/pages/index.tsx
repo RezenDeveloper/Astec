@@ -9,10 +9,12 @@ import { GetStaticProps } from 'next'
 import { getRecentWorks } from '../database/work'
 
 interface HomeProps {
-  recentWorks: Work[]
+  recentWorks: Work[] | null
 }
 
 const Home:React.FC<HomeProps> = ({ recentWorks }) => {
+  if(!recentWorks) return null
+
   return (
     <>
       <Head>
@@ -44,9 +46,10 @@ const Home:React.FC<HomeProps> = ({ recentWorks }) => {
 }
 
 export const getStaticProps: GetStaticProps<HomeProps> = async () => {
+  const { data } = await getRecentWorks();
   return {
     props: {
-      recentWorks: getRecentWorks(),
+      recentWorks: data,
     }
   }
 }

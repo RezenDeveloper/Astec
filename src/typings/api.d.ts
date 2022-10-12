@@ -10,6 +10,21 @@ interface ReqWork {
   year: number
   tags: string[]
 }
+interface ResAllWorks {
+  id: string
+  year: number
+  title: string
+  description: string
+  tags: {
+    id: string
+    name: string
+  }[]
+  subject: {
+    id: string
+    name: string
+    description: string
+  }
+}
 
 interface ReqSubject {
   name: string

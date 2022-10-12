@@ -18,10 +18,10 @@ export interface WorkCardProps {
 }
 
 export const WorkCard:React.FC<WorkCardProps> = ({ work }) => {
-  const { 
+  const {
+    id,
     title,
     subject,
-    fileId,
     description,
   } = work
 
@@ -31,17 +31,17 @@ export const WorkCard:React.FC<WorkCardProps> = ({ work }) => {
       <div className={styles['pdf-container']}>
         <PDFViewer 
           Loading={() => (<div className={styles['loading']}></div>)}
-          fileId={fileId}
+          fileId={id}
           pageIndex={0} 
         />
       </div>
-      <strong className={styles['class']}>{subject}</strong>
+      <strong className={styles['class']}>{subject.name}</strong>
       <div className={styles['description']}>
         <h4>Descrição</h4>
         <p>{description}</p>
       </div>
       <div className={styles['button-area']}>
-        <Link href={`/trabalho/${fileId}`}>Visualizar</Link>
+        <Link href={`/trabalho/${id}`}>Visualizar</Link>
       </div>
     </div>
   );

@@ -3,20 +3,24 @@ interface Year {
   value: string
 }
 
-interface Tag { 
+interface SearchTag { 
   id: string
   text: string
   total: number
 }
 
 interface Work {
-  title: string,
+  title: string
+  id: string
   description: string
-  fileId: string,
-  authorArray: string[],
-  tagArray: string[],
-  subject: string,
-  year: number,
+  authorArray: string[]
+  tagArray: string[]
+  year: number
+  subject: {
+    id: string
+    name: string
+    description: string
+  }
 }
 
 type ErrorTypes = 'error' | 'error__min' | 'error__max' | undefined

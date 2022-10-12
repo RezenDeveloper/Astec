@@ -1,91 +1,90 @@
 import { AxiosError } from "axios"
 import { axiosAPI } from "./axios"
 
-export const getWork = (id: string): Work | null => {
-
-  return {
-    title: 'Trabalho de Graduação Teste',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur nibh eu luctus consequat. Praesent a scelerisque elit. Sed cursus diam ac ligula vehicula, ut tincidunt magna fringilla. Nullam lobortis dui a massa bibendum, vel porta neque sodales. Nam vestibulum justo nec condimentum luctus. Cras eros dui, porta vitae auctor a, cursus nec nisl. Vivamus pretium ex eu felis consequat lobortis. ',
-    fileId: 'test',
-    authorArray: ['autor1', 'autor2', 'autor3'],
-    tagArray: ['tag1', 'tag2', 'tag3', 'tag4'],
-    subject: 'Análise e Desenvolvimento de Sistemas',
-    year: 2015
+export const getWork = async (id: string):Promise<MethodResponse<Work, AxiosError>> => {
+  try {
+    const { data } = await axiosAPI.get<ResAllWorks>(`/api/work/${id}`)
+    const { description, title, subject, tags, year } = data
+    return {
+      data: {
+        id,
+        title,
+        description,
+        year,
+        authorArray: [],
+        tagArray: tags.map(tag => tag.name),
+        subject: {
+          id: subject.id,
+          name: subject.name,
+          description: subject.description
+        }
+      },
+      error: null
+    }
+  } catch (error) {
+    return {
+      data: null,
+      error: error as AxiosError
+    }
   }
 }
 
-export const getRecentWorks = () => {
-  return [
-    {
-      title: 'teste',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur nibh eu luctus consequat. Praesent a scelerisque elit. Sed cursus diam ac ligula vehicula, ut tincidunt magna fringilla. Nullam lobortis dui a massa bibendum, vel porta neque sodales. Nam vestibulum justo nec condimentum luctus. Cras eros dui, porta vitae auctor a, cursus nec nisl. Vivamus pretium ex eu felis consequat lobortis. ',
-      fileId: 'test',
-      authorArray: ['teste', 'teste', 'teste'],
-      tagArray: ['teste', 'teste', 'teste', 'teste'],
-      subject: 'Análise e Desenvolvimento de Sistemas',
-      year: 2015
-    },
-    {
-      title: 'teste',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur nibh eu luctus consequat. Praesent a scelerisque elit. Sed cursus diam ac ligula vehicula, ut tincidunt magna fringilla. Nullam lobortis dui a massa bibendum, vel porta neque sodales. Nam vestibulum justo nec condimentum luctus. Cras eros dui, porta vitae auctor a, cursus nec nisl. Vivamus pretium ex eu felis consequat lobortis. ',
-      fileId: 'test',
-      authorArray: ['teste', 'teste', 'teste'],
-      tagArray: ['teste', 'teste', 'teste', 'teste'],
-      subject: 'Análise e Desenvolvimento de Sistemas',
-      year: 2015
-    },
-    {
-      title: 'teste',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur nibh eu luctus consequat. Praesent a scelerisque elit. Sed cursus diam ac ligula vehicula, ut tincidunt magna fringilla. Nullam lobortis dui a massa bibendum, vel porta neque sodales. Nam vestibulum justo nec condimentum luctus. Cras eros dui, porta vitae auctor a, cursus nec nisl. Vivamus pretium ex eu felis consequat lobortis. ',
-      fileId: 'test',
-      authorArray: ['teste', 'teste', 'teste'],
-      tagArray: ['teste', 'teste', 'teste', 'teste'],
-      subject: 'Análise e Desenvolvimento de Sistemas',
-      year: 2015
+export const getRecentWorks = async ():Promise<MethodResponse<Work[], AxiosError>> => {
+  try {
+    const { data } = await axiosAPI.get<ResAllWorks[]>('/api/work', {
+      params: {
+        order: 'recent'
+      }
+    })
+    return {
+      data: data.map(({ id, description, title, subject, tags, year }):Work => ({
+        id,
+        title,
+        description,
+        year,
+        authorArray: [],
+        tagArray: tags.map(tag => tag.name),
+        subject: {
+          id: subject.id,
+          name: subject.name,
+          description: subject.description
+        }
+      })),
+      error: null
     }
-  ]
+  } catch (error) {
+    return {
+      data: null,
+      error: error as AxiosError
+    }
+  }
 }
 
-export const getAllWorks = (): Work[] | null => {
-
-  return [
-    {
-      title: 'teste',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur nibh eu luctus consequat. Praesent a scelerisque elit. Sed cursus diam ac ligula vehicula, ut tincidunt magna fringilla. Nullam lobortis dui a massa bibendum, vel porta neque sodales. Nam vestibulum justo nec condimentum luctus. Cras eros dui, porta vitae auctor a, cursus nec nisl. Vivamus pretium ex eu felis consequat lobortis. ',
-      fileId: 'test',
-      authorArray: ['teste', 'teste', 'teste'],
-      tagArray: ['teste', 'teste', 'teste', 'teste'],
-      subject: 'Análise e Desenvolvimento de Sistemas',
-      year: 2015
-    },
-    {
-      title: 'teste',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur nibh eu luctus consequat. Praesent a scelerisque elit. Sed cursus diam ac ligula vehicula, ut tincidunt magna fringilla. Nullam lobortis dui a massa bibendum, vel porta neque sodales. Nam vestibulum justo nec condimentum luctus. Cras eros dui, porta vitae auctor a, cursus nec nisl. Vivamus pretium ex eu felis consequat lobortis. ',
-      fileId: 'test',
-      authorArray: ['teste', 'teste', 'teste'],
-      tagArray: ['teste', 'teste', 'teste', 'teste'],
-      subject: 'Análise e Desenvolvimento de Sistemas',
-      year: 2015
-    },
-    {
-      title: 'teste',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur nibh eu luctus consequat. Praesent a scelerisque elit. Sed cursus diam ac ligula vehicula, ut tincidunt magna fringilla. Nullam lobortis dui a massa bibendum, vel porta neque sodales. Nam vestibulum justo nec condimentum luctus. Cras eros dui, porta vitae auctor a, cursus nec nisl. Vivamus pretium ex eu felis consequat lobortis. ',
-      fileId: 'test',
-      authorArray: ['teste', 'teste', 'teste'],
-      tagArray: ['teste', 'teste', 'teste', 'teste'],
-      subject: 'Análise e Desenvolvimento de Sistemas',
-      year: 2015
-    },
-    {
-      title: 'teste',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur nibh eu luctus consequat. Praesent a scelerisque elit. Sed cursus diam ac ligula vehicula, ut tincidunt magna fringilla. Nullam lobortis dui a massa bibendum, vel porta neque sodales. Nam vestibulum justo nec condimentum luctus. Cras eros dui, porta vitae auctor a, cursus nec nisl. Vivamus pretium ex eu felis consequat lobortis. ',
-      fileId: 'test',
-      authorArray: ['teste', 'teste', 'teste'],
-      tagArray: ['teste', 'teste', 'teste', 'teste'],
-      subject: 'Análise e Desenvolvimento de Sistemas',
-      year: 2015
+export const getAllWorks = async ():Promise<MethodResponse<Work[], AxiosError>> => {
+  try {
+    const { data } = await axiosAPI.get<ResAllWorks[]>('/api/work')
+    return {
+      data: data.map(({ id, description, title, subject, tags, year }):Work => ({
+        id,
+        title,
+        description,
+        year,
+        authorArray: [],
+        tagArray: tags.map(tag => tag.name),
+        subject: {
+          id: subject.id,
+          name: subject.name,
+          description: subject.description
+        }
+      })),
+      error: null
     }
-  ]
+  } catch (error) {
+    return {
+      data: null,
+      error: error as AxiosError
+    }
+  }
 }
 
 export const createWork = async (data:ReqWork):Promise<MethodResponse<Work, AxiosError>> => {

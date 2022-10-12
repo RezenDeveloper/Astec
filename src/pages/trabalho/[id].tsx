@@ -36,14 +36,14 @@ const Work = ({ work }: WorkProps) => {
     <NotFound />
   )
   
-  const { 
+  const {
+    id,
     title, 
     authorArray, 
     tagArray,
     description, 
     subject,
     year,
-    fileId
   } = work;
 
   return (
@@ -59,7 +59,7 @@ const Work = ({ work }: WorkProps) => {
           <PDFViewer
             Loading={() => (<div className={styles['loading']}></div>)}
             pageIndex={0}
-            fileId={fileId}
+            fileId={id}
             showDetails={true}
           />
         </div>
@@ -84,7 +84,7 @@ const Work = ({ work }: WorkProps) => {
           </div>
         </div>
         <div className={`${styles['information-container']} ${styles['information-container--subject']}`}>
-          <p>{subject} - {year}</p>
+          <p>{subject.name} - {year}</p>
         </div>
       </main>
       <Footer />
@@ -101,11 +101,11 @@ export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
 
 export const getStaticProps: GetStaticProps<WorkProps> = async ({ params }) => {
   const id = params?.id as string
-  const work = await getWork(id)
-
+  const { data } = await getWork(id)
+  
   return {
     props: {
-      work
+      work: data
     }
   }
 }

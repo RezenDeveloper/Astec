@@ -15,24 +15,24 @@ const PDFViewer = dynamic(() =>
 export interface ResultCardProps {
   title: string
   description: string
-  fileId: string
+  id: string
   authorArray: string[]
   tagArray: string[]
 }
 
-export const ResultCard = ({ title, description, fileId, authorArray, tagArray }: ResultCardProps) => {
+export const ResultCard = ({ title, description, id, authorArray, tagArray }: ResultCardProps) => {
 
   return (
     <div className={styles['result-card']}>
       <h2 className={styles['result-card--title']}>
-        <Link href={`/trabalho/${fileId}`}>{title}</Link>
+        <Link href={`/trabalho/${id}`}>{title}</Link>
       </h2>
       <div className={styles['wrapper']}>
         <div className={styles['pdf-container']}>
           <PDFViewer 
             Loading={() => (<div className={styles['loading']}></div>)}
             pageIndex={0}
-            fileId={fileId}
+            fileId={id}
           />
         </div>
         <div>

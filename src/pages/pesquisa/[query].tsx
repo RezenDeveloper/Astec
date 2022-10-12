@@ -17,7 +17,7 @@ import { getWorkTags } from '../../database/tag'
 
 interface SearchProps { 
   subjectList: Subject[] | null
-  tagList: Tag[] | null
+  tagList: SearchTag[] | null
   resultList: Work[] | null
   yearList: Year[] | null
 }
@@ -109,7 +109,7 @@ const Search = ({ subjectList, tagList, yearList, resultList }: SearchProps) => 
               selectedId={subject}
               valueList={subjectList.map(subject => ({
                 id: subject.id,
-                value: subject.title
+                value: subject.name
               }))}
               onChange={(id) => {
                 setSubject(id)
@@ -158,12 +158,12 @@ const Search = ({ subjectList, tagList, yearList, resultList }: SearchProps) => 
             {query}
           </h1>
           <div className={styles['result--list']}>
-            {resultList.map(({ authorArray, description, fileId, tagArray, title }, index) => (
+            {resultList.map(({ id, authorArray, description, tagArray, title }, index) => (
               <ResultCard
                 key={index}
                 authorArray={authorArray} 
                 description={description} 
-                fileId={fileId}
+                id={id}
                 tagArray={tagArray}
                 title={title}
               />
@@ -185,12 +185,18 @@ export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
 }
 
 export const getStaticProps: GetStaticProps<SearchProps> = async () => {
+  
+  const { data: subjectList } = await getAllSubjects()
+  // const { data: workTagsData } = await getWorkTags()
+  const { data: resultList } = await getAllWorks()
+
+
   return {
     props: {
-      subjectList: getAllSubjects(),
+      subjectList,
       tagList: getWorkTags(),
       yearList: getYearList(),
-      resultList: getAllWorks()
+      resultList
     }
   }
 }
