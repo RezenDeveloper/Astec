@@ -43,4 +43,6 @@ interface SearchParams {
   subject?: string
   tags?: string
   order?: 'recent'
+  limit?: number
+  offset?: number
 }

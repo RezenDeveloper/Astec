@@ -5,13 +5,12 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  margin: 0 25px;
+  margin: 40px auto;
   max-width: 485px;
 
   padding: 20px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   min-width: 350px;
-  width: 33%;
   transition: box-shadow ease 300ms;
 
   &:hover {
@@ -81,6 +80,10 @@
 
 .class-card {
   margin: 0 20px;
+
+  h4 {
+    text-align: center;
+  }
 
   .image {
     margin: auto;

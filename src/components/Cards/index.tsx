@@ -48,14 +48,17 @@ export const WorkCard:React.FC<WorkCardProps> = ({ work }) => {
 }
 
 export interface IClassCardProps {
+  title: string
+  description: string
 }
-export const ClassCard = (props: IClassCardProps) => {
+
+export const ClassCard = ({ title }: IClassCardProps) => {
   return (
     <div className={styles['class-card']}>
       <div className={styles['image']}>
         <h1>ADS</h1>
       </div>
-      <h4>Análise e desenvolvimento de sistemas</h4>
+      <h4>{title}</h4>
     </div>
   );
 }

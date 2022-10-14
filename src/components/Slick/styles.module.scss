@@ -1,0 +1,10 @@
+.slick-prev,
+.slick-next {
+  &::before {
+    display: none;
+  }
+  display: block;
+  width: 50px;
+  height: 50px;
+  z-index: 1;
+}

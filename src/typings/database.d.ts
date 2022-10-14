@@ -8,7 +8,7 @@ interface Tag extends DefaultAPI{
   name: string
 }
 
-interface Subject extends DefaultAPI{
+interface Subject extends DefaultAPI {
   name: string
   description: string
 }

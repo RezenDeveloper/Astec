@@ -17,6 +17,8 @@ const searchWork = async (req: NextApiRequest, res: NextApiResponse) => {
       author,
       tags,
       order,
+      limit,
+      offset
     } = req.query as { [key: string]: string }
 
     let where:any = {}
@@ -42,8 +44,7 @@ const searchWork = async (req: NextApiRequest, res: NextApiResponse) => {
             ...tagsWhere
           }
         }
-      ],
-      order: order === 'recent' ? [['createdAt', 'DESC']] : []
+      ]
     })
 
     const fullWorkList = await Work.findAll({
@@ -59,7 +60,10 @@ const searchWork = async (req: NextApiRequest, res: NextApiResponse) => {
         {
           association: 'subject'
         }
-      ]
+      ],
+      order: order === 'recent' ? [['createdAt', 'DESC']] : [],
+      limit: parseInt(limit) || 10,
+      offset: parseInt(offset) || 0,
     })
     
     res.status(200).json(fullWorkList)
