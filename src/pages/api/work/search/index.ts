@@ -26,7 +26,7 @@ const searchWork = async (req: NextApiRequest, res: NextApiResponse) => {
 
     if(year !== undefined) where.year = year
     if(subject !== undefined) where.subject_id = subject
-    if(tags) tagsWhere = {[Op.or]: tags.split(',').map(value => ({ name: value.trim() }))}
+    if(tags) tagsWhere = {[Op.or]: tags.split(',').map(value => ({ id: value.trim() }))}
 
     const workList = await Work.findAll({
       attributes: ['id'],

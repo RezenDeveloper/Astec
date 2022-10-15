@@ -41,7 +41,6 @@ const deleteSubject = async (req: NextApiRequest, res: NextApiResponse) => {
     if(!subject) return res.status(404).send(`Subject not found`)
 
     await subject.destroy()
-    console.log('ok')
     
     res.status(200).end()
   } catch (error) {

@@ -5,7 +5,7 @@ interface Year {
 
 interface SearchTag { 
   id: string
-  text: string
+  name: string
   total: number
 }
 

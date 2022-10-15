@@ -44,7 +44,6 @@ const Subjects = ({ subjectList: subjectListProps }: SubjectsProps) => {
 
   const updateSubjectList = async () => {
     const { data:newSubjectList } = await getAllSubjects()
-    console.log('updated')
     setSelectedSubjectList(newSubjectList)
   }
 

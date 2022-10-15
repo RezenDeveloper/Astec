@@ -12,7 +12,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
     case 'POST': return await createTag(req, res, work)
     default: {
-      console.log('default', req.method)
       return res.status(500).send(`Invalid method`)
     }
   }

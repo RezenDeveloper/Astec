@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { Sequelize } from 'sequelize'
 import { Tag } from '../../../database/models'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -11,7 +12,17 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
 const getAllTags = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const tags = await Tag.findAll()
+    const tags = await Tag.findAll({
+      attributes: {
+        include: [[Sequelize.fn("COUNT", Sequelize.col("works.id")), "total"]] 
+      },
+      include: {
+        association: 'works',
+        attributes: []
+      },
+      group: ['id'],
+      order: [['total', 'DESC']]
+    })
     
     res.status(200).json(tags)
   } catch (error) {

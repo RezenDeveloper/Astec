@@ -13,7 +13,7 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 import { getYearList, searchWorks } from '../../database/work'
 import NotFound from '../404'
 import { getAllSubjects } from '../../database/subject'
-import { getWorkTags } from '../../database/tag'
+import { getAllTags } from '../../database/tag'
 import Image from 'next/image'
 
 interface SearchProps { 
@@ -33,15 +33,20 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
   const [subject, setSubject] = useState('')
   const [tagArray, setTagArray] = useState<string[]>([])
 
+  const [loading, setLoading] = useState(false)
+
   useEffect(() => {
     const { ano, autor, curso, tags, query } = router.query as { [key: string]: string }
     const foundSubject = !!subjectList?.find(subject => curso === subject.id)
     const foundYear = !!yearList?.find(year => ano === year.id)
+
+    const newTagArray = !tags ? [] : tags.split(',')
     
     setAuthor(autor || '')
-    setTagArray(tags?.split(',') || [])
+    setTagArray(newTagArray)
     setYear(foundYear ? ano : '')
     setSubject(foundSubject ? curso : '')
+
 
     updateSearchResults({
       query,
@@ -54,8 +59,10 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
 
 
   const updateSearchResults = async (params: SearchParams) => {
+    setLoading(true)
     const { data } = await searchWorks(params)
     setResultList(data)
+    setLoading(false)
   }
 
   const handleTagSelect = (newTag: string) => {
@@ -64,7 +71,6 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
     if(tagExists) {
       setTagArray(old => {
         const newTagArray = old.filter(tag => tag !== newTag)
-        console.log('join', newTagArray.join(','))
         changeParams({ 
           tags: newTagArray.join(',')
         })
@@ -98,7 +104,7 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
   return (
     <>
       <Head>
-        <title>{query || 'Pesquisando...'}</title>
+        <title>{loading ? 'Pequisando' : query || 'Pesquisa'}</title>
       </Head>
       <Header query={query} />
       <main className={styles['container']}>
@@ -154,11 +160,11 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
           </div>
           <div className={`${styles['filter--field']} ${styles['filter--field__tags']}`}>
             {
-              tagList.map(({ text, total, id }) => (
+              tagList.map(({ name, total, id }) => (
                 <Tag 
                   key={id}
                   id={id}
-                  text={text} 
+                  text={name} 
                   total={total} 
                   isSelected={!!tagArray.find(tag => tag === id)}
                   handleTagSelect={handleTagSelect}
@@ -167,7 +173,7 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
             }
           </div>
         </section>
-        {query && (
+        {!loading && (
           <section className={styles['result']}>
             <h1 className={styles['result--title']}>
               {query}
@@ -192,7 +198,7 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
           </section>
         )}
         
-        {!query && (
+        {loading && (
           <section className={styles['result-loading']}>
             <Image
               src={'/images/loading.svg'}
@@ -219,11 +225,11 @@ export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
 export const getStaticProps: GetStaticProps<SearchProps> = async ({ params }) => {
   
   const { data: subjectList } = await getAllSubjects()
-  // const { data: workTagsData } = await getWorkTags()
+  const { data: tagList } = await getAllTags()
   return {
     props: {
       subjectList,
-      tagList: getWorkTags(),
+      tagList,
       yearList: getYearList()
     }
   }
