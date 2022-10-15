@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Sequelize } from 'sequelize'
-import { Tag, Work } from '../../../database/models'
+import { Tag, Work, Author } from '../../../database/models'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
@@ -10,6 +10,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 
+interface CreateWorkBody {
+  title?: string
+  description?: string
+  subjectId?: string
+  tags?: string[]
+  authors?: string[]
+  year?: number
+}
+
 const createWork = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const {
@@ -17,10 +26,18 @@ const createWork = async (req: NextApiRequest, res: NextApiResponse) => {
       description,
       subjectId,
       tags,
+      authors,
       year
-    } = req.body
+    } = req.body as CreateWorkBody
     
-    if(!title || !description || !subjectId || !tags?.length || !year) return res.status(404).json({ message: 'Invalid fields' })
+    if(
+      !title || 
+      !description || 
+      !subjectId || 
+      !tags?.length || 
+      !authors?.length || 
+      !year
+    ) return res.status(404).json({ message: 'Invalid fields' })
 
     const work = await Work.create({
       title,
@@ -44,6 +61,24 @@ const createWork = async (req: NextApiRequest, res: NextApiResponse) => {
         
         // @ts-expect-error
         await work.addTag(tag)
+      })
+    )
+
+    await Promise.all(
+      authors.map(async (name: string) => {
+        let author = await Author.findOne({
+          // @ts-expect-error
+          where: { 
+            name: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('name')), 'LIKE', '%' + name.toLowerCase() + '%')
+          },
+        })
+
+        if(!author) {
+          await Author.create({ 
+            name,
+            work_id: work.id
+          })
+        }
       })
     )
 

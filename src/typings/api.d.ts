@@ -8,6 +8,7 @@ interface ReqWork {
   description: string
   subjectId: string
   year: number
+  authors: string[]
   tags: string[]
 }
 interface ResAllWorks {

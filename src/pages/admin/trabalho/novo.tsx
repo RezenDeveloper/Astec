@@ -88,6 +88,7 @@ const New = ({ yearList, subjectList }: NewProps) => {
     const { data, error } = await createWork({
       title,
       description,
+      authors: authorList,
       tags: tagList,
       year: parseInt(year),
       subjectId: subject
