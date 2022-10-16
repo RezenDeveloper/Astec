@@ -23,6 +23,7 @@ const Work = connection.define<WorkModel>('works', {
 const associate = () => {
   const Subject = connection.models['subjects']
   const Tag = connection.models['tags']
+  const Author = connection.models['authors']
 
   Work.belongsTo(Subject, {
     foreignKey: 'subject_id',
@@ -32,6 +33,10 @@ const associate = () => {
     foreignKey: 'work_id',
     through: 'work_tags',
     as: 'tags'
+  })
+  Work.hasMany(Author, {
+    foreignKey: 'work_id',
+    as: 'authors',
   })
 }
 

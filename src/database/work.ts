@@ -4,48 +4,17 @@ import { axiosAPI } from "./axios"
 export const getWork = async (id: string):Promise<MethodResponse<Work, AxiosError>> => {
   try {
     const { data } = await axiosAPI.get<ResAllWorks>(`/api/work/${id}`)
-    const { description, title, subject, tags, year } = data
+    const { description, title, subject, tags, year, authors } = data
     return {
       data: {
         id,
         title,
         description,
         year,
-        authorArray: [],
         tagArray: tags.map(tag => tag.name),
-        subject: {
-          id: subject.id,
-          name: subject.name,
-          description: subject.description
-        }
+        subject,
+        authors
       },
-      error: null
-    }
-  } catch (error) {
-    return {
-      data: null,
-      error: error as AxiosError
-    }
-  }
-}
-
-export const getAllWorks = async ():Promise<MethodResponse<Work[], AxiosError>> => {
-  try {
-    const { data } = await axiosAPI.get<ResAllWorks[]>('/api/work')
-    return {
-      data: data.map(({ id, description, title, subject, tags, year }):Work => ({
-        id,
-        title,
-        description,
-        year,
-        authorArray: [],
-        tagArray: tags.map(tag => tag.name),
-        subject: {
-          id: subject.id,
-          name: subject.name,
-          description: subject.description
-        }
-      })),
       error: null
     }
   } catch (error) {
@@ -64,18 +33,14 @@ export const searchWorks = async (params:SearchParams):Promise<MethodResponse<Wo
       }
     })
     return {
-      data: data.map(({ id, description, title, subject, tags, year }):Work => ({
+      data: data.map(({ id, description, title, subject, tags, year, authors }):Work => ({
         id,
         title,
         description,
         year,
-        authorArray: [],
         tagArray: tags.map(tag => tag.name),
-        subject: {
-          id: subject.id,
-          name: subject.name,
-          description: subject.description
-        }
+        subject,
+        authors
       })),
       error: null
     }

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { Work } from '../../../database/models'
+import { Author, Work } from '../../../database/models'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
@@ -14,10 +14,13 @@ const getWork = async (req: NextApiRequest, res: NextApiResponse) => {
     const work = await Work.findByPk(id, {
       include: [
         {
-          association: 'subject',
+          association: 'subject'
         },
         {
           association: 'tags'
+        },
+        {
+          association: 'authors'
         }
       ]
     })

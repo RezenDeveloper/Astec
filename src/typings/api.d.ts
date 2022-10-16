@@ -25,6 +25,10 @@ interface ResAllWorks {
     name: string
     description: string
   }
+  authors: {
+    id: string
+    name: string
+  }[]
 }
 
 interface ReqSubject {

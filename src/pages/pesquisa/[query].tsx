@@ -180,10 +180,10 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
             </h1>
             <div className={styles['result--list']}>
               {resultList.length > 0 ? 
-                resultList.map(({ id, authorArray, description, tagArray, title }, index) => (
+                resultList.map(({ id, authors, description, tagArray, title }, index) => (
                   <ResultCard
                     key={index}
-                    authorArray={authorArray} 
+                    authorArray={authors} 
                     description={description} 
                     id={id}
                     tagArray={tagArray}

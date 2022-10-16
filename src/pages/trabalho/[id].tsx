@@ -38,8 +38,8 @@ const Work = ({ work }: WorkProps) => {
   
   const {
     id,
-    title, 
-    authorArray, 
+    title,
+    authors,
     tagArray,
     description, 
     subject,
@@ -70,8 +70,8 @@ const Work = ({ work }: WorkProps) => {
         <div className={`${styles['information-container']} ${styles['information-container--authors']}`}>
           <b>Autores</b>
           <div className={styles['information-container--list']}>
-            {authorArray.map((author, index) => (
-              <span key={index} className={styles['author']}>{author}</span>
+            {authors.map(({ name, id }) => (
+              <span key={id} className={styles['author']}>{name}</span>
             ))}
           </div>
         </div>

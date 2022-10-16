@@ -16,7 +16,7 @@ export interface ResultCardProps {
   title: string
   description: string
   id: string
-  authorArray: string[]
+  authorArray: Author[]
   tagArray: string[]
 }
 
@@ -43,7 +43,7 @@ export const ResultCard = ({ title, description, id, authorArray, tagArray }: Re
           <div className={styles['result-card--authors']}>
             <label>Autores</label>
             <div className={styles['tag-wrapper']}>
-              {authorArray.map((name, index) => (
+              {authorArray.map(({ name }, index) => (
                 <p key={index}>{name}</p>
               ))}
             </div>

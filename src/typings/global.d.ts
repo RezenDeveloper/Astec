@@ -9,11 +9,15 @@ interface SearchTag {
   total: number
 }
 
+interface Author {
+  id: string
+  name: string
+}
+
 interface Work {
   title: string
   id: string
   description: string
-  authorArray: string[]
   tagArray: string[]
   year: number
   subject: {
@@ -21,6 +25,7 @@ interface Work {
     name: string
     description: string
   }
+  authors: Author[]
 }
 
 type ErrorTypes = 'error' | 'error__min' | 'error__max' | undefined

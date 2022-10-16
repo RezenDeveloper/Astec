@@ -29,6 +29,8 @@ const createWork = async (req: NextApiRequest, res: NextApiResponse) => {
       authors,
       year
     } = req.body as CreateWorkBody
+
+    console.log(req.body)
     
     if(
       !title || 

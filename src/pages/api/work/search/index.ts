@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Op } from 'sequelize'
-import { Work } from '../../../../database/models'
+import { Author, Work } from '../../../../database/models'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
@@ -43,7 +43,16 @@ const searchWork = async (req: NextApiRequest, res: NextApiResponse) => {
           where: {
             ...tagsWhere
           }
-        }
+        },
+        {
+          attributes: ['id'],
+          association: 'authors',
+          where: {
+            name: {
+              [Op.like]: `%${author || ''}%`
+            }
+          }
+        }        
       ]
     })
 
@@ -59,6 +68,9 @@ const searchWork = async (req: NextApiRequest, res: NextApiResponse) => {
         },
         {
           association: 'subject'
+        },
+        {
+          association: 'authors'
         }
       ],
       order: order === 'recent' ? [['createdAt', 'DESC']] : [],
