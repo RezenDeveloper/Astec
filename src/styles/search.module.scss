@@ -41,10 +41,13 @@
 
   &--title {
     text-align: center;
+    min-height: 50px;
   }
   &--list {
-    > div:last-of-type {
-      filter: blur(2px);
+    &:not(.complete) {
+      > div:last-of-type {
+        filter: blur(2px);
+      }
     }
     .not-found {
       width: 100%;

@@ -28,6 +28,11 @@ interface Work {
   authors: Author[]
 }
 
+interface SearchWork {
+  result: Work[]
+  pagination: Pagination
+}
+
 type ErrorTypes = 'error' | 'error__min' | 'error__max' | undefined
 interface ErrorObj {
   title: ErrorTypes

@@ -27,13 +27,26 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
   const router = useRouter()
   const query = router.query.query as string
 
-  const [resultList, setResultList] = useState<Work[] | null>(null)
+  const [resultList, setResultList] = useState<Work[] | undefined>()
   const [year, setYear] = useState('')
   const [author, setAuthor] = useState('')
   const [subject, setSubject] = useState('')
   const [tagArray, setTagArray] = useState<string[]>([])
-
+  const [pagination, setPagination] = useState<Pagination>()
   const [loading, setLoading] = useState(false)
+  
+  const limit = 10
+  let currentPage = 0
+  let totalPages = 0
+  let hasMore = false
+  let rest = 0
+
+  if(pagination) {
+    currentPage = Math.floor(pagination.offset / limit)
+    totalPages = Math.floor((pagination.total - 1) / limit)
+    rest = pagination.total - pagination.offset
+    hasMore = totalPages > currentPage
+  }
 
   useEffect(() => {
     const { ano, autor, curso, tags, query } = router.query as { [key: string]: string }
@@ -54,14 +67,25 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
       subject: curso,
       year: ano,
       tags,
+      limit
     })
   }, [router.query])
 
 
-  const updateSearchResults = async (params: SearchParams) => {
+  const updateSearchResults = async (params: SearchParams, add = false) => {
     setLoading(true)
     const { data } = await searchWorks(params)
-    setResultList(data)
+    if(!data) return
+
+    setPagination(data.pagination)
+    if(add) {
+      setResultList(prev => {
+        if(prev) return [...prev, ...data.result]
+        else return data.result
+      })
+    } else {
+      setResultList(data.result)
+    }
     setLoading(false)
   }
 
@@ -173,42 +197,51 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
             }
           </div>
         </section>
-        {!loading && (
-          <section className={styles['result']}>
-            <h1 className={styles['result--title']}>
-              {query}
-            </h1>
-            <div className={styles['result--list']}>
-              {resultList.length > 0 ? 
-                resultList.map(({ id, authors, description, tagArray, title }, index) => (
-                  <ResultCard
-                    key={index}
-                    authorArray={authors} 
-                    description={description} 
-                    id={id}
-                    tagArray={tagArray}
-                    title={title}
-                  />
-                )) : (
-                  <h1 className={styles['not-found']}>Nada encontrado</h1>
-                )
-              }
-            </div>
-            <button className={styles['result--button']}>Ver Mais</button>
-          </section>
-        )}
-        
-        {loading && (
-          <section className={styles['result-loading']}>
-            <Image
-              src={'/images/loading.svg'}
-              aria-label={'Carregando'}
-              objectFit={'contain'}
-              width={150}
-              height={150}
-            />
-          </section>
-        )}
+        <section className={styles['result']}>
+          <h1 className={styles['result--title']}>
+            {loading ? '' : query || 'Pesquisa'}
+          </h1>
+          <div className={`${styles['result--list']} ${!hasMore ? styles['complete'] : ''}`}>
+            {resultList.length > 0 ? 
+              resultList.map(({ id, authors, description, tagArray, title }, index) => (
+                <ResultCard
+                  key={index}
+                  authorArray={authors} 
+                  description={description} 
+                  id={id}
+                  tagArray={tagArray}
+                  title={title}
+                />
+              )) : (
+                <h1 className={styles['not-found']}>Nada encontrado</h1>
+              )
+            }
+            {loading && (
+              <section className={styles['result-loading']}>
+                <Image
+                  src={'/images/loading.svg'}
+                  aria-label={'Carregando'}
+                  objectFit={'contain'}
+                  width={150}
+                  height={150}
+                />
+              </section>
+            )}
+          </div>
+          {hasMore && (
+            <button onClick={async () => {
+              await updateSearchResults({
+                query: query || undefined,
+                author: author || undefined,
+                subject: subject || undefined,
+                year: year || undefined,
+                tags: tagArray.join(',') || undefined,
+                limit,
+                offset: (pagination?.offset || 0) + limit
+              }, true)
+            }} className={styles['result--button']}>Ver Mais</button>
+          )}
+        </section>
       </main>
       <Footer />
     </>

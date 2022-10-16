@@ -77,8 +77,22 @@ const searchWork = async (req: NextApiRequest, res: NextApiResponse) => {
       limit: parseInt(limit) || 10,
       offset: parseInt(offset) || 0,
     })
+
+    const total = await Work.count({
+      where: {
+        id: {
+          [Op.in]: workList.map(({ id }) => id),
+        }
+      }
+    })
     
-    res.status(200).json(fullWorkList)
+    res.status(200).json({
+      result: fullWorkList,
+      pagination: {
+        total,
+        offset: parseInt(offset) || 0
+      }      
+    })
   } catch (error) {
     console.log(error)
     res.status(500).json({ error: error }) 

@@ -3,7 +3,7 @@ import { axiosAPI } from "./axios"
 
 export const getWork = async (id: string):Promise<MethodResponse<Work, AxiosError>> => {
   try {
-    const { data } = await axiosAPI.get<ResAllWorks>(`/api/work/${id}`)
+    const { data } = await axiosAPI.get<ResWork>(`/api/work/${id}`)
     const { description, title, subject, tags, year, authors } = data
     return {
       data: {
@@ -25,23 +25,27 @@ export const getWork = async (id: string):Promise<MethodResponse<Work, AxiosErro
   }
 }
 
-export const searchWorks = async (params:SearchParams):Promise<MethodResponse<Work[], AxiosError>> => {
+export const searchWorks = async (params:SearchParams):Promise<MethodResponse<SearchWork, AxiosError>> => {
   try {
-    const { data } = await axiosAPI.get<ResAllWorks[]>('/api/work/search', {
+    const { data } = await axiosAPI.get<ResAllWorks>('/api/work/search', {
       params: {
         ...params
       }
     })
+    const { result, pagination } = data
     return {
-      data: data.map(({ id, description, title, subject, tags, year, authors }):Work => ({
-        id,
-        title,
-        description,
-        year,
-        tagArray: tags.map(tag => tag.name),
-        subject,
-        authors
-      })),
+      data: {
+        result: result.map(({ id, description, title, subject, tags, year, authors }) => ({
+          id,
+          title,
+          description,
+          year,
+          tagArray: tags.map(tag => tag.name),
+          subject,
+          authors
+        })),
+        pagination
+      },
       error: null
     }
   } catch (error) {

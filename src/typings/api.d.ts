@@ -11,7 +11,13 @@ interface ReqWork {
   authors: string[]
   tags: string[]
 }
-interface ResAllWorks {
+
+interface Pagination {
+  offset: number
+  total: number
+}
+
+interface ResWork {
   id: string
   year: number
   title: string
@@ -29,6 +35,10 @@ interface ResAllWorks {
     id: string
     name: string
   }[]
+}
+interface ResAllWorks {
+  result: ResWork[]
+  pagination: Pagination
 }
 
 interface ReqSubject {
