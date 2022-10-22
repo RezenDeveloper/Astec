@@ -2,6 +2,7 @@ import AuthorObj from './Author'
 import SubjectObj from './Subject'
 import WorkObj from './Work'
 import TagObj from './Tag'
+import ManagerObj from './Manager'
 
 TagObj.associate()
 WorkObj.associate()
@@ -12,10 +13,12 @@ const Work = WorkObj.Model
 const Subject = SubjectObj.Model
 const Author = AuthorObj.Model
 const Tag = TagObj.Model
+const Manager = ManagerObj.Model
 
 export {
   Work,
   Subject,
   Author,
-  Tag
+  Tag,
+  Manager
 }
