@@ -16,7 +16,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { CustomNextArrow, CustomPrevArrow } from '../components/Slick'
 
 interface HomeProps {
-  recentWorks: Work[] | null
+  recentWorks: SearchWork | null
   subjects: Subject[] | null
 }
 
@@ -41,7 +41,7 @@ const Home:React.FC<HomeProps> = ({ recentWorks, subjects }) => {
               prevArrow={<CustomPrevArrow />}
               nextArrow={<CustomNextArrow />}
             >
-              {recentWorks.map((work, index) => <WorkCard key={index} work={work} />)}
+              {recentWorks.result.map((work, index) => <WorkCard key={index} work={work} />)}
             </Slider>
           </div>
         </section>
