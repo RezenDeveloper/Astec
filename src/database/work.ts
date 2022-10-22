@@ -11,7 +11,7 @@ export const getWork = async (id: string):Promise<MethodResponse<Work, AxiosErro
         title,
         description,
         year,
-        tagArray: tags.map(tag => tag.name),
+        tags,
         subject,
         authors
       },
@@ -35,15 +35,7 @@ export const searchWorks = async (params:SearchParams):Promise<MethodResponse<Se
     const { result, pagination } = data
     return {
       data: {
-        result: result.map(({ id, description, title, subject, tags, year, authors }) => ({
-          id,
-          title,
-          description,
-          year,
-          tagArray: tags.map(tag => tag.name),
-          subject,
-          authors
-        })),
+        result,
         pagination
       },
       error: null
@@ -55,7 +47,6 @@ export const searchWorks = async (params:SearchParams):Promise<MethodResponse<Se
     }
   }
 }
-
 export const createWork = async (data:ReqWork):Promise<MethodResponse<Work, AxiosError>> => {
   try {
     const { data:resData } = await axiosAPI.post<Work>(`/api/work`, data)

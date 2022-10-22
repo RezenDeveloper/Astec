@@ -12,3 +12,7 @@ interface Subject extends DefaultAPI {
   name: string
   description: string
 }
+
+interface Manager extends DefaultAPI {
+  email: string
+}

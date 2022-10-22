@@ -61,3 +61,8 @@ interface SearchParams {
   limit?: number
   offset?: number
 }
+
+interface ReqAuthenticate {
+  email: string
+  password: string
+}

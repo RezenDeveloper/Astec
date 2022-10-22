@@ -10,91 +10,96 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 }
 const searchWork = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const {
-      query,
-      year,
-      subject,
-      author,
-      tags,
-      order,
-      limit,
-      offset
-    } = req.query as { [key: string]: string }
-
-    let where:any = {}
-    let tagsWhere:any = {}
-
-    if(year !== undefined) where.year = year
-    if(subject !== undefined) where.subject_id = subject
-    if(tags) tagsWhere = {[Op.or]: tags.split(',').map(value => ({ id: value.trim() }))}
-
-    const workList = await Work.findAll({
-      attributes: ['id'],
-      where: {
-        title: {
-          [Op.like]: `%${query || ''}%`
-        },
-        ...where,
-      },
-      include: [
-        {
-          attributes: ['id'],
-          association: 'tags',
-          where: {
-            ...tagsWhere
-          }
-        },
-        {
-          attributes: ['id'],
-          association: 'authors',
-          where: {
-            name: {
-              [Op.like]: `%${author || ''}%`
-            }
-          }
-        }        
-      ]
-    })
-
-    const fullWorkList = await Work.findAll({
-      where: {
-        id: {
-          [Op.in]: workList.map(({ id }) => id)
-        }
-      },
-      include: [
-        {
-          association: 'tags'
-        },
-        {
-          association: 'subject'
-        },
-        {
-          association: 'authors'
-        }
-      ],
-      order: order === 'recent' ? [['createdAt', 'DESC']] : [],
-      limit: parseInt(limit) || 10,
-      offset: parseInt(offset) || 0,
-    })
-
-    const total = await Work.count({
-      where: {
-        id: {
-          [Op.in]: workList.map(({ id }) => id),
-        }
-      }
-    })
-    
-    res.status(200).json({
-      result: fullWorkList,
-      pagination: {
-        total,
-        offset: parseInt(offset) || 0
-      }      
-    })
+    const data = await handleSearchWork(req.query as { [key: string]: string })
+    res.status(200).json(data)
   } catch (error) {
     console.log(error)
     res.status(500).json({ error: error }) 
   }
+}
+
+export const handleSearchWork = async (reqQuery: { [key: string]: string }) => {
+  let where:any = {}
+  let tagsWhere:any = {}
+
+  const {
+    query,
+    year,
+    subject,
+    author,
+    tags,
+    order,
+    limit,
+    offset
+  } = reqQuery
+
+  if(year !== undefined) where.year = year
+  if(subject !== undefined) where.subject_id = subject
+  if(tags) tagsWhere = {[Op.or]: tags.split(',').map(value => ({ id: value.trim() }))}
+
+  const workList = await Work.findAll({
+    attributes: ['id'],
+    where: {
+      title: {
+        [Op.like]: `%${query || ''}%`
+      },
+      ...where,
+    },
+    include: [
+      {
+        attributes: ['id'],
+        association: 'tags',
+        where: {
+          ...tagsWhere
+        }
+      },
+      {
+        attributes: ['id'],
+        association: 'authors',
+        where: {
+          name: {
+            [Op.like]: `%${author || ''}%`
+          }
+        }
+      }        
+    ]
+  })
+
+  const fullWorkList = await Work.findAll({
+    where: {
+      id: {
+        [Op.in]: workList.map(({ id }) => id)
+      }
+    },
+    include: [
+      {
+        association: 'tags'
+      },
+      {
+        association: 'subject'
+      },
+      {
+        association: 'authors'
+      }
+    ],
+    order: order === 'recent' ? [['createdAt', 'DESC']] : [],
+    limit: parseInt(limit) || 10,
+    offset: parseInt(offset) || 0,
+  })
+
+  const total = await Work.count({
+    where: {
+      id: {
+        [Op.in]: workList.map(({ id }) => id),
+      }
+    }
+  })
+  
+  return ({
+    result: fullWorkList.map(work => JSON.parse(JSON.stringify(work.toJSON()))),
+    pagination: {
+      total,
+      offset: parseInt(offset) || 0
+    }
+  }) as unknown as SearchWork
 }

@@ -7,13 +7,16 @@ interface ManagerModel extends Model<InferAttributes<ManagerModel>, InferCreatio
   password: string
 }
 
-const Manager = connection.define<ManagerModel>('manager', {
+const Manager = connection.define<ManagerModel>('managers', {
   id: { 
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true
   },
-  email: DataTypes.STRING,
+  email: {
+    type: DataTypes.STRING,
+    unique: true
+  },
   password: DataTypes.STRING,
 })
 

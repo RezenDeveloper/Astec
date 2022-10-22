@@ -66,12 +66,24 @@
       }
     }
 
+    &_error {
+      input {
+        border-color: red;
+      }
+    }
+
     input,
     label {
       max-width: 400px;
       width: 100%;
       text-align: left;
     }
+  }
+
+  &--error-message {
+    color: red;
+    position: relative;
+    font-size: 1rem
   }
 
   &--button {

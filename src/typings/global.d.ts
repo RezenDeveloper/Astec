@@ -18,7 +18,10 @@ interface Work {
   title: string
   id: string
   description: string
-  tagArray: string[]
+  tags: {
+    id: string
+    name: string
+  }[]
   year: number
   subject: {
     id: string

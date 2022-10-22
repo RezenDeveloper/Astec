@@ -5,8 +5,7 @@ import { ClassCard, WorkCard } from '../components/Cards'
 
 import styles from '../styles/home.module.scss'
 import Footer from '../components/Footer'
-import { GetStaticProps } from 'next'
-import { searchWorks } from '../database/work'
+import { GetServerSideProps, GetStaticProps } from 'next'
 import Slider from "react-slick";
 import { getAllSubjects } from '../database/subject'
 
@@ -14,14 +13,19 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import { CustomNextArrow, CustomPrevArrow } from '../components/Slick'
+import { checkIsAdmin } from '../database/manager'
+import { handleSearchWork } from './api/work/search'
 
 interface HomeProps {
   recentWorks: SearchWork | null
   subjects: Subject[] | null
+  isAdmin: boolean
 }
 
-const Home:React.FC<HomeProps> = ({ recentWorks, subjects }) => {
+const Home:React.FC<HomeProps> = ({ recentWorks, subjects, isAdmin }) => {
   if(!recentWorks || !subjects) return null
+
+  console.log(isAdmin)
 
   return (
     <>
@@ -59,16 +63,18 @@ const Home:React.FC<HomeProps> = ({ recentWorks, subjects }) => {
   )
 }
 
-export const getStaticProps: GetStaticProps<HomeProps> = async () => {
-  const { data: recentWorks } = await searchWorks({ 
-    limit: 9,
+export const getServerSideProps: GetServerSideProps<HomeProps> = async (context) => {
+  const token = context.req.cookies['TGManager_Admin_Token']
+  const recentWorks = await handleSearchWork({
+    limit: '9',
     order: 'recent'
   });
   const { data: subjects } = await getAllSubjects();
   return {
     props: {
       recentWorks,
-      subjects
+      subjects,
+      isAdmin: await checkIsAdmin(token)
     }
   }
 }
