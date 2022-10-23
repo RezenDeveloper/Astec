@@ -7,9 +7,10 @@ import styles from './styles.module.scss';
 interface Props {
   query?: string
   hideSearch?: boolean
+  isAdmin?: boolean
 }
 
-export const Header:React.FC<Props> = ({ query, hideSearch = false }) => {
+export const Header:React.FC<Props> = ({ query, hideSearch = false, isAdmin = false }) => {
 
   const [queryValue, setQueryValue] = useState(query || '')
 
@@ -56,6 +57,13 @@ export const Header:React.FC<Props> = ({ query, hideSearch = false }) => {
                 />
               </form>
             </div>
+          }
+          {
+            isAdmin && (
+              <div className={styles['header__container--admin']}>
+                <Link href={'/admin/trabalho/novo'}>Adicionar Trabalho</Link>
+              </div>
+            )
           }
         </div>
       </header>

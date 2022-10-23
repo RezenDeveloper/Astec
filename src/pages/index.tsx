@@ -5,16 +5,16 @@ import { ClassCard, WorkCard } from '../components/Cards'
 
 import styles from '../styles/home.module.scss'
 import Footer from '../components/Footer'
-import { GetServerSideProps, GetStaticProps } from 'next'
+import { GetServerSideProps } from 'next'
 import Slider from "react-slick";
-import { getAllSubjects } from '../database/subject'
-
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import { CustomNextArrow, CustomPrevArrow } from '../components/Slick'
 import { checkIsAdmin } from '../database/manager'
 import { handleSearchWork } from './api/work/search'
+import { Subject } from '../database/models'
+import { handleGetAllSubjects } from './api/subject'
 
 interface HomeProps {
   recentWorks: SearchWork | null
@@ -32,7 +32,7 @@ const Home:React.FC<HomeProps> = ({ recentWorks, subjects, isAdmin }) => {
       <Head>
         <title>Armazenador de TGs</title>
       </Head>
-      <Header />
+      <Header isAdmin={isAdmin} />
       <main className={styles['container']}>
         <section className={styles['recent-works']}>
           <h1>Trabalhos recentes</h1>
@@ -69,7 +69,8 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async (context)
     limit: '9',
     order: 'recent'
   });
-  const { data: subjects } = await getAllSubjects();
+  const subjects = await handleGetAllSubjects()
+  
   return {
     props: {
       recentWorks,

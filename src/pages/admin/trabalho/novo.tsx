@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { ChangeEventHandler, FormEventHandler, MouseEventHandler, useEffect, useState } from 'react'
+import { ChangeEventHandler, FormEventHandler, useEffect, useState } from 'react'
 
 import { Header } from '../../../components/Header'
 
@@ -9,13 +9,15 @@ import Footer from '../../../components/Footer'
 import { SelectInput, TextBox, TextInput } from '../../../components/Inputs'
 import { TagInput } from '../../../components/Tags'
 import { createWork, getYearList } from '../../../database/work'
-import { GetStaticProps } from 'next'
+import { GetServerSideProps } from 'next'
 import { getAllSubjects } from '../../../database/subject'
 import AdminError from './erro'
 import { checkInputs } from '../../../utils/checkInputs'
 import Link from 'next/link'
 import { InfoModal } from '../../../components/InfoModal'
 import { LoadingModal } from '../../../components/LoadingModal'
+import { handleGetAllSubjects } from '../../api/subject'
+import { checkIsAdmin } from '../../../database/manager'
 
 interface NewProps {
   subjectList: Subject[] | null
@@ -233,13 +235,21 @@ const New = ({ yearList, subjectList }: NewProps) => {
   )
 }
 
-export const getStaticProps: GetStaticProps<NewProps> = async () => {
-  const { data } = await getAllSubjects();
-  return {
+export const getServerSideProps: GetServerSideProps<NewProps> = async (context) => {
+  const isAdmin = await checkIsAdmin(context.req.cookies['TGManager_Admin_Token'])
+  const subjects = await handleGetAllSubjects();
+
+  if(isAdmin) return {
     props: {
-      subjectList: data,
-      yearList: getYearList(),
+      subjectList: subjects,
+      yearList: getYearList()
     },
+  }
+  else return {
+    redirect: {
+      destination: '/',
+      permanent: true
+    }
   }
 }
 

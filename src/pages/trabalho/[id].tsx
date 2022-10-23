@@ -7,11 +7,10 @@ import { Header } from '../../components/Header'
 import Footer from '../../components/Footer'
 import NotFound from '../404'
 
-import { getWork } from '../../database/work'
-
 import styles from '../../styles/work.module.scss'
 import React from 'react'
 import { PDFViewerProps } from '../../components/PDFViewer'
+import { handleGetWork } from '../api/work/[id]'
 
 const PDFViewer = dynamic(() => 
   import('../../components/PDFViewer'), 
@@ -40,11 +39,12 @@ const Work = ({ work }: WorkProps) => {
     id,
     title,
     authors,
-    tagArray,
     description, 
     subject,
     year,
   } = work;
+
+  const tagArray = work.tags.map(({ name }) => name)
 
   return (
     <>
@@ -101,11 +101,11 @@ export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
 
 export const getStaticProps: GetStaticProps<WorkProps> = async ({ params }) => {
   const id = params?.id as string
-  const { data } = await getWork(id)
-  
+  const work = await handleGetWork(id)
+
   return {
     props: {
-      work: data
+      work
     }
   }
 }

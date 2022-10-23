@@ -4,7 +4,7 @@ import { Header } from '../../components/Header'
 
 import styles from '../../styles/admin-subjects.module.scss'
 import Footer from '../../components/Footer'
-import { GetStaticProps } from 'next'
+import { GetServerSideProps, GetStaticProps } from 'next'
 import { createSubject, deleteSubject, getAllSubjects, updateSubject } from '../../database/subject'
 import AdminError from './trabalho/erro'
 import { useEffect, useState } from 'react'
@@ -12,6 +12,8 @@ import { handleSelectKeyPress } from '../../utils/acessibility'
 import { TextBox, TextInput } from '../../components/Inputs'
 import { LoadingModal } from '../../components/LoadingModal'
 import { InfoModal } from '../../components/InfoModal'
+import { handleGetAllSubjects } from '../api/subject'
+import { checkIsAdmin } from '../../database/manager'
 
 interface SubjectsProps {
   subjectList: Subject[] | null
@@ -187,12 +189,22 @@ const Subjects = ({ subjectList: subjectListProps }: SubjectsProps) => {
   )
 }
 
-export const getStaticProps: GetStaticProps<SubjectsProps> = async () => {
-  const { data } = await getAllSubjects();
-  return {
+export const getServerSideProps: GetServerSideProps<SubjectsProps> = async (context) => {
+  const token = context.req.cookies['TGManager_Admin_Token']
+
+  const subjects = await handleGetAllSubjects()
+  const isAdmin = await checkIsAdmin(token)
+  
+  if(isAdmin) return {
     props: {
-      subjectList: data,
-    },
+      subjectList: subjects,
+    }    
+  }
+  else return {
+    redirect: {
+      destination: '/',
+      permanent: true
+    }
   }
 }
 

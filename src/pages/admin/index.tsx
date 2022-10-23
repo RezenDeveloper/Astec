@@ -1,11 +1,13 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import { GetServerSideProps } from 'next/types'
 import { FormEvent, ChangeEvent, useState, SetStateAction, Dispatch } from 'react'
-import { authenticate } from '../../database/manager'
+import { authenticate, checkIsAdmin } from '../../database/manager'
 
 import styles from '../../styles/admin.module.scss'
 
-const Admin = () => {
+
+const Admin:React.FC = () => {
 
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
@@ -73,6 +75,23 @@ const Admin = () => {
       </main>
     </>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const token = context.req.cookies['TGManager_Admin_Token']
+  const isAdmin = await checkIsAdmin(token)
+  
+  if(isAdmin) return {
+    redirect: {
+      destination: '/',
+      permanent: true
+    }
+  }
+  else {
+    return {
+      props: {}
+    }
+  }
 }
 
 export default Admin

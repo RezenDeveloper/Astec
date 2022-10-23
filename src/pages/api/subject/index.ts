@@ -37,3 +37,11 @@ const getAllSubjects = async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(500).json({ error: error }) 
   }
 }
+
+export const handleGetAllSubjects = async () => {
+  const subjects =  await Subject.findAll({ 
+    raw: true,
+  });
+
+  return JSON.parse(JSON.stringify(subjects))
+}
