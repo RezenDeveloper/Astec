@@ -12,9 +12,9 @@ import { ResultCard } from '../../components/ResultCard'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import { getYearList, searchWorks } from '../../database/work'
 import NotFound from '../404'
-import { getAllSubjects } from '../../database/subject'
-import { getAllTags } from '../../database/tag'
 import Image from 'next/image'
+import { handleGetAllSubjects } from '../api/subject'
+import { handleGetAllTags } from '../api/tag'
 
 interface SearchProps { 
   subjectList: Subject[] | null
@@ -114,7 +114,6 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
 
   const changeParams = (newParams: { [key: string]: string }) => {
     const queryParams = router.query
-    delete queryParams.query
     router.push({
       query: {
         ...queryParams,
@@ -203,13 +202,13 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
           </h1>
           <div className={`${styles['result--list']} ${!hasMore ? styles['complete'] : ''}`}>
             {resultList.length > 0 ? 
-              resultList.map(({ id, authors, description, tagArray, title }, index) => (
+              resultList.map(({ id, authors, description, tags, title }, index) => (
                 <ResultCard
                   key={index}
                   authorArray={authors} 
                   description={description} 
                   id={id}
-                  tagArray={tagArray}
+                  tagArray={tags.map(({ name }) => name)}
                   title={title}
                 />
               )) : (
@@ -257,8 +256,8 @@ export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
 
 export const getStaticProps: GetStaticProps<SearchProps> = async ({ params }) => {
   
-  const { data: subjectList } = await getAllSubjects()
-  const { data: tagList } = await getAllTags()
+  const subjectList = await handleGetAllSubjects()
+  const tagList = await handleGetAllTags()
   return {
     props: {
       subjectList,

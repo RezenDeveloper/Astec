@@ -46,3 +46,19 @@ const createTag = async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(500).json({ error: error })
   }
 }
+
+export const handleGetAllTags = async () => {
+  const tags = await Tag.findAll({
+    attributes: {
+      include: [[Sequelize.fn("COUNT", Sequelize.col("works.id")), "total"]] 
+    },
+    include: {
+      association: 'works',
+      attributes: []
+    },
+    group: ['id'],
+    order: [['total', 'DESC']]
+  })
+
+  return JSON.parse(JSON.stringify(tags))
+}
