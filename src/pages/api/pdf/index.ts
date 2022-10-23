@@ -31,7 +31,6 @@ const getDrive = () => {
 
 const getPDF = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    
     const drive = getDrive()
     const id = req.query.id
 
@@ -42,12 +41,15 @@ const getPDF = async (req: NextApiRequest, res: NextApiResponse) => {
 
       return res.status(200).send(pdf)
     }
-
+    
     const { data:pdf } = await drive.files.get({
       fileId: id as string,
-      fields: '*'
+      alt: 'media',
+    }, {
+      responseType: 'stream'
     })
 
+    res.setHeader('Content-Type', 'application/pdf')
     res.send(pdf)
   } catch (error) {
     console.log(error)
@@ -63,7 +65,7 @@ const createPDF = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const { data:createData } = await drive.files.create({
       requestBody: {
-        name: 'teste'
+        name: 'teste.pdf'
       },
       media: {
         mimeType: 'application/pdf',

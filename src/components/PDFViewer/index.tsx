@@ -42,8 +42,7 @@ const PDFViewer:React.FC<PDFViewerProps> = ({ pageIndex:propPageIndex, Loading, 
         </div>
       }
       <Document
-        // file={`//${window.location.host}/${fileId}.pdf`}
-        file={`//${window.location.host}/test.pdf`}
+        file={`/api/pdf?id=1C1e5PfmqkOuyXgAUrrFjrfl3idoWDx8c`}
         onLoadError={(err) => console.log(err)}
         loading={<Loading />}
         error={<Loading />}
