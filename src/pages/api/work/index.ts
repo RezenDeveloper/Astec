@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Sequelize } from 'sequelize'
 import { Tag, Work, Author } from '../../../database/models'
+import { handleCreatePDF } from '../pdf'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
@@ -17,6 +18,7 @@ interface CreateWorkBody {
   tags?: string[]
   authors?: string[]
   year?: number
+  file?: string
 }
 
 const createWork = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -27,23 +29,28 @@ const createWork = async (req: NextApiRequest, res: NextApiResponse) => {
       subjectId,
       tags,
       authors,
-      year
+      year,
+      file
     } = req.body as CreateWorkBody
     
     if(
       !title || 
       !description || 
       !subjectId || 
-      !tags?.length || 
+      !tags?.length ||
       !authors?.length || 
-      !year
+      !year ||
+      !file
     ) return res.status(404).json({ message: 'Invalid fields' })
+
+    const { fileId } = await handleCreatePDF(file)
 
     const work = await Work.create({
       title,
       description,
       year,
-      subject_id: subjectId
+      subject_id: subjectId,
+      pdf_id: fileId
     })
 
     await Promise.all(
@@ -94,6 +101,7 @@ const createWork = async (req: NextApiRequest, res: NextApiResponse) => {
     
   } catch (error) {
     res.status(500).json({ error: error })
+    console.log('error')
   }
 }
 

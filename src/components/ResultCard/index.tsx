@@ -16,11 +16,12 @@ export interface ResultCardProps {
   title: string
   description: string
   id: string
+  pdfId: string
   authorArray: Author[]
   tagArray: string[]
 }
 
-export const ResultCard = ({ title, description, id, authorArray, tagArray }: ResultCardProps) => {
+export const ResultCard = ({ title, description, id, authorArray, tagArray, pdfId }: ResultCardProps) => {
 
   return (
     <div className={styles['result-card']}>
@@ -32,7 +33,7 @@ export const ResultCard = ({ title, description, id, authorArray, tagArray }: Re
           <PDFViewer 
             Loading={() => (<div className={styles['loading']}></div>)}
             pageIndex={0}
-            fileId={id}
+            fileId={pdfId}
           />
         </div>
         <div>

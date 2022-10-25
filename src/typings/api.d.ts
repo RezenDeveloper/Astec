@@ -10,6 +10,7 @@ interface ReqWork {
   year: number
   authors: string[]
   tags: string[]
+  file: string
 }
 
 interface Pagination {

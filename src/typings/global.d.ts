@@ -18,6 +18,7 @@ interface Work {
   title: string
   id: string
   description: string
+  pdf_id: string
   tags: {
     id: string
     name: string

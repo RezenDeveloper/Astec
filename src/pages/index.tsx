@@ -13,7 +13,6 @@ import "slick-carousel/slick/slick-theme.css";
 import { CustomNextArrow, CustomPrevArrow } from '../components/Slick'
 import { checkIsAdmin } from '../database/manager'
 import { handleSearchWork } from './api/work/search'
-import { Subject } from '../database/models'
 import { handleGetAllSubjects } from './api/subject'
 
 interface HomeProps {

@@ -7,6 +7,7 @@ export interface WorkModel extends Model<InferAttributes<WorkModel>, InferCreati
   year: number
   title: string
   description: string
+  pdf_id: string
 }
 
 const Work = connection.define<WorkModel>('works', {
@@ -18,6 +19,7 @@ const Work = connection.define<WorkModel>('works', {
   year: DataTypes.INTEGER,
   title: DataTypes.STRING,
   description: DataTypes.TEXT,
+  pdf_id: DataTypes.STRING
 })
 
 const associate = () => {

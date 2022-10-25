@@ -202,12 +202,13 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
           </h1>
           <div className={`${styles['result--list']} ${!hasMore ? styles['complete'] : ''}`}>
             {resultList.length > 0 ? 
-              resultList.map(({ id, authors, description, tags, title }, index) => (
+              resultList.map(({ id, pdf_id, authors, description, tags, title }, index) => (
                 <ResultCard
                   key={index}
                   authorArray={authors} 
                   description={description} 
                   id={id}
+                  pdfId={pdf_id}
                   tagArray={tags.map(({ name }) => name)}
                   title={title}
                 />

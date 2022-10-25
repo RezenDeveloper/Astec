@@ -10,7 +10,6 @@ import { SelectInput, TextBox, TextInput } from '../../../components/Inputs'
 import { TagInput } from '../../../components/Tags'
 import { createWork, getYearList } from '../../../database/work'
 import { GetServerSideProps } from 'next'
-import { getAllSubjects } from '../../../database/subject'
 import AdminError from './erro'
 import { checkInputs } from '../../../utils/checkInputs'
 import Link from 'next/link'
@@ -87,13 +86,17 @@ const New = ({ yearList, subjectList }: NewProps) => {
       return
     }
     setLoading(true)
+    
+    const buffer = await file!.arrayBuffer()
+
     const { data, error } = await createWork({
       title,
       description,
       authors: authorList,
       tags: tagList,
       year: parseInt(year),
-      subjectId: subject
+      subjectId: subject,
+      file: Buffer.from(buffer).toString('base64')
     })
     
     if(error) setSubmitError(true)

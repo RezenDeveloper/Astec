@@ -38,11 +38,13 @@ const PDFViewer:React.FC<PDFViewerProps> = ({ pageIndex:propPageIndex, Loading, 
     <div className={styles['document--container']}>
       {showDetails &&
         <div className={styles['download']}>
-          <HiDownload size={20} aria-label='download' onClick={handleDownload} />
+          <a href={`/api/pdf?id=${fileId}`}>
+            <HiDownload size={20} aria-label='download' target='_blank'/>
+          </a>
         </div>
       }
       <Document
-        file={`/api/pdf?id=1C1e5PfmqkOuyXgAUrrFjrfl3idoWDx8c`}
+        file={`/api/pdf?id=${fileId}`}
         onLoadError={(err) => console.log(err)}
         loading={<Loading />}
         error={<Loading />}

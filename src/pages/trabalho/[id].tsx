@@ -42,6 +42,7 @@ const Work = ({ work }: WorkProps) => {
     description, 
     subject,
     year,
+    pdf_id
   } = work;
 
   const tagArray = work.tags.map(({ name }) => name)
@@ -59,7 +60,7 @@ const Work = ({ work }: WorkProps) => {
           <PDFViewer
             Loading={() => (<div className={styles['loading']}></div>)}
             pageIndex={0}
-            fileId={id}
+            fileId={pdf_id}
             showDetails={true}
           />
         </div>

@@ -9,6 +9,11 @@ module.exports = {
         primaryKey: true,
         allowNull: false
       },
+      pdf_id: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.UUIDV4,
+        allowNull: false
+      },
       title: {
         type: Sequelize.STRING,
         allowNull: false
