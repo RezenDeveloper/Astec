@@ -4,4 +4,9 @@
   margin-top: 100px;
   background: $secundary;
   height: 150px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 70px;
 }
