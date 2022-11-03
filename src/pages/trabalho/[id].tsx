@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { GetStaticPaths, GetStaticProps } from 'next'
+import { GetServerSideProps, GetStaticPaths, GetStaticProps } from 'next'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 
@@ -11,6 +11,7 @@ import styles from '../../styles/work.module.scss'
 import React from 'react'
 import { PDFViewerProps } from '../../components/PDFViewer'
 import { handleGetWork } from '../api/work/[id]'
+import { checkIsAdmin } from '../../database/manager'
 
 const PDFViewer = dynamic(() => 
   import('../../components/PDFViewer'), 
@@ -22,9 +23,10 @@ const PDFViewer = dynamic(() =>
 
 interface WorkProps {
   work: Work | null
+  isAdmin: boolean
 }
 
-const Work = ({ work }: WorkProps) => {
+const Work = ({ work, isAdmin }: WorkProps) => {
   const router = useRouter()
   
   if(router.isFallback) {
@@ -52,7 +54,7 @@ const Work = ({ work }: WorkProps) => {
       <Head>
         <title>{title}</title>
       </Head>
-      <Header />
+      <Header isAdmin={isAdmin} />
       <main className={styles['container']}>
         <h1 className={styles['title']}>{title}</h1>
         <div className={styles['pdf-container']}>
@@ -93,20 +95,15 @@ const Work = ({ work }: WorkProps) => {
   )
 }
 
-export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
-  return {
-    paths: [],
-    fallback: true
-  }
-}
-
-export const getStaticProps: GetStaticProps<WorkProps> = async ({ params }) => {
-  const id = params?.id as string
+export const getServerSideProps: GetServerSideProps<WorkProps> = async (context) => {
+  const token = context.req.cookies['TGManager_Admin_Token']
+  const id = context.params?.id as string
   const work = await handleGetWork(id)
-
+  
   return {
     props: {
-      work
+      work,
+      isAdmin: await checkIsAdmin(token)
     }
   }
 }

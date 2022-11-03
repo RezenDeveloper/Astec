@@ -137,6 +137,37 @@ export const handleCreatePDF = async (file: string) => {
   }
 }
 
+export const handleUpdatePDF = async (file: string, id: string) => {
+  const drive = getDrive()
+
+  const buffer = Buffer.from(file,'base64')
+  const fileStream = Readable.from(buffer)
+
+  const { data:createData } = await drive.files.update({
+    fileId: id,
+    requestBody: {
+      name: 'teste.pdf',
+    },
+    media: {
+      mimeType: 'application/pdf',
+      body: fileStream
+    }
+  })
+
+  const fileId = createData.id
+  if(!fileId) throw new Error('File not found')
+
+  const { data } = await drive.files.get({
+    fileId,
+    fields: 'webViewLink, webContentLink'
+  })
+
+  return {
+    fileId,
+    data
+  }
+}
+
 const deletePDF = async (req: NextApiRequest, res: NextApiResponse) => {
   const id = req.query.id
 

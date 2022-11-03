@@ -1,4 +1,4 @@
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import Link from 'next/link';
 import React, { useCallback, useEffect, useState } from 'react';
 import { MdSearch } from 'react-icons/md';
@@ -13,6 +13,9 @@ interface Props {
 export const Header:React.FC<Props> = ({ query, hideSearch = false, isAdmin = false }) => {
 
   const [queryValue, setQueryValue] = useState(query || '')
+  const router = useRouter()
+
+  const isWorkPage = router.pathname === '/trabalho/[id]'
 
   useEffect(() => {
     setQueryValue(query || '')
@@ -20,7 +23,7 @@ export const Header:React.FC<Props> = ({ query, hideSearch = false, isAdmin = fa
 
   const handleSearch = useCallback((value: string) => {
     if(typeof window === 'undefined') return
-    Router.push(`/pesquisa/${value}`)
+    router.push(`/pesquisa/${value}`)
   }, [])
 
   return (
@@ -59,7 +62,11 @@ export const Header:React.FC<Props> = ({ query, hideSearch = false, isAdmin = fa
             </div>
           }
           {
-            isAdmin && (
+            isAdmin && isWorkPage ? (
+              <div className={styles['header__container--admin']}>
+                <Link href={`/admin/trabalho/${router.query.id}`}>Editar Trabalho</Link>
+              </div>
+            ) : (
               <div className={styles['header__container--admin']}>
                 <Link href={'/admin/trabalho/novo'}>Adicionar Trabalho</Link>
               </div>
