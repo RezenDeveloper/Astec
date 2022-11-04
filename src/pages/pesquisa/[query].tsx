@@ -112,6 +112,19 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
     }
   }
 
+  const removeParams = (params: string[]) => {
+    const queryParams = router.query
+
+    params.forEach(param => {
+      delete queryParams[param]
+    })
+    router.push({
+      query: {
+        ...queryParams,
+      }
+    })
+  }
+
   const changeParams = (newParams: { [key: string]: string }) => {
     const queryParams = router.query
     router.push({
@@ -145,6 +158,17 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
                 })
               }}
             />
+            <div className={styles['filter--clear_container']}>
+              <button 
+                className={styles['filter--clear']}
+                onClick={() => {
+                  setYear('')
+                  removeParams(['ano'])
+                }}
+              >
+                limpar
+              </button>
+            </div>
           </div>
           <div className={styles['filter--field']}>
             <SelectInput
@@ -161,6 +185,17 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
                 })
               }}
             />
+            <div className={styles['filter--clear_container']}>
+              <button 
+                className={styles['filter--clear']}
+                onClick={() => {
+                  setSubject('')
+                  removeParams(['curso'])
+                }}
+              >
+                limpar
+              </button>
+            </div>
           </div>
           <div className={styles['filter--field']}>
             <TextInput 
@@ -180,8 +215,19 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
               }}
               onBlur={() => changeParams({ autor: author })}
             />
+            <div className={styles['filter--clear_container']}>
+              <button 
+                className={styles['filter--clear']}
+                onClick={() => {
+                  setAuthor('')
+                  removeParams(['autor'])
+                }}
+              >
+                limpar
+              </button>
+            </div>
           </div>
-          <div className={`${styles['filter--field']} ${styles['filter--field__tags']}`}>
+          <div className={`${styles['filter--field__tags']}`}>
             {
               tagList.map(({ name, total, id }) => (
                 <Tag 

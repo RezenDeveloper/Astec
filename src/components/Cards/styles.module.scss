@@ -30,7 +30,7 @@
   }
   
   .loading {
-    height: 390px;
+    height: 424px;
     width: 300px;
     @include loading();
   }
@@ -79,36 +79,45 @@
 }
 
 .class-card {
-  margin: 0 20px;
-
+  cursor: pointer;
   h4 {
     text-align: center;
   }
 
   .image {
     margin: auto;
-    margin-bottom: 10px;
     display: flex;
     justify-content: center;
     transition: 500ms;
 
-    width: 200px;
-    height: 200px;
+    width: 300px;
+    height: 300px;
 
     border: 5px solid rgb(24, 24, 24);
     background: rgb(201, 201, 201);
 
-    h1 {
+    h4 {
       margin: auto;
       color: $black;
+      font-size: 1.125rem;
+      padding: 0 10px;
     }
-    cursor: pointer;
+    p {
+      font-size: 0.75rem;
+      padding: 10px;
+      color: white;
+      display: block;
+      opacity: 1;
+      overflow-y: auto;
+      max-height: 100%;
 
+      height: auto;
+      width: auto;
+      margin: auto;
+    }
+    
     &:hover {
       background: rgb(24, 24, 24);
-      h1 {
-        color: white;
-      }
     }
   }
 }

@@ -18,12 +18,26 @@
     text-transform: uppercase;
   }
   &--field {
-    margin-bottom: 40px;
-
+    margin-bottom: 10px;
     &__tags{
       display: flex;
       flex-wrap: wrap;
       gap: 12px 30px;
+      margin-top: 20px;
+    }
+  }
+  &--clear {
+    padding: 0;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: $primary;
+
+    &_container {
+      margin-top: 5px;
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
     }
   }
 }

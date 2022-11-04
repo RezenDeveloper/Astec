@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import dynamic from 'next/dynamic'
 
 import styles from './styles.module.scss';
@@ -49,17 +49,31 @@ export const WorkCard:React.FC<WorkCardProps> = ({ work }) => {
 }
 
 export interface IClassCardProps {
+  id: string
   title: string
   description: string
 }
 
-export const ClassCard = ({ title }: IClassCardProps) => {
+export const ClassCard = ({ id, title, description }: IClassCardProps) => {
+
+  const [hover, setHover] = useState(false)
   return (
-    <div className={styles['class-card']}>
-      <div className={styles['image']}>
-        <h1>ADS</h1>
+    <Link
+      href={`/pesquisa?curso=${id}`}
+    >
+      <div 
+        className={styles['class-card']} 
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+      >
+        <div className={styles['image']}>
+          {!hover ? (
+            <h4>{title}</h4>
+          ) : (
+            <p>{description}</p>
+          )}
+        </div>
       </div>
-      <h4>{title}</h4>
-    </div>
+    </Link>
   );
 }

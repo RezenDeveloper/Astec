@@ -23,6 +23,11 @@
   border-radius: 20px;
   padding: 3px;
 
+  a {
+    width: 20px;
+    height: 20px;
+  }
+
   &:hover {
     cursor: pointer;
     filter: brightness(80%);

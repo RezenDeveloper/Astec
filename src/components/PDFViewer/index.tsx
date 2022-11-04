@@ -22,11 +22,7 @@ const PDFViewer:React.FC<PDFViewerProps> = ({ pageIndex:propPageIndex, Loading, 
   const onDocumentLoadSuccess = (numPages: number) => {
     setNumPages(numPages);
   }
-
-  const handleDownload = () => {
-    
-  }
-
+  
   const goToPage = (page: number) => {
     if((page + 1) > numPages! || page < 0) return
     setPageIndex(page)
@@ -38,8 +34,8 @@ const PDFViewer:React.FC<PDFViewerProps> = ({ pageIndex:propPageIndex, Loading, 
     <div className={styles['document--container']}>
       {showDetails &&
         <div className={styles['download']}>
-          <a href={`/api/pdf?id=${fileId}`}>
-            <HiDownload size={20} aria-label='download' target='_blank'/>
+          <a href={`/api/pdf?id=${fileId}`} target='_blank'>
+            <HiDownload size={20} aria-label='download' />
           </a>
         </div>
       }

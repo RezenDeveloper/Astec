@@ -52,7 +52,7 @@ const Home:React.FC<HomeProps> = ({ recentWorks, subjects, isAdmin }) => {
           <h1>Cursos Disponíveis</h1>
           <div className={styles['classes__container']}>
             {subjects.map(({ id, name, description }) => (
-              <ClassCard title={name} description={description} key={id} />
+              <ClassCard id={id} title={name} description={description} key={id} />
             ))}
           </div>
         </section>

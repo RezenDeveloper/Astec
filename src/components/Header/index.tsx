@@ -66,7 +66,7 @@ export const Header:React.FC<Props> = ({ query, hideSearch = false, isAdmin = fa
               <div className={styles['header__container--admin']}>
                 <Link href={`/admin/trabalho/${router.query.id}`}>Editar Trabalho</Link>
               </div>
-            ) : (
+            ) : isAdmin && (
               <div className={styles['header__container--admin']}>
                 <Link href={'/admin/trabalho/novo'}>Adicionar Trabalho</Link>
               </div>
