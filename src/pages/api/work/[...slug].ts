@@ -25,7 +25,7 @@ const createTag = async (req: NextApiRequest, res: NextApiResponse, work: WorkMo
       where: { name },
     })
 
-    // @ts-expect-error
+    // @ts-ignore
     await work.addTag(tag)
     
     return res.status(200).json(tag)

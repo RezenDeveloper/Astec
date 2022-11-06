@@ -96,12 +96,12 @@ const updateWork = async (req: NextApiRequest, res: NextApiResponse) => {
       }
     })
 
-    // @ts-expect-error
+    // @ts-ignore
     const allTags = await work.getTags() as string[]
 
     await Promise.all(
       allTags.map(async tag => {
-        // @ts-expect-error
+        // @ts-ignore
         await work.removeTag(tag)
       })
     )
@@ -109,7 +109,7 @@ const updateWork = async (req: NextApiRequest, res: NextApiResponse) => {
     await Promise.all(
       tags.map(async (name: string) => {
         let tag = await Tag.findOne({
-          // @ts-expect-error
+          // @ts-ignore
           where: { 
             name: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('name')), 'LIKE', '%' + name.toLowerCase() + '%')
           },
@@ -119,7 +119,7 @@ const updateWork = async (req: NextApiRequest, res: NextApiResponse) => {
           tag = await Tag.create({ name })
         }
         
-        // @ts-expect-error
+        // @ts-ignore
         await work.addTag(tag)
       })
     )
@@ -133,7 +133,7 @@ const updateWork = async (req: NextApiRequest, res: NextApiResponse) => {
     await Promise.all(
       authors.map(async (name: string) => {
         let author = await Author.findOne({
-          // @ts-expect-error
+          // @ts-ignore
           where: { 
             name: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('name')), 'LIKE', '%' + name.toLowerCase() + '%')
           },

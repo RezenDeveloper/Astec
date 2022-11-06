@@ -56,7 +56,7 @@ const createWork = async (req: NextApiRequest, res: NextApiResponse) => {
     await Promise.all(
       tags.map(async (name: string) => {
         let tag = await Tag.findOne({
-          // @ts-expect-error
+          // @ts-ignore
           where: { 
             name: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('name')), 'LIKE', '%' + name.toLowerCase() + '%')
           },
@@ -66,7 +66,7 @@ const createWork = async (req: NextApiRequest, res: NextApiResponse) => {
           tag = await Tag.create({ name })
         }
         
-        // @ts-expect-error
+        // @ts-ignore
         await work.addTag(tag)
       })
     )
@@ -74,7 +74,7 @@ const createWork = async (req: NextApiRequest, res: NextApiResponse) => {
     await Promise.all(
       authors.map(async (name: string) => {
         let author = await Author.findOne({
-          // @ts-expect-error
+          // @ts-ignore
           where: { 
             name: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('name')), 'LIKE', '%' + name.toLowerCase() + '%')
           },
