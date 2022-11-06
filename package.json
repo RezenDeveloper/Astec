@@ -27,7 +27,7 @@
     "@types/bcrypt": "^5.0.0",
     "@types/cookie": "^0.5.1",
     "@types/jsonwebtoken": "^8.5.9",
-    "@types/react": "17.0.9",
+    "@types/react": "^18.0.25",
     "@types/react-pdf": "^5.0.9",
     "@types/react-slick": "^0.23.10",
     "dotenv": "^16.0.1",
