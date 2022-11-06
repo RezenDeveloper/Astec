@@ -44,13 +44,14 @@ const deleteSubject = async (req: NextApiRequest, res: NextApiResponse) => {
     
     res.status(200).end()
   } catch (error) {
-    // @ts-expect-error
-    const name = error.name
 
-    if(name === "SequelizeForeignKeyConstraintError") {
-      return res.status(400).json({ error: name })
+    if(error instanceof Error) {
+      const name = error.name
+      if(name === "SequelizeForeignKeyConstraintError") {
+        return res.status(400).json({ error: name })
+      }
     }
-
+    
     res.status(500).json({ error: error })
   }
 }
