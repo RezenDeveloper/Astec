@@ -24,8 +24,6 @@ interface HomeProps {
 const Home:React.FC<HomeProps> = ({ recentWorks, subjects, isAdmin }) => {
   if(!recentWorks || !subjects) return null
 
-  console.log(isAdmin)
-
   return (
     <>
       <Head>

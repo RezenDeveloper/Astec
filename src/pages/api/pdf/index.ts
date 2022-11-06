@@ -1,5 +1,4 @@
 import { google } from 'googleapis'
-import settings from '../../../../google-settings.json'
 import fs from 'fs'
 import path from 'path'
 import { Readable } from 'stream';
@@ -17,9 +16,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
 const getDrive = () => {
   const j2 = new google.auth.JWT(
-    settings.client_email, 
+    process.env["GOOGLE_EMAIL"],
     undefined, 
-    settings.private_key,
+    process.env["GOOGLE_KEY"],
     'https://www.googleapis.com/auth/drive', 
     undefined
   )
@@ -89,8 +88,6 @@ const createPDF = async (req: NextApiRequest, res: NextApiResponse) => {
       fileId,
       fields: 'webViewLink, webContentLink'
     })
-
-    console.log(data)
   
     res.status(200).send(data)    
   } catch (error) {
@@ -178,8 +175,6 @@ const deletePDF = async (req: NextApiRequest, res: NextApiResponse) => {
   const { data } = await drive.files.delete({
     fileId: id as string
   })
-
-  console.log(data)
 
   res.status(200).send('Deleted')
 }

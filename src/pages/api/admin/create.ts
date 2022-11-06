@@ -26,11 +26,9 @@ const createManager = async (req: NextApiRequest, res: NextApiResponse) => {
     jwt.verify(token, process.env.API_SECRET!, async (err, decoded) => {
       if(err) return res.status(401).send(`token invalid`)
       if(decoded) {
-        console.log('decoded',decoded)
         const password = await bcrypt.hash(reqPassword, 12)
         const hasEmail = !!(await Manager.findOne({ where: { email } }))?.id
 
-        console.log('hasEmail', hasEmail)
         if(hasEmail) return res.status(400).send('Email already registered')
 
         const manager = await Manager.create({
