@@ -1,0 +1,138 @@
+
+@import "../../styles/variables.scss";
+@import "../../styles/mixins.scss";
+
+.text-input {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-family: $font-titles;
+    font-size: .875rem;
+    font-weight: 600;
+  }
+
+  input {
+    font-size: .875rem;
+    border-radius: 4px;
+    border: 1px solid $black;
+    min-width: 300px;
+    min-height: 32px;
+    padding: 0 8px;
+
+    @include outline()
+  }
+}
+
+.text-box {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-family: $font-titles;
+    font-size: .875rem;
+    font-weight: 600;
+  }
+
+  textarea {
+    font-size: .875rem;
+    border-radius: 4px;
+    border: 1px solid $black;
+    min-width: 300px;
+    min-height: 80px;
+    padding: 4px 8px;
+    resize: vertical;
+
+    @include outline()
+  }
+}
+
+.select-input {
+  label {
+    font-family: $font-titles;
+    font-size: .875rem;
+    font-weight: 600;
+  }
+
+  &.open {
+    .select-input--dropdown {
+      visibility: visible;
+    }
+    .select-input--field svg {
+      transform: rotate(180deg);
+    }
+  }
+
+  &--field {
+    position: relative;
+    min-height: 32px;
+
+    > button {
+      display: flex;
+      align-items: center;
+      font-size: .875rem;
+      text-align: left;
+      
+      border: 1px solid $black;
+      border-radius: 4px;
+      background: none;
+      
+      padding: 4px 8px;
+      margin: 0 0 2px 0;
+
+      width: 100%;
+      min-height: 30px;
+      
+      @include outline();
+
+      &.placeholder {
+        color: $placeholder;
+      }
+
+      svg {
+        transition: transform ease 200ms;
+        margin-left: auto;
+      }
+    }
+  }
+  &--dropdown {
+    visibility: hidden;
+    
+    position: absolute;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    z-index: 2;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: scroll;     
+    
+    background-color: $white;
+    border: 1px solid $black;
+    border-radius: 4px;
+  }
+}
+
+.select-option {
+  margin: 0;
+  padding: 4px 8px;
+  font-size: .875rem;
+  &:hover {
+    background-color: $dark-gray;
+  }
+  @include outline() {
+    background-color: $dark-gray;
+  }
+  &--selected {
+    padding: 4px 8px;
+    margin: 0;
+    background-color: $secundary;
+    color: $white;
+    &:hover {
+      background-color: $secundary;
+    }
+    @include outline() {
+      background-color: $secundary;
+    }
+  }
+}

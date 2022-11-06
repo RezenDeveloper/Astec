@@ -1,5 +1,10 @@
+@import "../../styles/variables.scss";
+
 .document {
   width: 100%;
+  &--container {
+    position: relative;
+  }
 }
 
 .page {
@@ -8,5 +13,78 @@
     width: 100% !important;
     height: auto !important;
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  }
+}
+
+.download {
+  display: flex;
+  justify-content: flex-end;
+  background: $transparent-gray;
+  border-radius: 20px;
+  padding: 3px;
+
+  a {
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    cursor: pointer;
+    filter: brightness(80%);
+  }
+
+  z-index: 1;
+  position: absolute;
+  right: 15px;
+  top: 15px;
+}
+
+.pagination {
+  &--arrow {
+    position: absolute;
+    top: 50%;
+    padding: 0;
+    background: $transparent-gray;
+    border-radius: 20px;
+    &:hover {
+      cursor: pointer;
+      filter: brightness(80%);
+    }
+    &.disabled {
+      cursor: not-allowed;
+      filter: brightness(120%);
+    }
+    &__back {
+      left: 10px;
+      padding-right: 2px;
+    }
+    &__forward {
+      right: 10px;
+      padding-left: 2px;
+    }
+  }
+  &--count {
+    display: flex;
+    justify-content:center;
+    
+    position: absolute;
+    bottom: 15px;
+    right: 0;
+    left: 0;
+
+    &:hover {
+      filter: brightness(80%);
+    }
+    
+    p {
+      font-family: $font-titles;
+      font-size: .688rem;
+      font-weight: 700;
+      border-radius: 20px;
+      background: $transparent-gray;
+  
+      padding: 2px 8px;
+      margin: 0;
+    }
   }
 }

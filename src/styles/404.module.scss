@@ -1,0 +1,11 @@
+@import './variables';
+
+.container {
+  margin-top: $header-height;
+  height: $full-height;
+  display: grid;
+  h1 {
+    margin-top: 50px;
+    text-align: center;
+  }
+}

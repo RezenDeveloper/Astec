@@ -1,28 +1,39 @@
 .container {
-  main {
-    margin-top: 100px;
+  margin: auto;
+  margin-top: 100px;
+  max-width: 1366px;
 
+  h1 {
+    text-transform: uppercase;
+    text-align: center;
+    margin: 40px 0 20px;
+  }
+
+  .recent-works {
+    margin: 0 auto;
+
+    &__container {
+      margin: 20px 0;
+    }
+    
+    .slick-next {
+      width: 50px;
+      svg {
+        width: 50px;
+        height: 50px;
+      }
+    }
+  }
+
+  .classes {
     h1 {
-      text-transform: uppercase;
-      text-align: center;
-      margin: 40px 0;
+      margin: 80px 0 40px;
     }
-
-    .recent-works {
-      margin: 0 auto;
-      
-      &__container {
-        display: flex;
-        justify-content: center;
-        margin: 0 10px;
-      }
-    }
-
-    .classes {
-      &__container {
-        display: flex;
-        justify-content: center;
-      }
+    &__container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      justify-content: center;
     }
   }
 }

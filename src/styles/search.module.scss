@@ -1,0 +1,83 @@
+@import "./variables.scss";
+@import "./mixins.scss";
+
+.container {
+  margin: 100px 50px 30px;
+  display: flex;
+}
+
+.filter {
+  min-height: 600px;
+  max-width: 320px;
+  margin-top: 110px;
+  padding-right: 20px;
+  border-right: 1px solid $black;
+  &--title {
+    font-size: 1.25rem;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  &--field {
+    margin-bottom: 10px;
+    &__tags{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 30px;
+      margin-top: 20px;
+    }
+  }
+  &--clear {
+    padding: 0;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: $primary;
+
+    &_container {
+      margin-top: 5px;
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+}
+
+.result {
+  position: relative;
+  flex: 1;
+  margin-left: 60px;
+  
+  &-loading {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  &--title {
+    text-align: center;
+    min-height: 50px;
+  }
+  &--list {
+    &:not(.complete) {
+      > div:last-of-type {
+        filter: blur(2px);
+      }
+    }
+    .not-found {
+      width: 100%;
+      text-align: center;
+      font-size: 2.3rem;
+    }
+  }
+  &--button {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    margin: auto;
+    display: block;
+    max-width: 350px;
+    @include buttonPrimary();
+  }
+}

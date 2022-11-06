@@ -1,23 +1,79 @@
-import * as React from 'react';
-import { Document, Page, pdfjs } from 'react-pdf/dist/umd/entry.webpack';
+import { useState } from 'react';
+import { Document, Page, pdfjs } from 'react-pdf';
+import { HiDownload } from 'react-icons/hi';
+import { IoMdArrowDropleft, IoMdArrowDropright } from 'react-icons/io';
 
-pdfjs.GlobalWorkerOptions.workerSrc = 'pdf.worker.js';
+pdfjs.GlobalWorkerOptions.workerSrc = `//${window.location.host}/pdf.worker.min.js`;
 
 import styles from './styles.module.scss';
 
-const PDFViewer = () => {
+export interface PDFViewerProps {
+  pageIndex: number
+  Loading: React.FC
+  fileId: string
+  showDetails?: boolean
+}
+
+const PDFViewer:React.FC<PDFViewerProps> = ({ pageIndex:propPageIndex, Loading, fileId, showDetails = false }) => {
+  
+  const [numPages, setNumPages] = useState<number>()
+  const [pageIndex, setPageIndex] = useState(propPageIndex)
+
+  const onDocumentLoadSuccess = (numPages: number) => {
+    setNumPages(numPages);
+  }
+  
+  const goToPage = (page: number) => {
+    if((page + 1) > numPages! || page < 0) return
+    setPageIndex(page)
+  }
+
+  const hasNextPage = numPages ? (pageIndex + 1) < numPages : false
+  const hasPrevPage = pageIndex > 0
   return (
-    <Document
-      file={"sample.pdf"}
-      onLoadError={(err) => console.log(err)}
-      className={styles['document']}
-    >
-      <Page 
-        pageNumber={1}
-        className={styles['page']}
-        renderTextLayer={false}
-      />
-    </Document>
+    <div className={styles['document--container']}>
+      {showDetails &&
+        <div className={styles['download']}>
+          <a href={`/api/pdf?id=${fileId}`} target='_blank'>
+            <HiDownload size={20} aria-label='download' />
+          </a>
+        </div>
+      }
+      <Document
+        file={`/api/pdf?id=${fileId}`}
+        onLoadError={(err) => console.log(err)}
+        loading={<Loading />}
+        error={<Loading />}
+        onLoadSuccess={(e) => onDocumentLoadSuccess(e.numPages)}
+        className={styles['document']}
+      >
+        <Page 
+          pageIndex={pageIndex}
+          className={styles['page']}
+          renderTextLayer={false}
+          loading={<Loading />}
+        />
+      </Document>
+      {showDetails && numPages &&
+        <div className={styles['pagination']}>
+          <IoMdArrowDropleft
+            className={`${styles['pagination--arrow']} ${styles['pagination--arrow__back']} ${!hasPrevPage ? styles['disabled'] : ''}`}
+            size={25} 
+            aria-label='página anterior' 
+            onClick={() => goToPage(pageIndex - 1)}
+          />
+          <IoMdArrowDropright
+            className={`${styles['pagination--arrow']} ${styles['pagination--arrow__forward']} ${!hasNextPage ? styles['disabled'] : ''}`} 
+            size={25} 
+            aria-label='próxima página' 
+            onClick={() => goToPage(pageIndex + 1)} 
+          />
+          <div className={styles['pagination--count']}>
+            <p>{pageIndex+1}/{numPages}</p>
+          </div>
+        </div>
+      }
+    </div>
   );
 }
 

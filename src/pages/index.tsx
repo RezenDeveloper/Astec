@@ -5,36 +5,77 @@ import { ClassCard, WorkCard } from '../components/Cards'
 
 import styles from '../styles/home.module.scss'
 import Footer from '../components/Footer'
+import { GetServerSideProps } from 'next'
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
-export default function Home() {
+import { CustomNextArrow, CustomPrevArrow } from '../components/Slick'
+import { checkIsAdmin } from '../database/manager'
+import { handleSearchWork } from './api/work/search'
+import { handleGetAllSubjects } from './api/subject'
+
+interface HomeProps {
+  recentWorks: SearchWork | null
+  subjects: Subject[] | null
+  isAdmin: boolean
+}
+
+const Home:React.FC<HomeProps> = ({ recentWorks, subjects, isAdmin }) => {
+  if(!recentWorks || !subjects) return null
+
   return (
-    <div className={styles['container']}>
+    <>
       <Head>
         <title>Armazenador de TGs</title>
-        <link rel="preconnect" href="https://fonts.gstatic.com"/>
-        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet"/>
       </Head>
-      <Header />
-      <main>
+      <Header isAdmin={isAdmin} />
+      <main className={styles['container']}>
         <section className={styles['recent-works']}>
-          <h1>Trabalhos mais recentes</h1> 
+          <h1>Trabalhos recentes</h1>
           <div className={styles['recent-works__container']}>
-          {/* Colocar vários cards com um slider na horizontal */}
-          {[1,2,3].map(() => (
-            <WorkCard />
-          ))}
+            <Slider
+              infinite={true}
+              slidesToShow={3}
+              slidesToScroll={3}
+              dots={true}
+              prevArrow={<CustomPrevArrow />}
+              nextArrow={<CustomNextArrow />}
+            >
+              {recentWorks.result.map((work, index) => <WorkCard key={index} work={work} />)}
+            </Slider>
           </div>
         </section>
         <section className={styles['classes']}>
-            <h1>Cursos Disponíveis</h1>
-            <div className={styles['classes__container']}>
-              {[1,2,3].map(() => (
-                <ClassCard />
-              ))}
-            </div>
+          <h1>Cursos Disponíveis</h1>
+          <div className={styles['classes__container']}>
+            {subjects.map(({ id, name, description }) => (
+              <ClassCard id={id} title={name} description={description} key={id} />
+            ))}
+          </div>
         </section>
       </main>
-      <Footer/>
-    </div>
+      <Footer />
+    </>
   )
 }
+
+export const getServerSideProps: GetServerSideProps<HomeProps> = async (context) => {
+  const token = context.req.cookies['TGManager_Admin_Token']
+  const recentWorks = await handleSearchWork({
+    limit: '9',
+    order: 'recent'
+  });
+  const subjects = await handleGetAllSubjects()
+  
+  return {
+    props: {
+      recentWorks,
+      subjects,
+      isAdmin: await checkIsAdmin(token)
+    }
+  }
+}
+
+
+export default Home

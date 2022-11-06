@@ -1,56 +1,79 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import dynamic from 'next/dynamic'
 
 import styles from './styles.module.scss';
+import { PDFViewerProps } from '../../components/PDFViewer';
+import Link from 'next/link';
 
-const PDFViewer = dynamic(() => import('../PDFViewer'), { ssr: false });
+const PDFViewer = dynamic(() => 
+  import('../../components/PDFViewer'), 
+  { 
+    ssr: false, 
+    loading: () => <div className={styles['loading']}></div> 
+  }
+) as React.FC<PDFViewerProps>;
 
-export interface IWorkCardProps {
+export interface WorkCardProps {
+  work: Work
 }
 
-export const WorkCard = (props: IWorkCardProps) => {
+export const WorkCard:React.FC<WorkCardProps> = ({ work }) => {
+  const {
+    id,
+    pdf_id,
+    title,
+    subject,
+    description,
+  } = work
+
   return (
     <div className={styles['work-card']}>
-      <h2 className={styles['title']}>Lorem ipsum dolor sit amet</h2>
-      <div className={styles['card-wrapper']}>
-        <div className={styles['pdf-container']}>
-          <PDFViewer />
-        </div>
-        <div className={styles['description']}>
-          <h4>Descrição</h4>
-          <p>
-           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut hendrerit, libero sodales iaculis tincidunt, arcu arcu efficitur dui, ac sodales augue nisi at purus. Sed ornare rhoncus ante eget feugiat. Suspendisse molestie placerat vehicula. Proin imperdiet quis nisl non porttitor. Morbi convallis ligula felis, et viverra augue luctus ut. Sed vel turpis euismod, varius nulla elementum, varius dui. Etiam dignissim vehicula est ut rhoncus. Praesent imperdiet imperdiet diam vitae porttitor. Proin tellus tellus, maximus at erat nec, fermentum efficitur lorem. Sed imperdiet elit eu odio sodales, at lacinia eros mattis.
-          </p>
-        </div>
+      <h2 className={styles['title']}>{title}</h2>
+      <div className={styles['pdf-container']}>
+        <PDFViewer 
+          Loading={() => (<div className={styles['loading']}></div>)}
+          fileId={pdf_id}
+          pageIndex={0} 
+        />
       </div>
-      <strong className={styles['class']}>Análise e Desenvolvimento de Sistemas</strong>
-      <strong className={styles['authors-title']}>Autores</strong>
-      <div className={styles['authors-container']}>
-        <span>Vinicius Silva Rezende</span>
-        <span>Gabriel Renato</span>
-      </div>
-      <strong className={styles['tags-title']}>TAGS</strong>
-      <div className={styles['tags-container']}>
-        <span>TAG 1</span>
-        <span>TAG 2</span>
-        <span>TAG 3</span>
+      <strong className={styles['class']}>{subject.name}</strong>
+      <div className={styles['description']}>
+        <h4>Descrição</h4>
+        <p>{description}</p>
       </div>
       <div className={styles['button-area']}>
-        <a href="">Ver Mais</a>
+        <Link href={`/trabalho/${id}`}>Visualizar</Link>
       </div>
     </div>
   );
 }
 
 export interface IClassCardProps {
+  id: string
+  title: string
+  description: string
 }
-export const ClassCard = (props: IClassCardProps) => {
+
+export const ClassCard = ({ id, title, description }: IClassCardProps) => {
+
+  const [hover, setHover] = useState(false)
   return (
-    <div className={styles['class-card']}>
-      <div className={styles['image']}>
-        <h1>ADS</h1>
+    <Link
+      href={`/pesquisa?curso=${id}`}
+    >
+      <div 
+        className={styles['class-card']} 
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+      >
+        <div className={styles['image']}>
+          {!hover ? (
+            <h4>{title}</h4>
+          ) : (
+            <p>{description}</p>
+          )}
+        </div>
       </div>
-      <h4>Análise e desenvolvimento de sistemas</h4>
-    </div>
+    </Link>
   );
 }
