@@ -15,12 +15,11 @@
  
   .pdf-container {
     max-width: 220px;
-    padding-right: 26px;
   }
 
   .loading {
-    width: 194px;
-    height: 274px;
+    width: 100%;
+    height: 311px;
     @include loading();
   }
 
@@ -55,8 +54,9 @@
 }
 
 .wrapper {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  column-gap: 20px;
 }
 
 .tag-wrapper {

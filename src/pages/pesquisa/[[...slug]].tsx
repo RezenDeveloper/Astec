@@ -25,7 +25,7 @@ interface SearchProps {
 const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
   
   const router = useRouter()
-  const query = router.query.query as string
+  const query = router.query.slug !== undefined ? router.query.slug[0] : ''
 
   const [resultList, setResultList] = useState<Work[] | undefined>()
   const [year, setYear] = useState('')
@@ -33,7 +33,7 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
   const [subject, setSubject] = useState('')
   const [tagArray, setTagArray] = useState<string[]>([])
   const [pagination, setPagination] = useState<Pagination>()
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   
   const limit = 10
   let currentPage = 0
@@ -62,7 +62,7 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
 
 
     updateSearchResults({
-      query,
+      query: router.query.slug !== undefined ? router.query.slug[0] : '',
       author: autor,
       subject: curso,
       year: ano,
@@ -135,8 +135,9 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
     })
   }
 
-  if(!subjectList || !tagList || !yearList || !resultList) return <NotFound />
+  if(!subjectList || !tagList || !yearList) return <NotFound />
 
+  const hasResults = resultList !== undefined && resultList.length > 0
   return (
     <>
       <Head>
@@ -247,8 +248,8 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
             {loading ? '' : query || 'Pesquisa'}
           </h1>
           <div className={`${styles['result--list']} ${!hasMore ? styles['complete'] : ''}`}>
-            {resultList.length > 0 ? 
-              resultList.map(({ id, pdf_id, authors, description, tags, title }, index) => (
+            {hasResults ? 
+              resultList!.map(({ id, pdf_id, authors, description, tags, title }, index) => (
                 <ResultCard
                   key={index}
                   authorArray={authors} 
@@ -258,7 +259,7 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
                   tagArray={tags.map(({ name }) => name)}
                   title={title}
                 />
-              )) : (
+              )) : !loading && (
                 <h1 className={styles['not-found']}>Nada encontrado</h1>
               )
             }
@@ -302,7 +303,6 @@ export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
 }
 
 export const getStaticProps: GetStaticProps<SearchProps> = async ({ params }) => {
-  
   const subjectList = await handleGetAllSubjects()
   const tagList = await handleGetAllTags()
   return {
