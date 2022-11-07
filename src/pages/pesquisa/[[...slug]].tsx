@@ -134,7 +134,7 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
       }
     })
   }
-  
+
   if(!subjectList || !tagList || !yearList) return <NotFound />
 
   const hasResults = resultList !== undefined && resultList.length > 0
@@ -249,7 +249,7 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
           </h1>
           <div className={`${styles['result--list']} ${!hasMore ? styles['complete'] : ''}`}>
             {hasResults ? 
-              resultList.map(({ id, pdf_id, authors, description, tags, title }, index) => (
+              resultList!.map(({ id, pdf_id, authors, description, tags, title }, index) => (
                 <ResultCard
                   key={index}
                   authorArray={authors} 
