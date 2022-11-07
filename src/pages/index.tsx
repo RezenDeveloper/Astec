@@ -14,6 +14,7 @@ import { CustomNextArrow, CustomPrevArrow } from '../components/Slick'
 import { checkIsAdmin } from '../database/manager'
 import { handleSearchWork } from './api/work/search'
 import { handleGetAllSubjects } from './api/subject'
+import { useState } from 'react'
 
 interface HomeProps {
   recentWorks: SearchWork | null
@@ -23,6 +24,8 @@ interface HomeProps {
 
 const Home:React.FC<HomeProps> = ({ recentWorks, subjects, isAdmin }) => {
   if(!recentWorks || !subjects) return null
+
+  const [descriptionHeight, setDescriptionHeight] = useState(0)
 
   return (
     <>
@@ -42,7 +45,14 @@ const Home:React.FC<HomeProps> = ({ recentWorks, subjects, isAdmin }) => {
               prevArrow={<CustomPrevArrow />}
               nextArrow={<CustomNextArrow />}
             >
-              {recentWorks.result.map((work, index) => <WorkCard key={index} work={work} />)}
+              {recentWorks.result.map((work, index) => 
+                <WorkCard 
+                  key={index} 
+                  work={work} 
+                  descriptionHeight={descriptionHeight} 
+                  setDescriptionHeight={setDescriptionHeight} 
+                />
+              )}
             </Slider>
           </div>
         </section>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import dynamic from 'next/dynamic'
 
 import styles from './styles.module.scss';
@@ -15,9 +15,11 @@ const PDFViewer = dynamic(() =>
 
 export interface WorkCardProps {
   work: Work
+  descriptionHeight: number
+  setDescriptionHeight: Dispatch<SetStateAction<number>>
 }
 
-export const WorkCard:React.FC<WorkCardProps> = ({ work }) => {
+export const WorkCard:React.FC<WorkCardProps> = ({ work, descriptionHeight, setDescriptionHeight }) => {
   const {
     id,
     pdf_id,
@@ -25,6 +27,15 @@ export const WorkCard:React.FC<WorkCardProps> = ({ work }) => {
     subject,
     description,
   } = work
+
+  const descriptionRef = useCallback(node => {    
+    if (node !== null) {
+      const currentHeight = node.getBoundingClientRect().height
+      if(currentHeight > descriptionHeight) {
+        setDescriptionHeight(currentHeight)
+      }
+    }
+  }, [descriptionHeight])
 
   return (
     <div className={styles['work-card']}>
@@ -39,7 +50,7 @@ export const WorkCard:React.FC<WorkCardProps> = ({ work }) => {
       <strong className={styles['class']}>{subject.name}</strong>
       <div className={styles['description']}>
         <h4>Descrição</h4>
-        <p>{description}</p>
+        <p ref={descriptionRef} style={{ minHeight: descriptionHeight || 'auto' }}>{description}</p>
       </div>
       <div className={styles['button-area']}>
         <Link href={`/trabalho/${id}`}>Visualizar</Link>
