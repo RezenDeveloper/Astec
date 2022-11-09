@@ -33,7 +33,7 @@ const Edit = ({ yearList, subjectList, work }: NewProps) => {
   const [authorList, setAuthorList] = useState<string[]>(work.authors.map(author => author.name))
   const [year, setYear] = useState(work.year.toString())
   const [subject, setSubject] = useState(work.subject.id)
-  const [file, setFile] = useState<File>()
+  const [file, setFile] = useState<File | 'SAME_FILE'>('SAME_FILE')
 
   const [submitError, setSubmitError] = useState<boolean>(false)
   const [errorList, setErrorList] = useState<ErrorObj>({
@@ -68,13 +68,12 @@ const Edit = ({ yearList, subjectList, work }: NewProps) => {
     const { errorList: newErrorList, hasErrors } = checkInputs({
       authorList,
       description,
-      file,
+      file: 'SAME_FILE',
       subject,
       tagList,
       title,
       year
     })
-    
     setErrorList(newErrorList)
 
     if(hasErrors) {
@@ -83,8 +82,14 @@ const Edit = ({ yearList, subjectList, work }: NewProps) => {
     }
     setLoading(true)
     
-    const buffer = await file!.arrayBuffer()
+    let sendFile
 
+    if(file !== 'SAME_FILE') {
+      const buffer = await file!.arrayBuffer()
+      sendFile = Buffer.from(buffer).toString('base64')
+    } else {
+      sendFile = file
+    }
     const { error } = await editWork(work.id, {
       title,
       description,
@@ -92,7 +97,7 @@ const Edit = ({ yearList, subjectList, work }: NewProps) => {
       tags: tagList,
       year: parseInt(year),
       subjectId: subject,
-      file: Buffer.from(buffer).toString('base64')
+      file: sendFile
     })
     
     if(error) setSubmitError(true)
@@ -196,9 +201,11 @@ const Edit = ({ yearList, subjectList, work }: NewProps) => {
                   objectFit={'contain'}
                 />
               </div>
-              <p className={styles['name']}>{file?.name || ''}</p>
+              {file !== 'SAME_FILE' && (
+                <p className={styles['name']}>{file?.name || ''}</p>
+              )}
               <label className={styles['send-button']} role={'button'} htmlFor={'pdf'} aria-label={'Enviar PDF'}>
-                Enviar PDF
+                Alterar PDF
               </label>
               <input
                 type={'file'}

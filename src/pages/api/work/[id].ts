@@ -18,7 +18,7 @@ interface UpdateWorkBody {
   tags?: string[]
   authors?: string[]
   year?: number
-  file?: string
+  file?: string | 'SAME_FILE'
 }
 
 const getWork = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -82,7 +82,7 @@ const updateWork = async (req: NextApiRequest, res: NextApiResponse) => {
     
     if(!work) return res.status(404).json({ message: 'Invalid fields' })
 
-    await handleUpdatePDF(file, work.pdf_id)
+    if(file !== 'SAME_FILE') await handleUpdatePDF(file, work.pdf_id)
 
     await Work.update({
       title,

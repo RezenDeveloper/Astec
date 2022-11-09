@@ -7,7 +7,7 @@ interface InputData {
   authorList: string[],
   year: string,
   subject: string,
-  file: File | undefined
+  file: File | 'SAME_FILE' | undefined
 }
 
 interface CheckInputsReturn {
