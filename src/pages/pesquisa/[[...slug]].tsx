@@ -9,7 +9,7 @@ import { SelectInput, TextInput } from '../../components/Inputs'
 import styles from '../../styles/search.module.scss'
 import { Tag } from '../../components/Tags'
 import { ResultCard } from '../../components/ResultCard'
-import { GetStaticPaths, GetStaticProps } from 'next'
+import { GetServerSideProps } from 'next'
 import { getYearList, searchWorks } from '../../database/work'
 import NotFound from '../404'
 import Image from 'next/image'
@@ -295,14 +295,7 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
   )
 }
 
-export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
-  return {
-      paths: [],
-      fallback: 'blocking'
-  }
-}
-
-export const getStaticProps: GetStaticProps<SearchProps> = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps<SearchProps> = async () => {
   const subjectList = await handleGetAllSubjects()
   const tagList = await handleGetAllTags()
   return {
