@@ -230,7 +230,8 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
           </div>
           <div className={`${styles['filter--field__tags']}`}>
             {
-              tagList.map(({ name, total, id }) => (
+              tagList.filter(({ total }) => total > 0)
+              .map(({ name, total, id }) => (
                 <Tag 
                   key={id}
                   id={id}
