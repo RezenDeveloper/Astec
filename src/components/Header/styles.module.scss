@@ -16,9 +16,10 @@
 
     &--title {
       align-self: flex-start;
-      font-size: 25px;
+      font-size: 1.6rem;
       padding: 0 20px;
       width: 25%;
+      letter-spacing: 3px;
     }
 
     &--search {
@@ -64,6 +65,24 @@
       font-size: 20px;
       a {
         cursor: pointer;
+      }
+    }
+
+    @media screen and (max-width: 768px) {
+      display: grid;
+      grid-template-columns: 1fr;
+
+      &--title {
+        width: 100%;
+        text-align: center;
+        padding: 0;
+        margin: 10px 0;
+      }
+      &--search {
+        margin: 0 10px 10px;
+      }
+      &--admin {
+        display: none;
       }
     }
   }

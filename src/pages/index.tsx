@@ -44,6 +44,29 @@ const Home:React.FC<HomeProps> = ({ recentWorks, subjects, isAdmin }) => {
               dots={true}
               prevArrow={<CustomPrevArrow />}
               nextArrow={<CustomNextArrow />}
+              responsive={[
+                {
+                  breakpoint: 768,
+                  settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                  }
+                },
+                {
+                  breakpoint: 1280,
+                  settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2
+                  }
+                },
+                {
+                  breakpoint: 1366,
+                  settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 3
+                  }
+                }
+              ]}
             >
               {recentWorks.result.map((work, index) => 
                 <WorkCard 

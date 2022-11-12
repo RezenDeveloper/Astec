@@ -1,9 +1,11 @@
 import { AxiosError } from "axios"
 import { axiosAPI } from "./axios"
 
-export const getAllTags = async ():Promise<MethodResponse<SearchTag[], AxiosError>> => {
+export const getAllTags = async (params:SearchParams):Promise<MethodResponse<SearchTag[], AxiosError>> => {
   try {
-    const { data } = await axiosAPI.get<SearchTag[]>(`/api/tag`)
+    const { data } = await axiosAPI.get<SearchTag[]>(`/api/tag`, {
+      params
+    })
     return {
       data,
       error: null

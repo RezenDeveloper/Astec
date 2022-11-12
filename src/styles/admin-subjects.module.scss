@@ -2,8 +2,10 @@
 @import './mixins';
 
 .container {
-  margin: $header-height 20% 0;
-  height: $full-height;
+  max-width: 1366px;
+  margin: 70px auto 0;
+  padding: 0 12px;
+
   .title {
     margin: 0;
     font-size: 2.19rem;
@@ -46,6 +48,7 @@
   
   .add-container {
     margin-top: 32px;
+    min-height: 290px;
     h2 {
       text-align: center;
       text-transform: uppercase;

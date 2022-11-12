@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { Sequelize } from 'sequelize'
+import { Op, Sequelize } from 'sequelize'
 import { Tag } from '../../../database/models'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -12,17 +12,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
 const getAllTags = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const tags = await Tag.findAll({
-      attributes: {
-        include: [[Sequelize.fn("COUNT", Sequelize.col("works.id")), "total"]] 
-      },
-      include: {
-        association: 'works',
-        attributes: []
-      },
-      group: ['id'],
-      order: [['total', 'DESC']]
-    })
+    const tags = await handleGetAllTags(req.query as Params)
     
     res.status(200).json(tags)
   } catch (error) {
@@ -47,18 +37,53 @@ const createTag = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 
-export const handleGetAllTags = async () => {
-  const tags = await Tag.findAll({
-    attributes: {
-      include: [[Sequelize.fn("COUNT", Sequelize.col("works.id")), "total"]] 
-    },
-    include: {
-      association: 'works',
-      attributes: []
-    },
-    group: ['id'],
-    order: [['total', 'DESC']]
-  })
+export const handleGetAllTags = async (filter?:Params) => {
+  
+  const query = filter?.query || ''
+  const author = filter?.author || ''
+  const year = filter?.year || undefined
+  const subject = filter?.subject || undefined
+  let where: any = {}
 
-  return JSON.parse(JSON.stringify(tags))
+  try {
+    
+    if(year !== undefined) where.year = year
+    if(subject !== undefined) where.subject_id = subject
+     
+     const resTags = await Tag.findAll({
+        include: [
+          {
+            association: 'works',
+            attributes: ['id'],
+            where: {
+              title: {
+                [Op.like]: `%${query || ''}%`
+              },
+              ...where
+            },
+            include: [
+              {
+                association: 'authors',
+                attributes: [],
+                where: {
+                  name: {
+                    [Op.like]: `%${author || ''}%`
+                  }
+                }
+              }
+            ]
+          },
+        ],
+        attributes: {
+          include: [[Sequelize.fn("COUNT", Sequelize.fn('DISTINCT', Sequelize.col("works.id"))) , "total"]] 
+        },
+        
+        group: ['id'],
+        order: [['total', 'DESC'], ['name', 'ASC']]
+     })
+   
+     return JSON.parse(JSON.stringify(resTags))
+  } catch (error) {
+    console.log(error)
+  }
 }

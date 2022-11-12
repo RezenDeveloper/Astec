@@ -2,50 +2,52 @@
 @import "./mixins.scss";
 
 .container {
-  margin: 100px 50px 30px;
+  margin: 70px 50px 30px;
   display: flex;
-}
 
-.filter {
-  min-height: 600px;
-  max-width: 320px;
-  margin-top: 110px;
-  padding-right: 20px;
-  border-right: 1px solid $black;
-  &--title {
-    font-size: 1.25rem;
-    text-align: center;
-    text-transform: uppercase;
-  }
-  &--field {
-    margin-bottom: 10px;
-    &__tags{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px 30px;
-      margin-top: 20px;
-    }
-  }
-  &--clear {
-    padding: 0;
-    cursor: pointer;
-    border: none;
-    background: none;
-    color: $primary;
-
-    &_container {
-      margin-top: 5px;
-      width: 100%;
-      display: flex;
-      justify-content: flex-end;
-    }
+  @media screen and (max-width: 768px) {
+    margin: 105px 0 30px;
+    min-height: 80%;
+    padding: 0 12px;
+    display: block;
   }
 }
 
+.filter-container {
+  display: flex;
+  justify-content: flex-end;
+  position: fixed;
+  
+  top: 10px;
+  right: 5px;
+  z-index: 2;
+
+  button {
+    display: none;
+
+    @media screen and (max-width: 768px) {
+      display: block;
+    }
+
+    @include buttonPrimary();
+    background: #DDD;
+    color: $black;
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    
+    &:hover:not(.disabled) {
+      filter: brightness(60%) !important;
+    }
+  }
+}
 .result {
   position: relative;
   flex: 1;
   margin-left: 60px;
+
+  @media screen and (max-width: 768px) {
+    margin-left: 0;
+  }
   
   &-loading {
     display: flex;
@@ -56,6 +58,10 @@
   &--title {
     text-align: center;
     min-height: 50px;
+    
+    @media screen and (max-width: 768px) {
+      padding-top: 20px;
+    }
   }
   &--list {
     &:not(.complete) {

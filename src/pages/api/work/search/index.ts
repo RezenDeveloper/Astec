@@ -22,16 +22,14 @@ export const handleSearchWork = async (reqQuery: { [key: string]: string }) => {
   let where:any = {}
   let tagsWhere:any = {}
 
-  const {
-    query,
-    year,
-    subject,
-    author,
-    tags,
-    order,
-    limit,
-    offset
-  } = reqQuery
+  const query = reqQuery.query || ''
+  const year = reqQuery.year || undefined
+  const subject = reqQuery.subject || undefined
+  const author = reqQuery.author || undefined
+  const tags = reqQuery.tags || undefined
+  const order = reqQuery.order || undefined
+  const limit = reqQuery.limit || '10'
+  const offset = reqQuery.offset || '0'
 
   if(year !== undefined) where.year = year
   if(subject !== undefined) where.subject_id = subject
@@ -83,8 +81,8 @@ export const handleSearchWork = async (reqQuery: { [key: string]: string }) => {
       }
     ],
     order: order === 'recent' ? [['createdAt', 'DESC']] : [],
-    limit: parseInt(limit) || 10,
-    offset: parseInt(offset) || 0,
+    limit: parseInt(limit),
+    offset: parseInt(offset),
   })
 
   const total = await Work.count({

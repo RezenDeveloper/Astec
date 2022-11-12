@@ -1,6 +1,6 @@
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { MdSearch } from 'react-icons/md';
 import styles from './styles.module.scss';
 
@@ -17,10 +17,6 @@ export const Header:React.FC<Props> = ({ query, hideSearch = false, isAdmin = fa
 
   const isWorkPage = router.pathname === '/trabalho/[id]'
 
-  useEffect(() => {
-    setQueryValue(query || '')
-  }, [query])
-
   const handleSearch = useCallback((value: string) => {
     if(typeof window === 'undefined') return
     router.push(`/pesquisa/${value}`)
@@ -31,7 +27,7 @@ export const Header:React.FC<Props> = ({ query, hideSearch = false, isAdmin = fa
       <header className={styles['header']}>
         <div className={styles['header__container']}>
           <h1 className={styles['header__container--title']}>
-            <Link href={`/`} aria-label="Home">Armazenador de TGs</Link>
+            <Link href={`/`} aria-label="Home">ASTEC</Link>
           </h1>
           {!hideSearch &&
             <div className={styles['header__container--search']}>

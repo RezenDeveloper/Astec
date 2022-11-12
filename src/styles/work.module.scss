@@ -2,10 +2,12 @@
 @import './mixins';
 
 .container {
-  min-height: $full-height;
-  margin: $header-height auto 0;
-  width: 60%;
-  max-width: 1100px;
+  max-width: 1366px;
+  margin: 70px auto 0;
+
+  @media screen and (max-width: 768px) {
+    margin: 110px auto 0;
+  }
 }
 
 .title {
@@ -15,21 +17,29 @@
 }
 
 .pdf-container {
-  min-height: 700px;
   max-width: 700px;
-  margin: auto;
+  margin: auto auto 20px;
+  padding: 0 12px;
+
+  @media screen and (max-width: 768px) {
+    max-width: 375px;
+  }
 }
 
 .loading {
   @include loading() {
     background-size: 1500px 1500px;
   }
-  width: 700px;
-  height: 989px;
+  width: 100%;
+  height: 957px;
+  
+  @media screen and (max-width: 768px) {
+    height: 475.5px;
+  }
 }
 
 .information-container {
-  margin-bottom: 10px;
+  margin: 0 12px 10px;
 
   &--description p {
     margin: 0;
@@ -66,5 +76,18 @@
   
   &--subject p {
     font-size: 0.875rem;
+  }
+
+  @media screen and (max-width: 768px) {
+    &--subject p,
+    &--description p,
+    &--tags span,
+    &--authors span {
+      font-size: 0.75rem;
+    }
+
+    b {
+      font-size: 0.875rem;
+    }
   }
 }

@@ -1,8 +1,9 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next/types'
-import { FormEvent, ChangeEvent, useState, SetStateAction, Dispatch } from 'react'
+import { FormEvent, useState } from 'react'
 import { authenticate, checkIsAdmin } from '../../database/manager'
+import { useIsMobile } from '../../hooks/isMobile'
 
 import styles from '../../styles/admin.module.scss'
 
@@ -14,6 +15,7 @@ const Admin:React.FC = () => {
   const [error, setError] = useState<string>()
 
   const router = useRouter()
+  const isMobile = useIsMobile()
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -33,6 +35,36 @@ const Admin:React.FC = () => {
     
     router.push('/')
   }
+
+  if(isMobile) return (
+    <>
+      <Head>
+          <title>Armazenador de TGs - Admin</title>
+        </Head>
+        <main className={styles['container']}>
+          <div className={styles['modal']}>
+            <div className={styles['modal--header']}>
+              <h1 className={styles['modal--title']}>Login</h1>
+            </div>
+            <div className={styles['modal--content']}>
+              <p className={styles['modal--content__info']}>
+                Não é possível acessar o admin em um dispositivo mobile, por favor acesse por um computador ou notebook.
+              </p>
+              <div className={styles['modal--button-container']}>
+                <button 
+                  className={styles['modal--button']} 
+                  onClick={() => {
+                    router.push('/')
+                  }}
+                >
+                  Voltar
+                </button>
+              </div>
+            </div>
+          </div>
+        </main>
+      </>
+  )
 
   return (
     <>
