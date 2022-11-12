@@ -67,5 +67,23 @@
         cursor: pointer;
       }
     }
+
+    @media screen and (max-width: 768px) {
+      display: grid;
+      grid-template-columns: 1fr;
+
+      &--title {
+        width: 100%;
+        text-align: center;
+        padding: 0;
+        margin: 10px 0;
+      }
+      &--search {
+        margin: 0 10px 10px;
+      }
+      &--admin {
+        display: none;
+      }
+    }
   }
 }
