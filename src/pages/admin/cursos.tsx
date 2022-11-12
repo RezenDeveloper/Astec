@@ -142,33 +142,37 @@ const Subjects = ({ subjectList: subjectListProps }: SubjectsProps) => {
             Adicionar Novo
           </button>
         </div>
-        {!!selecteAction && (
-          <div className={styles['add-container']}>
-            <h2>{selecteAction === 'EDIT' ? 'Editar curso selecionado' : 'Adicionar novo curso'}</h2>
-            <TextInput 
-              id='title' 
-              label='Titulo' 
-              className={styles['title-input']}
-              onChange={(e) => setTitle(e.target.value)}
-              value={title}
-            />
-            <TextBox
-              id='description' 
-              label='Descrição'
-              className={styles['desc-input']}
-              onChange={(e) => setDescription(e.target.value)}
-              value={description}
-            />
-            <div className={styles['buttons-container']}>
-              <button
-                className={styles['save-button']}
-                onClick={handleSaveSubject}
-              >
-                Salvar
-              </button>
-            </div>
-          </div>
-        )}
+        <div className={styles['add-container']}>
+          {!!selecteAction && (
+            (
+              <>
+                <h2>{selecteAction === 'EDIT' ? 'Editar curso selecionado' : 'Adicionar novo curso'}</h2>
+                <TextInput 
+                  id='title' 
+                  label='Titulo' 
+                  className={styles['title-input']}
+                  onChange={(e) => setTitle(e.target.value)}
+                  value={title}
+                />
+                <TextBox
+                  id='description' 
+                  label='Descrição'
+                  className={styles['desc-input']}
+                  onChange={(e) => setDescription(e.target.value)}
+                  value={description}
+                />
+                <div className={styles['buttons-container']}>
+                  <button
+                    className={styles['save-button']}
+                    onClick={handleSaveSubject}
+                  >
+                    Salvar
+                  </button>
+                </div>
+              </>
+            )    
+          )}
+        </div>
       </main>
       {loading && <LoadingModal />}
       {error !== undefined && (
