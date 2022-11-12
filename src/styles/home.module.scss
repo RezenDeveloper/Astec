@@ -1,7 +1,6 @@
 .container {
-  margin: auto;
-  margin-top: 100px;
-  max-width: 1366px;
+  margin: 100px auto 0;
+  max-width: 1440px;
 
   h1 {
     text-transform: uppercase;
@@ -10,7 +9,11 @@
   }
 
   .recent-works {
-    margin: 0 auto;
+    margin: 0 40px;
+
+    @media screen and (max-width: 768px) {
+      margin: 0 15px;
+    }
 
     &__container {
       margin: 20px 0;
@@ -34,6 +37,10 @@
       flex-wrap: wrap;
       gap: 40px;
       justify-content: center;
+      
+      @media screen and (max-width: 768px) {
+        gap: 20px;
+      }
     }
   }
 }

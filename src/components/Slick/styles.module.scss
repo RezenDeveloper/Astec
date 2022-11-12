@@ -8,3 +8,19 @@
   height: 50px;
   z-index: 1;
 }
+
+.slick-prev {
+  left: -40px;
+}
+.slick-next {
+  right: -40px;
+}
+
+@media screen and (max-width: 768px) {
+  .slick-prev {
+    left: -15px;
+  }
+  .slick-next {
+    right: -15px;
+  }
+}
