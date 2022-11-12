@@ -17,6 +17,7 @@ import { handleGetAllSubjects } from '../api/subject'
 import { handleGetAllTags } from '../api/tag'
 import { getAllTags } from '../../database/tag'
 import { handleSearchWork } from '../api/work/search'
+import { removeUndefinedFromObject } from '../../utils/utils'
 
 interface SearchProps { 
   subjectList: Subject[] | null
@@ -24,6 +25,10 @@ interface SearchProps {
   yearList: Year[] | null
   searchInfo: SearchWork
 }
+
+type FilterParams = "query" | "author" | "subject" | "year" | "tags" | "limit"
+
+let ignoreNextRender = false
 
 const Search = ({ subjectList, tagList: propTagList, yearList, searchInfo }: SearchProps) => {
   
@@ -39,7 +44,7 @@ const Search = ({ subjectList, tagList: propTagList, yearList, searchInfo }: Sea
   const [pagination, setPagination] = useState<Pagination>(searchInfo.pagination)
   const [loading, setLoading] = useState({
     loadingMore: false,
-    loadingAll: true
+    loadingAll: false
   })
   
   const limit = 10
@@ -57,6 +62,11 @@ const Search = ({ subjectList, tagList: propTagList, yearList, searchInfo }: Sea
 
   useEffect(() => {
     const { ano, autor, curso, tags } = router.query as { [key: string]: string }
+    if(ignoreNextRender) {
+      ignoreNextRender = false
+      return
+    }
+
     const foundSubject = !!subjectList?.find(subject => curso === subject.id)
     const foundYear = !!yearList?.find(year => ano === year.id)
 
@@ -66,7 +76,6 @@ const Search = ({ subjectList, tagList: propTagList, yearList, searchInfo }: Sea
     setTagArray(newTagArray)
     setYear(foundYear ? ano : '')
     setSubject(foundSubject ? curso : '')
-
 
     updateSearchResults({
       query: router.query.slug !== undefined ? router.query.slug[0] : '',
@@ -84,12 +93,14 @@ const Search = ({ subjectList, tagList: propTagList, yearList, searchInfo }: Sea
       loadingAll: !add,
       loadingMore: add
     })
+
     const { data } = await searchWorks(params)
     const { data:tagData } = await getAllTags(params)
     if(!data || !tagData) return
 
     setPagination(data.pagination)
     setTagList(tagData)
+
     if(add) {
       setResultList(prev => {
         if(prev) return [...prev, ...data.result]
@@ -98,6 +109,7 @@ const Search = ({ subjectList, tagList: propTagList, yearList, searchInfo }: Sea
     } else {
       setResultList(data.result)
     }
+
     setLoading({
       loadingMore: false,
       loadingAll: false
@@ -127,25 +139,59 @@ const Search = ({ subjectList, tagList: propTagList, yearList, searchInfo }: Sea
     }
   }
 
-  const removeParams = (params: string[]) => {
-    const queryParams = router.query
-
-    params.forEach(param => {
-      delete queryParams[param]
+  const removeParams = (paramsToRemove: FilterParams[]) => {    
+    ignoreNextRender = true
+    let newParams = {
+      query: router.query.slug !== undefined ? router.query.slug[0] : '',
+      author,
+      subject,
+      year,
+      tags: tagArray.join(','),
+      limit,
+    }
+    
+    paramsToRemove.forEach(param => {
+      delete newParams[param]
     })
+
+    updateSearchResults({
+      ...newParams
+    })
+
     router.push({
       query: {
-        ...queryParams,
+        ...removeUndefinedFromObject({
+          ano: newParams.year || undefined,
+          autor: newParams.author || undefined, 
+          curso: newParams.subject || undefined, 
+          tags: newParams.tags || undefined
+        }),
       }
     })
   }
 
   const changeParams = (newParams: { [key: string]: string }) => {
-    const queryParams = router.query
+    ignoreNextRender = true
+    const prevParams = {
+      query: router.query.slug !== undefined ? router.query.slug[0] : '',
+      author,
+      subject,
+      year,
+      tags: tagArray.join(','),
+      limit,
+    }
+    const fullParams = { ...prevParams, ...newParams }
+    updateSearchResults(fullParams)
+
     router.push({
       query: {
-        ...queryParams,
-        ...newParams
+        ...router.query,
+        ...removeUndefinedFromObject({
+          ano: fullParams.year || undefined,
+          autor: fullParams.author || undefined, 
+          curso: fullParams.subject || undefined, 
+          tags: fullParams.tags || undefined
+        })
       }
     })
   }
@@ -171,7 +217,7 @@ const Search = ({ subjectList, tagList: propTagList, yearList, searchInfo }: Sea
               onChange={(id) => {
                 setYear(id)
                 changeParams({
-                  ano: id
+                  year: id
                 })
               }}
             />
@@ -180,7 +226,7 @@ const Search = ({ subjectList, tagList: propTagList, yearList, searchInfo }: Sea
                 className={styles['filter--clear']}
                 onClick={() => {
                   setYear('')
-                  removeParams(['ano'])
+                  removeParams(['year'])
                 }}
               >
                 limpar
@@ -198,7 +244,7 @@ const Search = ({ subjectList, tagList: propTagList, yearList, searchInfo }: Sea
               onChange={(id) => {
                 setSubject(id)
                 changeParams({
-                  curso: id
+                  subject: id
                 })
               }}
             />
@@ -207,7 +253,7 @@ const Search = ({ subjectList, tagList: propTagList, yearList, searchInfo }: Sea
                 className={styles['filter--clear']}
                 onClick={() => {
                   setSubject('')
-                  removeParams(['curso'])
+                  removeParams(['subject'])
                 }}
               >
                 limpar
@@ -226,18 +272,18 @@ const Search = ({ subjectList, tagList: propTagList, yearList, searchInfo }: Sea
               onKeyDown={(e) => {
                 if(e.key === 'Enter') {
                   changeParams({
-                      autor: author,
+                    author
                   })
                 }
               }}
-              onBlur={() => changeParams({ autor: author })}
+              onBlur={() => changeParams({ author })}
             />
             <div className={styles['filter--clear_container']}>
               <button 
                 className={styles['filter--clear']}
                 onClick={() => {
                   setAuthor('')
-                  removeParams(['autor'])
+                  removeParams(['author'])
                 }}
               >
                 limpar
@@ -245,7 +291,7 @@ const Search = ({ subjectList, tagList: propTagList, yearList, searchInfo }: Sea
             </div>
           </div>
           <div className={`${styles['filter--field__tags']}`}>
-            {
+            { !loadingAll &&
               tagList.filter(({ total }) => total > 0)
               .map(({ name, total, id }) => (
                 <Tag 

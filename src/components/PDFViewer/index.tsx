@@ -6,7 +6,6 @@ import { IoMdArrowDropleft, IoMdArrowDropright } from 'react-icons/io';
 pdfjs.GlobalWorkerOptions.workerSrc = `//${window.location.host}/pdf.worker.min.js`;
 
 import styles from './styles.module.scss';
-
 export interface PDFViewerProps {
   pageIndex: number
   Loading: React.FC

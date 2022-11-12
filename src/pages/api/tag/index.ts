@@ -41,8 +41,8 @@ export const handleGetAllTags = async (filter?:Params) => {
   
   const query = filter?.query || ''
   const author = filter?.author || ''
-  const year = filter?.year
-  const subject = filter?.subject
+  const year = filter?.year || undefined
+  const subject = filter?.subject || undefined
   let where: any = {}
 
   try {

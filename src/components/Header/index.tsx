@@ -17,10 +17,6 @@ export const Header:React.FC<Props> = ({ query, hideSearch = false, isAdmin = fa
 
   const isWorkPage = router.pathname === '/trabalho/[id]'
 
-  useEffect(() => {
-    setQueryValue(query || '')
-  }, [query])
-
   const handleSearch = useCallback((value: string) => {
     if(typeof window === 'undefined') return
     router.push(`/pesquisa/${value}`)
