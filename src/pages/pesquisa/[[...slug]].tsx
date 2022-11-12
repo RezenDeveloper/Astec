@@ -1,13 +1,10 @@
 import Head from 'next/head'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
 
 import { Header } from '../../components/Header'
 import Footer from '../../components/Footer'
-import { SelectInput, TextInput } from '../../components/Inputs'
-
 import styles from '../../styles/search.module.scss'
-import { Tag } from '../../components/Tags'
 import { ResultCard } from '../../components/ResultCard'
 import { GetServerSideProps } from 'next'
 import { getYearList, searchWorks } from '../../database/work'
@@ -17,7 +14,8 @@ import { handleGetAllSubjects } from '../api/subject'
 import { handleGetAllTags } from '../api/tag'
 import { getAllTags } from '../../database/tag'
 import { handleSearchWork } from '../api/work/search'
-import { removeUndefinedFromObject } from '../../utils/utils'
+import { Filter } from '../../components/Filter'
+import { FilterContextProvider, useFilter } from '../../contexts/filter'
 
 interface SearchProps { 
   subjectList: Subject[] | null
@@ -26,26 +24,24 @@ interface SearchProps {
   searchInfo: SearchWork
 }
 
-type FilterParams = "query" | "author" | "subject" | "year" | "tags" | "limit"
-
-let ignoreNextRender = false
-
-const Search = ({ subjectList, tagList: propTagList, yearList, searchInfo }: SearchProps) => {
-  
+const SearchBody = ({ subjectList, tagList: propTagList, yearList, searchInfo }: SearchProps) => {
   const router = useRouter()
   const query = router.query.slug !== undefined ? router.query.slug[0] : ''
 
   const [resultList, setResultList] = useState<Work[]>(searchInfo.result)
   const [tagList, setTagList] = useState<SearchTag[] | null>(propTagList)
-  const [year, setYear] = useState('')
-  const [author, setAuthor] = useState('')
-  const [subject, setSubject] = useState('')
-  const [tagArray, setTagArray] = useState<string[]>([])
   const [pagination, setPagination] = useState<Pagination>(searchInfo.pagination)
   const [loading, setLoading] = useState({
     loadingMore: false,
     loadingAll: false
   })
+
+  const {
+    author,
+    subject,
+    year,
+    tagArray
+  } = useFilter()
   
   const limit = 10
   let currentPage = 0
@@ -59,33 +55,6 @@ const Search = ({ subjectList, tagList: propTagList, yearList, searchInfo }: Sea
     rest = pagination.total - pagination.offset
     hasMore = totalPages > currentPage
   }
-
-  useEffect(() => {
-    const { ano, autor, curso, tags } = router.query as { [key: string]: string }
-    if(ignoreNextRender) {
-      ignoreNextRender = false
-      return
-    }
-
-    const foundSubject = !!subjectList?.find(subject => curso === subject.id)
-    const foundYear = !!yearList?.find(year => ano === year.id)
-
-    const newTagArray = !tags ? [] : tags.split(',')
-    
-    setAuthor(autor || '')
-    setTagArray(newTagArray)
-    setYear(foundYear ? ano : '')
-    setSubject(foundSubject ? curso : '')
-
-    updateSearchResults({
-      query: router.query.slug !== undefined ? router.query.slug[0] : '',
-      author: autor,
-      subject: curso,
-      year: ano,
-      tags,
-      limit
-    })
-  }, [router.query])
 
 
   const updateSearchResults = async (params: SearchParams, add = false) => {
@@ -116,86 +85,6 @@ const Search = ({ subjectList, tagList: propTagList, yearList, searchInfo }: Sea
     })
   }
 
-  const handleTagSelect = (newTag: string) => {
-    const tagExists = !!tagArray.find(tag => tag === newTag)
-
-    if(tagExists) {
-      setTagArray(old => {
-        const newTagArray = old.filter(tag => tag !== newTag)
-        changeParams({ 
-          tags: newTagArray.join(',')
-        })
-        return newTagArray
-      })
-    }
-    else {
-      setTagArray(old => {
-        const newTagArray = [...old, newTag]
-        changeParams({ 
-          tags: newTagArray.join(',')
-        })
-        return newTagArray
-      })
-    }
-  }
-
-  const removeParams = (paramsToRemove: FilterParams[]) => {    
-    ignoreNextRender = true
-    let newParams = {
-      query: router.query.slug !== undefined ? router.query.slug[0] : '',
-      author,
-      subject,
-      year,
-      tags: tagArray.join(','),
-      limit,
-    }
-    
-    paramsToRemove.forEach(param => {
-      delete newParams[param]
-    })
-
-    updateSearchResults({
-      ...newParams
-    })
-
-    router.push({
-      query: {
-        ...removeUndefinedFromObject({
-          ano: newParams.year || undefined,
-          autor: newParams.author || undefined, 
-          curso: newParams.subject || undefined, 
-          tags: newParams.tags || undefined
-        }),
-      }
-    })
-  }
-
-  const changeParams = (newParams: { [key: string]: string }) => {
-    ignoreNextRender = true
-    const prevParams = {
-      query: router.query.slug !== undefined ? router.query.slug[0] : '',
-      author,
-      subject,
-      year,
-      tags: tagArray.join(','),
-      limit,
-    }
-    const fullParams = { ...prevParams, ...newParams }
-    updateSearchResults(fullParams)
-
-    router.push({
-      query: {
-        ...router.query,
-        ...removeUndefinedFromObject({
-          ano: fullParams.year || undefined,
-          autor: fullParams.author || undefined, 
-          curso: fullParams.subject || undefined, 
-          tags: fullParams.tags || undefined
-        })
-      }
-    })
-  }
-
   if(!subjectList || !tagList || !yearList) return <NotFound />
 
   const hasResults = resultList !== undefined && resultList.length > 0
@@ -207,105 +96,14 @@ const Search = ({ subjectList, tagList: propTagList, yearList, searchInfo }: Sea
       </Head>
       <Header query={query} />
       <main className={styles['container']}>
-        <section className={styles['filter']}>
-          <h2 className={styles['filter--title']}>Filtros</h2>
-          <div className={styles['filter--field']}>
-            <SelectInput
-              label='Ano'
-              selectedId={year}
-              valueList={yearList}
-              onChange={(id) => {
-                setYear(id)
-                changeParams({
-                  year: id
-                })
-              }}
-            />
-            <div className={styles['filter--clear_container']}>
-              <button 
-                className={styles['filter--clear']}
-                onClick={() => {
-                  setYear('')
-                  removeParams(['year'])
-                }}
-              >
-                limpar
-              </button>
-            </div>
-          </div>
-          <div className={styles['filter--field']}>
-            <SelectInput
-              label='Curso'
-              selectedId={subject}
-              valueList={subjectList.map(subject => ({
-                id: subject.id,
-                value: subject.name
-              }))}
-              onChange={(id) => {
-                setSubject(id)
-                changeParams({
-                  subject: id
-                })
-              }}
-            />
-            <div className={styles['filter--clear_container']}>
-              <button 
-                className={styles['filter--clear']}
-                onClick={() => {
-                  setSubject('')
-                  removeParams(['subject'])
-                }}
-              >
-                limpar
-              </button>
-            </div>
-          </div>
-          <div className={styles['filter--field']}>
-            <TextInput 
-              id='autor' 
-              label='Autor' 
-              value={author} 
-              onChange={(e) => {
-                const value = e.target.value
-                setAuthor(value.replace(/\d/g, ''))
-              }}
-              onKeyDown={(e) => {
-                if(e.key === 'Enter') {
-                  changeParams({
-                    author
-                  })
-                }
-              }}
-              onBlur={() => changeParams({ author })}
-            />
-            <div className={styles['filter--clear_container']}>
-              <button 
-                className={styles['filter--clear']}
-                onClick={() => {
-                  setAuthor('')
-                  removeParams(['author'])
-                }}
-              >
-                limpar
-              </button>
-            </div>
-          </div>
-          <div className={`${styles['filter--field__tags']}`}>
-            { !loadingAll &&
-              tagList.filter(({ total }) => total > 0)
-              .map(({ name, total, id }) => (
-                <Tag 
-                  key={id}
-                  id={id}
-                  text={name} 
-                  total={total} 
-                  isSelected={!!tagArray.find(tag => tag === id)}
-                  handleTagSelect={handleTagSelect}
-                />
-              ))
-            }
-          </div>
-        </section>
+        <Filter
+          limit={limit}
+          loading={loading}
+          subjectList={subjectList}
+          tagList={tagList}
+          updateSearchResults={updateSearchResults}
+          yearList={yearList}          
+        />
         <section className={styles['result']}>
           <h1 className={styles['result--title']}>
             {loadingAll ? '' : query || 'Pesquisa'}
@@ -356,6 +154,14 @@ const Search = ({ subjectList, tagList: propTagList, yearList, searchInfo }: Sea
       </main>
       <Footer />
     </>
+  )
+}
+
+const Search:React.FC<SearchProps> = (props) => {
+  return (
+    <FilterContextProvider>
+      <SearchBody {...props} />
+    </FilterContextProvider>
   )
 }
 
