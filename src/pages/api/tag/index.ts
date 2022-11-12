@@ -79,7 +79,7 @@ export const handleGetAllTags = async (filter?:Params) => {
         },
         
         group: ['id'],
-        order: [['total', 'DESC']]
+        order: [['total', 'DESC'], ['name', 'ASC']]
      })
    
      return JSON.parse(JSON.stringify(resTags))

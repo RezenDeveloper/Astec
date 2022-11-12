@@ -2,14 +2,52 @@
 @import "./mixins.scss";
 
 .container {
-  margin: 100px 50px 30px;
+  margin: 70px 50px 30px;
   display: flex;
+
+  @media screen and (max-width: 768px) {
+    margin: 105px 0 30px;
+    min-height: 80%;
+    padding: 0 12px;
+    display: block;
+  }
 }
 
+.filter-container {
+  display: flex;
+  justify-content: flex-end;
+  position: fixed;
+  
+  top: 10px;
+  right: 5px;
+  z-index: 2;
+
+  button {
+    display: none;
+
+    @media screen and (max-width: 768px) {
+      display: block;
+    }
+
+    @include buttonPrimary();
+    background: #DDD;
+    color: $black;
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    
+    &:hover:not(.disabled) {
+      filter: brightness(60%) !important;
+    }
+  }
+}
 .result {
   position: relative;
   flex: 1;
   margin-left: 60px;
+
+  @media screen and (max-width: 768px) {
+    margin-left: 0;
+  }
   
   &-loading {
     display: flex;
@@ -20,6 +58,10 @@
   &--title {
     text-align: center;
     min-height: 50px;
+    
+    @media screen and (max-width: 768px) {
+      padding-top: 20px;
+    }
   }
   &--list {
     &:not(.complete) {

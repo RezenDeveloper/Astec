@@ -1,6 +1,6 @@
 
 import { useRouter } from 'next/router'
-import { Dispatch, SetStateAction, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { removeUndefinedFromObject } from '../../utils/utils'
 import { SelectInput, TextInput } from '../Inputs'
 import styles from './styles.module.scss'
@@ -32,9 +32,6 @@ export const Filter:React.FC<FilterProps> = ({
   updateSearchResults
 }) => {
 
-  const router = useRouter()
-  const { loadingAll } = loading
-
   const {
     author,
     setAuthor,
@@ -43,9 +40,13 @@ export const Filter:React.FC<FilterProps> = ({
     year,
     setYear,
     tagArray,
-    setTagArray
+    setTagArray,
+    closed
   } = useFilter()
   
+  const router = useRouter()
+  const { loadingAll } = loading
+
   useEffect(() => {
     const { ano, autor, curso, tags } = router.query as { [key: string]: string }
     if(ignoreNextRender) {
@@ -154,7 +155,7 @@ export const Filter:React.FC<FilterProps> = ({
   }
   
   return (
-    <section className={styles['filter']}>
+    <section className={`${styles['filter']} ${closed ? styles['filter--closed'] : ''}`}>
       <h2 className={styles['filter--title']}>Filtros</h2>
       <div className={styles['filter--field']}>
         <SelectInput
@@ -238,7 +239,7 @@ export const Filter:React.FC<FilterProps> = ({
         </div>
       </div>
       <div className={`${styles['filter--field__tags']}`}>
-        { !loadingAll &&
+        {
           tagList.filter(({ total }) => total > 0)
           .map(({ name, total, id }) => (
             <Tag 

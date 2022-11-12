@@ -1,9 +1,9 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next/types'
-import { useEffect } from 'react'
-import { FormEvent, ChangeEvent, useState, SetStateAction, Dispatch } from 'react'
+import { FormEvent, useState } from 'react'
 import { authenticate, checkIsAdmin } from '../../database/manager'
+import { useIsMobile } from '../../hooks/isMobile'
 
 import styles from '../../styles/admin.module.scss'
 
@@ -13,14 +13,9 @@ const Admin:React.FC = () => {
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [error, setError] = useState<string>()
-  const [isMobile, setIsMobile] = useState(true)
 
   const router = useRouter()
-
-  useEffect(() => {
-    if(typeof window === 'undefined') return
-    setIsMobile(window.innerWidth <= 768)
-  }, [])
+  const isMobile = useIsMobile()
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()

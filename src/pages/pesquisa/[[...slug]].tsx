@@ -16,6 +16,7 @@ import { getAllTags } from '../../database/tag'
 import { handleSearchWork } from '../api/work/search'
 import { Filter } from '../../components/Filter'
 import { FilterContextProvider, useFilter } from '../../contexts/filter'
+import { useIsMobile } from '../../hooks/isMobile'
 
 interface SearchProps { 
   subjectList: Subject[] | null
@@ -40,7 +41,9 @@ const SearchBody = ({ subjectList, tagList: propTagList, yearList, searchInfo }:
     author,
     subject,
     year,
-    tagArray
+    tagArray,
+    setClosed,
+    closed
   } = useFilter()
   
   const limit = 10
@@ -87,6 +90,7 @@ const SearchBody = ({ subjectList, tagList: propTagList, yearList, searchInfo }:
 
   if(!subjectList || !tagList || !yearList) return <NotFound />
 
+  const isMobile = useIsMobile()
   const hasResults = resultList !== undefined && resultList.length > 0
   const { loadingAll, loadingMore } = loading
   return (
@@ -96,6 +100,11 @@ const SearchBody = ({ subjectList, tagList: propTagList, yearList, searchInfo }:
       </Head>
       <Header query={query} />
       <main className={styles['container']}>
+        {isMobile && (
+          <div className={styles['filter-container']}>
+            <button onClick={() => setClosed(prev => !prev)}>{closed ? 'Filtrar' : 'Fechar'}</button>
+          </div>
+        )}
         <Filter
           limit={limit}
           loading={loading}

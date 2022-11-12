@@ -9,6 +9,8 @@ interface FilterContextData {
   setSubject: Dispatch<SetStateAction<string>>
   tagArray: string[]
   setTagArray: Dispatch<SetStateAction<string[]>>
+  closed: boolean
+  setClosed: Dispatch<SetStateAction<boolean>>
 }
 
 const FilterContext = createContext({} as FilterContextData)
@@ -20,6 +22,7 @@ export const FilterContextProvider: React.FC = ({
   const [author, setAuthor] = useState('')
   const [subject, setSubject] = useState('')
   const [tagArray, setTagArray] = useState<string[]>([])
+  const [closed, setClosed] = useState(true)
   
   return (
     <FilterContext.Provider
@@ -31,7 +34,9 @@ export const FilterContextProvider: React.FC = ({
         subject,
         setSubject,
         tagArray,
-        setTagArray
+        setTagArray,
+        closed,
+        setClosed
       }}
     >
       {children}
