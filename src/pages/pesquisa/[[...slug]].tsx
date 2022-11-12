@@ -15,25 +15,32 @@ import NotFound from '../404'
 import Image from 'next/image'
 import { handleGetAllSubjects } from '../api/subject'
 import { handleGetAllTags } from '../api/tag'
+import { getAllTags } from '../../database/tag'
+import { handleSearchWork } from '../api/work/search'
 
 interface SearchProps { 
   subjectList: Subject[] | null
   tagList: SearchTag[] | null
   yearList: Year[] | null
+  searchInfo: SearchWork
 }
 
-const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
+const Search = ({ subjectList, tagList: propTagList, yearList, searchInfo }: SearchProps) => {
   
   const router = useRouter()
   const query = router.query.slug !== undefined ? router.query.slug[0] : ''
 
-  const [resultList, setResultList] = useState<Work[] | undefined>()
+  const [resultList, setResultList] = useState<Work[]>(searchInfo.result)
+  const [tagList, setTagList] = useState<SearchTag[] | null>(propTagList)
   const [year, setYear] = useState('')
   const [author, setAuthor] = useState('')
   const [subject, setSubject] = useState('')
   const [tagArray, setTagArray] = useState<string[]>([])
-  const [pagination, setPagination] = useState<Pagination>()
-  const [loading, setLoading] = useState(true)
+  const [pagination, setPagination] = useState<Pagination>(searchInfo.pagination)
+  const [loading, setLoading] = useState({
+    loadingMore: false,
+    loadingAll: true
+  })
   
   const limit = 10
   let currentPage = 0
@@ -49,7 +56,7 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
   }
 
   useEffect(() => {
-    const { ano, autor, curso, tags, query } = router.query as { [key: string]: string }
+    const { ano, autor, curso, tags } = router.query as { [key: string]: string }
     const foundSubject = !!subjectList?.find(subject => curso === subject.id)
     const foundYear = !!yearList?.find(year => ano === year.id)
 
@@ -73,11 +80,16 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
 
 
   const updateSearchResults = async (params: SearchParams, add = false) => {
-    setLoading(true)
+    setLoading({
+      loadingAll: !add,
+      loadingMore: add
+    })
     const { data } = await searchWorks(params)
-    if(!data) return
+    const { data:tagData } = await getAllTags(params)
+    if(!data || !tagData) return
 
     setPagination(data.pagination)
+    setTagList(tagData)
     if(add) {
       setResultList(prev => {
         if(prev) return [...prev, ...data.result]
@@ -86,7 +98,10 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
     } else {
       setResultList(data.result)
     }
-    setLoading(false)
+    setLoading({
+      loadingMore: false,
+      loadingAll: false
+    })
   }
 
   const handleTagSelect = (newTag: string) => {
@@ -138,10 +153,11 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
   if(!subjectList || !tagList || !yearList) return <NotFound />
 
   const hasResults = resultList !== undefined && resultList.length > 0
+  const { loadingAll, loadingMore } = loading
   return (
     <>
       <Head>
-        <title>{loading ? 'Pequisando' : query || 'Pesquisa'}</title>
+        <title>{loadingAll ? 'Pequisando' : query || 'Pesquisa'}</title>
       </Head>
       <Header query={query} />
       <main className={styles['container']}>
@@ -246,10 +262,10 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
         </section>
         <section className={styles['result']}>
           <h1 className={styles['result--title']}>
-            {loading ? '' : query || 'Pesquisa'}
+            {loadingAll ? '' : query || 'Pesquisa'}
           </h1>
           <div className={`${styles['result--list']} ${!hasMore ? styles['complete'] : ''}`}>
-            {hasResults ? 
+            {hasResults && !loadingAll ? 
               resultList!.map(({ id, pdf_id, authors, description, tags, title }, index) => (
                 <ResultCard
                   key={index}
@@ -260,11 +276,12 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
                   tagArray={tags.map(({ name }) => name)}
                   title={title}
                 />
-              )) : !loading && (
+              )) 
+              : !loadingAll && (
                 <h1 className={styles['not-found']}>Nada encontrado</h1>
               )
             }
-            {loading && (
+            {loadingMore || loadingAll && (
               <section className={styles['result-loading']}>
                 <Image
                   src={'/images/loading.svg'}
@@ -296,14 +313,26 @@ const Search = ({ subjectList, tagList, yearList }: SearchProps) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps<SearchProps> = async () => {
+export const getServerSideProps: GetServerSideProps<SearchProps> = async ({ query }) => {
   const subjectList = await handleGetAllSubjects()
-  const tagList = await handleGetAllTags()
+  const yearList = getYearList()
+  
+  const { ano, autor, curso, tags } = query as { [key: string]: string }
+  const filter = {
+    query: query.slug !== undefined ? query.slug[0] : '',
+    author: autor,
+    subject: curso,
+    year: ano,
+    tags
+  }
+  const searchInfo = await handleSearchWork(filter)
+  const tagList = await handleGetAllTags(filter)
   return {
     props: {
       subjectList,
       tagList,
-      yearList: getYearList()
+      searchInfo,
+      yearList
     }
   }
 }

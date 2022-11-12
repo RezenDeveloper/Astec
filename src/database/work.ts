@@ -4,9 +4,7 @@ import { axiosAPI } from "./axios"
 export const searchWorks = async (params:SearchParams):Promise<MethodResponse<SearchWork, AxiosError>> => {
   try {
     const { data } = await axiosAPI.get<ResAllWorks>('/api/work/search', {
-      params: {
-        ...params
-      }
+      params
     })
     const { result, pagination } = data
     return {
@@ -59,7 +57,7 @@ export const getYearList = () => {
   const LastYear = 2000
   let yearArray:number[] = []
   
-  for(let countYear = LastYear;  countYear <= currentYear; countYear ++) {
+  for(let countYear = currentYear;  countYear > LastYear; countYear --) {
     yearArray.push(countYear)
   }
 

@@ -68,3 +68,7 @@ interface ReqAuthenticate {
   email: string
   password: string
 }
+
+interface Params {
+  [key: string]: string | undefined
+}
