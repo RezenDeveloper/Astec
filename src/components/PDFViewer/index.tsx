@@ -46,7 +46,8 @@ const PDFViewer:React.FC<PDFViewerProps> = ({ pageIndex:propPageIndex, Loading, 
         onLoadSuccess={(e) => onDocumentLoadSuccess(e.numPages)}
         className={styles['document']}
       >
-        <Page 
+        <Page
+          renderAnnotationLayer={false}
           pageIndex={pageIndex}
           className={styles['page']}
           renderTextLayer={false}

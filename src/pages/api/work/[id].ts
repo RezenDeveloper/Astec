@@ -154,3 +154,11 @@ const updateWork = async (req: NextApiRequest, res: NextApiResponse) => {
     console.log('error')
   }
 }
+
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '4mb'
+    }
+  }
+}
