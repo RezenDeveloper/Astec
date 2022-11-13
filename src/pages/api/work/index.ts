@@ -126,3 +126,11 @@ const getAllWorks = async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(500).json({ error: error }) 
   }
 }
+
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '4mb'
+    }
+  }
+}
