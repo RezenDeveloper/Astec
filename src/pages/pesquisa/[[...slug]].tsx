@@ -46,7 +46,7 @@ const SearchBody = ({ subjectList, tagList: propTagList, yearList, searchInfo }:
     closed
   } = useFilter()
   
-  const limit = 10
+  const limit = 5
   let currentPage = 0
   let totalPages = 0
   let hasMore = false
@@ -93,6 +93,7 @@ const SearchBody = ({ subjectList, tagList: propTagList, yearList, searchInfo }:
   const isMobile = useIsMobile()
   const hasResults = resultList !== undefined && resultList.length > 0
   const { loadingAll, loadingMore } = loading
+  console.log(loading)
   return (
     <>
       <Head>
@@ -134,7 +135,7 @@ const SearchBody = ({ subjectList, tagList: propTagList, yearList, searchInfo }:
                 <h1 className={styles['not-found']}>Nada encontrado</h1>
               )
             }
-            {loadingMore || loadingAll && (
+            {(loadingMore || loadingAll) && (
               <section className={styles['result-loading']}>
                 <Image
                   src={'/images/loading.svg'}
@@ -146,7 +147,7 @@ const SearchBody = ({ subjectList, tagList: propTagList, yearList, searchInfo }:
               </section>
             )}
           </div>
-          {hasMore && (
+          {(!loadingAll && !loadingMore && hasMore) && (
             <button onClick={async () => {
               await updateSearchResults({
                 query: query || undefined,

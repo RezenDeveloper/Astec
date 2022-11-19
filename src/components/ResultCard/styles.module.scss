@@ -39,9 +39,11 @@
   }
 
   label {
+    display: block;
     font-family: $font-titles;
     font-size: .75rem;
     font-weight: 600;
+    margin: 8px 0;
   }
 
   &--description p {
@@ -76,5 +78,20 @@
 
 .tag-wrapper {
   display: flex;
+  flex-wrap: wrap;
   gap: 0 20px;
+  
+  p {
+    margin: 0;
+  }
+
+  @media screen and (max-width: 768px) {
+    gap: 10px;
+    p {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+  }
 }
