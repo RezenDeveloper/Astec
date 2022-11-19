@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Sequelize } from 'sequelize'
 import { Author, Tag, Work } from '../../../database/models'
-import { handleUpdatePDF } from '../pdf'
+import { handleDeletePDF, handleUpdatePDF } from '../pdf'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
@@ -112,7 +112,7 @@ const updateWork = async (req: NextApiRequest, res: NextApiResponse) => {
         let tag = await Tag.findOne({
           // @ts-ignore
           where: { 
-            name: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('name')), 'LIKE', '%' + name.toLowerCase() + '%')
+            name: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('name')), 'LIKE', name.toLowerCase())
           },
         })
 
@@ -136,7 +136,7 @@ const updateWork = async (req: NextApiRequest, res: NextApiResponse) => {
         let author = await Author.findOne({
           // @ts-ignore
           where: { 
-            name: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('name')), 'LIKE', '%' + name.toLowerCase() + '%')
+            name: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('name')), 'LIKE', name.toLowerCase())
           },
         })
 
@@ -168,7 +168,9 @@ const deleteWork = async (req: NextApiRequest, res: NextApiResponse) => {
     
     if(!work) return res.status(404).json({ message: 'Work not found' })
 
+    await handleDeletePDF(work.pdf_id)
     await work.destroy()
+
     res.status(200).end()
   } catch (error) {
     res.status(500).json({ error: error })
