@@ -25,6 +25,7 @@ interface HomeProps {
 const Home:React.FC<HomeProps> = ({ recentWorks, subjects, isAdmin }) => {
   if(!recentWorks || !subjects) return null
 
+  const [titleHeight, setTitleHeight] = useState(0)
   const [descriptionHeight, setDescriptionHeight] = useState(0)
 
   return (
@@ -38,7 +39,7 @@ const Home:React.FC<HomeProps> = ({ recentWorks, subjects, isAdmin }) => {
           <h1>Trabalhos recentes</h1>
           <div className={styles['recent-works__container']}>
             <Slider
-              infinite={true}
+              infinite={recentWorks.result.length > 3}
               slidesToShow={3}
               slidesToScroll={3}
               dots={true}
@@ -74,6 +75,8 @@ const Home:React.FC<HomeProps> = ({ recentWorks, subjects, isAdmin }) => {
                   work={work} 
                   descriptionHeight={descriptionHeight} 
                   setDescriptionHeight={setDescriptionHeight} 
+                  titleHeight={titleHeight}
+                  setTitleHeight={setTitleHeight}
                 />
               )}
             </Slider>

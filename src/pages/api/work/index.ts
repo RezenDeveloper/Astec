@@ -43,7 +43,7 @@ const createWork = async (req: NextApiRequest, res: NextApiResponse) => {
       !file
     ) return res.status(404).json({ message: 'Invalid fields' })
 
-    const { fileId } = await handleCreatePDF(file)
+    const { fileId } = await handleCreatePDF(file, title)
 
     const work = await Work.create({
       title,
@@ -58,7 +58,7 @@ const createWork = async (req: NextApiRequest, res: NextApiResponse) => {
         let tag = await Tag.findOne({
           // @ts-ignore
           where: { 
-            name: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('name')), 'LIKE', '%' + name.toLowerCase() + '%')
+            name: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('name')), 'LIKE', name.toLowerCase())
           },
         })
 
@@ -76,7 +76,7 @@ const createWork = async (req: NextApiRequest, res: NextApiResponse) => {
         let author = await Author.findOne({
           // @ts-ignore
           where: { 
-            name: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('name')), 'LIKE', '%' + name.toLowerCase() + '%')
+            name: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('name')), 'LIKE', name.toLowerCase())
           },
         })
 

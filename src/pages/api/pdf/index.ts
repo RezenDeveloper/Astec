@@ -96,7 +96,7 @@ const createPDF = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 
-export const handleCreatePDF = async (file: string) => {
+export const handleCreatePDF = async (file: string, title:string) => {
   const drive = getDrive()
 
   const buffer = Buffer.from(file,'base64')
@@ -104,7 +104,7 @@ export const handleCreatePDF = async (file: string) => {
 
   const { data:createData } = await drive.files.create({
     requestBody: {
-      name: 'teste.pdf',
+      name: title,
     },
     media: {
       mimeType: 'application/pdf',
@@ -170,11 +170,26 @@ const deletePDF = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if(!id) res.status(400).send('id not specified')
 
-  const drive = getDrive()
+  const deleted = await handleDeletePDF(id as string)
 
-  const { data } = await drive.files.delete({
-    fileId: id as string
-  })
+  if(deleted) {
+    res.status(200).send('Deleted')
+  } else {
+    res.status(500).send('')
+  }
+}
 
-  res.status(200).send('Deleted')
+export const handleDeletePDF = async (id:string) => {
+  
+  try {
+    const drive = getDrive()
+    const { data } = await drive.files.delete({
+      fileId: id as string
+    })
+    return true
+    
+  } catch (error) {
+    console.log('error deleting PDF fromo drive', error)
+    return false
+  }
 }

@@ -1,0 +1,56 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+.question-modal {
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,.3);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &-container {
+    width: 500px;
+    background: $white;
+    border: 1px solid $black;
+  }
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: $secundary;
+    padding: 8px 20px;
+
+    h1 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: $white;
+    }
+
+    svg {
+      cursor: pointer;
+    }
+  }
+  p {
+    margin: 12px 20px;
+    font-size: 0.875rem;
+  }
+
+  &-footer {
+    display: flex;
+    justify-content: flex-end;
+    column-gap: 16px;
+    padding: 0 10px 10px 10px;
+
+    button {
+      @include buttonPrimary;
+      font-size: 0.85rem;
+      padding: 4px 12px;
+    }
+  }
+}

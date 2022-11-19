@@ -1,12 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Sequelize } from 'sequelize'
 import { Author, Tag, Work } from '../../../database/models'
-import { handleUpdatePDF } from '../pdf'
+import { handleDeletePDF, handleUpdatePDF } from '../pdf'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
     case 'GET': return await getWork(req, res)
     case 'PATCH': return await updateWork(req, res)
+    case 'DELETE': return await deleteWork(req, res)
     default: return res.status(500).send(`Invalid method`)
   }
 }
@@ -111,7 +112,7 @@ const updateWork = async (req: NextApiRequest, res: NextApiResponse) => {
         let tag = await Tag.findOne({
           // @ts-ignore
           where: { 
-            name: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('name')), 'LIKE', '%' + name.toLowerCase() + '%')
+            name: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('name')), 'LIKE', name.toLowerCase())
           },
         })
 
@@ -135,7 +136,7 @@ const updateWork = async (req: NextApiRequest, res: NextApiResponse) => {
         let author = await Author.findOne({
           // @ts-ignore
           where: { 
-            name: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('name')), 'LIKE', '%' + name.toLowerCase() + '%')
+            name: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('name')), 'LIKE', name.toLowerCase())
           },
         })
 
@@ -152,6 +153,28 @@ const updateWork = async (req: NextApiRequest, res: NextApiResponse) => {
   } catch (error) {
     res.status(500).json({ error: error })
     console.log('error')
+  }
+}
+
+const deleteWork = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    const workId = req.query.id as string
+
+    const work = await Work.findByPk(workId as string, {
+      attributes: {
+        include: ['pdf_id']
+      }
+    })
+    
+    if(!work) return res.status(404).json({ message: 'Work not found' })
+
+    await handleDeletePDF(work.pdf_id)
+    await work.destroy()
+
+    res.status(200).end()
+  } catch (error) {
+    res.status(500).json({ error: error })
+    console.log('error deleting work')
   }
 }
 
