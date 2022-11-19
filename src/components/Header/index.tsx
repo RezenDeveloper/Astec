@@ -3,6 +3,8 @@ import Link from 'next/link';
 import React, { useCallback, useState } from 'react';
 import { MdSearch } from 'react-icons/md';
 import styles from './styles.module.scss';
+import { QuestionModal } from '../QuestionModal';
+import { axiosAPI } from '../../database/axios';
 
 interface Props {
   query?: string
@@ -13,6 +15,7 @@ interface Props {
 export const Header:React.FC<Props> = ({ query, hideSearch = false, isAdmin = false }) => {
 
   const [queryValue, setQueryValue] = useState(query || '')
+  const [showQuestion, setShowQuestion] = useState(false)
   const router = useRouter()
 
   const isWorkPage = router.pathname === '/trabalho/[id]'
@@ -21,6 +24,14 @@ export const Header:React.FC<Props> = ({ query, hideSearch = false, isAdmin = fa
     if(typeof window === 'undefined') return
     router.push(`/pesquisa/${value}`)
   }, [])
+
+  const handleDelete = async () => {
+    const id = router.query.id as string
+    const { status } = await axiosAPI.delete(`/api/work/${id}`)
+    if(status === 200) {
+      router.push('/')
+    }
+  }
 
   return (
     <>
@@ -60,7 +71,13 @@ export const Header:React.FC<Props> = ({ query, hideSearch = false, isAdmin = fa
           {
             isAdmin && isWorkPage ? (
               <div className={styles['header__container--admin']}>
-                <Link href={`/admin/trabalho/${router.query.id}`}>Editar Trabalho</Link>
+                <button 
+                  className={styles['header__container--admin_delete']}
+                  onClick={() => setShowQuestion(true)}
+                >
+                  Excluir
+                </button>
+                <Link href={`/admin/trabalho/${router.query.id}`}>Editar</Link>
               </div>
             ) : isAdmin && (
               <div className={styles['header__container--admin']}>
@@ -70,6 +87,15 @@ export const Header:React.FC<Props> = ({ query, hideSearch = false, isAdmin = fa
           }
         </div>
       </header>
+      {showQuestion && (
+        <QuestionModal
+          title='Tem certeza?'
+          message='Deseja realmente deletar o trabalho?'
+          closeCallback={() => setShowQuestion(false)}
+          acceptMessage={'Excluir'}
+          acceptCallback={handleDelete}
+        />
+      )}
     </>
   );
 }
