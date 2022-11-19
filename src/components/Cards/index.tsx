@@ -17,9 +17,18 @@ export interface WorkCardProps {
   work: Work
   descriptionHeight: number
   setDescriptionHeight: Dispatch<SetStateAction<number>>
+  titleHeight: number
+  setTitleHeight: Dispatch<SetStateAction<number>>
 }
 
-export const WorkCard:React.FC<WorkCardProps> = ({ work, descriptionHeight, setDescriptionHeight }) => {
+export const WorkCard:React.FC<WorkCardProps> = ({
+    work, 
+    descriptionHeight, 
+    setDescriptionHeight,
+    titleHeight,
+    setTitleHeight
+  }) => {
+
   const {
     id,
     pdf_id,
@@ -37,9 +46,18 @@ export const WorkCard:React.FC<WorkCardProps> = ({ work, descriptionHeight, setD
     }
   }, [descriptionHeight])
 
+  const titleRef = useCallback(node => {    
+    if (node !== null) {
+      const currentHeight = node.getBoundingClientRect().height
+      if(currentHeight > titleHeight) {
+        setTitleHeight(currentHeight)
+      }
+    }
+  }, [titleHeight])
+
   return (
     <div className={styles['work-card']}>
-      <h2 className={styles['title']}>{title}</h2>
+      <h2 ref={titleRef} style={{ minHeight: titleHeight || 'auto' }} className={styles['title']}>{title}</h2>
       <div className={styles['pdf-container']}>
         <PDFViewer 
           Loading={() => (<div className={styles['loading']}></div>)}
