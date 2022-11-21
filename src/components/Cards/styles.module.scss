@@ -21,6 +21,10 @@
     margin-bottom: 10px;
     text-align: center;
     font-size: 1rem;
+    
+    @media screen and (max-width: 425px) {
+      min-height: auto !important;
+    }
   }
 
   .pdf-container {
